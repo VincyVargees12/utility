@@ -1,99 +1,102 @@
 <nav class="navbar">
-  <div class="container">
-    <div class="navbar-content">
-      <!-- Logo -->
-      <a routerLink="/" class="logo">
-        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-        <span class="logo-text">DataUtil</span>
-      </a>
+  <div class="navbar-content">
+    <!-- Logo -->
+    <a routerLink="/" class="logo">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      <span class="logo-text">DataUtil</span>
+    </a>
 
-      <!-- Desktop Navigation -->
-      <div class="desktop-nav">
-        <a routerLink="/categories" routerLinkActive="active" class="nav-link">Categories</a>
-        <a routerLink="/pricing" routerLinkActive="active" class="nav-link">Pricing</a>
-        <a routerLink="/blog" routerLinkActive="active" class="nav-link">Blog</a>
-        <a routerLink="/about" routerLinkActive="active" class="nav-link">About</a>
-        <a routerLink="/contact" routerLinkActive="active" class="nav-link">Contact</a>
-      </div>
-
-      <!-- Actions -->
-      <div class="nav-actions">
-        <!-- Search Button -->
-        <button class="icon-btn" (click)="toggleSearch()" aria-label="Search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-        </button>
-
-        <!-- Dark Mode Toggle -->
-        <button class="icon-btn" (click)="toggleTheme()" aria-label="Toggle theme">
-          @if (isDarkMode()) {
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-          } @else {
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-            </svg>
-          }
-        </button>
-
-        <!-- Sign In -->
-        <button class="btn-text desktop-only">Sign In</button>
-
-        <!-- Get Started -->
-        <button class="btn-primary desktop-only">Get Started</button>
-
-        <!-- Mobile Menu Toggle -->
-        <button class="icon-btn mobile-only" (click)="toggleMobileMenu()" aria-label="Menu">
-          @if (mobileMenuOpen()) {
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          } @else {
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          }
-        </button>
-      </div>
+    <!-- Desktop Navigation -->
+    <div class="desktop-nav">
+      @for (item of navItems; track item.label) {
+        @if (item.dropdown) {
+          <div class="nav-item-wrapper" 
+               (mouseenter)="toggleDropdown(item.label)" 
+               (mouseleave)="closeDropdown()">
+            <button class="nav-link nav-dropdown-trigger">
+              {{ item.label }}
+              <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            
+            @if (activeDropdown() === item.label) {
+              <div class="dropdown-menu">
+                @for (dropItem of item.dropdown; track dropItem.route) {
+                  <a [routerLink]="dropItem.route" class="dropdown-item" (click)="closeDropdown()">
+                    <span class="dropdown-icon">{{ dropItem.icon }}</span>
+                    <span class="dropdown-label">{{ dropItem.label }}</span>
+                  </a>
+                }
+              </div>
+            }
+          </div>
+        } @else {
+          <a [routerLink]="item.route" class="nav-link">{{ item.label }}</a>
+        }
+      }
     </div>
 
-    <!-- Mobile Menu -->
-    @if (mobileMenuOpen()) {
-      <div class="mobile-menu" [@slideDown]>
-        <a routerLink="/categories" routerLinkActive="active" class="mobile-link" (click)="closeMobileMenu()">Categories</a>
-        <a routerLink="/pricing" routerLinkActive="active" class="mobile-link" (click)="closeMobileMenu()">Pricing</a>
-        <a routerLink="/blog" routerLinkActive="active" class="mobile-link" (click)="closeMobileMenu()">Blog</a>
-        <a routerLink="/about" routerLinkActive="active" class="mobile-link" (click)="closeMobileMenu()">About</a>
-        <a routerLink="/contact" routerLinkActive="active" class="mobile-link" (click)="closeMobileMenu()">Contact</a>
-        <div class="mobile-actions">
-          <button class="btn-text-mobile">Sign In</button>
-          <button class="btn-primary-mobile">Get Started</button>
-        </div>
-      </div>
-    }
+    <!-- Actions -->
+    <div class="nav-actions">
+      <!-- Dark Mode Toggle -->
+      <button class="icon-btn" (click)="toggleTheme()" aria-label="Toggle theme">
+        @if (isDarkMode()) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+        }
+      </button>
 
-    <!-- Search Modal -->
-    @if (searchOpen()) {
-      <div class="search-modal" (click)="toggleSearch()">
-        <div class="search-content" (click)="$event.stopPropagation()">
-          <input type="text" placeholder="Search for tools..." class="search-input" autofocus>
-          <div class="popular-searches">
-            <p class="label">Popular Searches</p>
-            <div class="search-tags">
-              <span class="tag">PDF</span>
-              <span class="tag">JSON</span>
-              <span class="tag">Image</span>
-              <span class="tag">QR</span>
-              <span class="tag">Word</span>
-              <span class="tag">Excel</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    }
+      <!-- Login -->
+      <button class="btn-text desktop-only">Login</button>
+
+      <!-- Sign up -->
+      <button class="btn-primary desktop-only">Sign up</button>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="icon-btn mobile-only" (click)="toggleMobileMenu()" aria-label="Menu">
+        @if (mobileMenuOpen()) {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        }
+      </button>
+    </div>
   </div>
+
+  <!-- Mobile Menu -->
+  @if (mobileMenuOpen()) {
+    <div class="mobile-menu">
+      @for (item of navItems; track item.label) {
+        @if (item.dropdown) {
+          <div class="mobile-category">
+            <div class="mobile-category-title">{{ item.label }}</div>
+            @for (dropItem of item.dropdown; track dropItem.route) {
+              <a [routerLink]="dropItem.route" class="mobile-link" (click)="closeMobileMenu()">
+                <span class="mobile-icon">{{ dropItem.icon }}</span>
+                {{ dropItem.label }}
+              </a>
+            }
+          </div>
+        } @else {
+          <a [routerLink]="item.route" class="mobile-link" (click)="closeMobileMenu()">{{ item.label }}</a>
+        }
+      }
+      <div class="mobile-actions">
+        <button class="btn-text-mobile">Login</button>
+        <button class="btn-primary-mobile">Sign up</button>
+      </div>
+    </div>
+  }
 </nav>

@@ -25,7 +25,7 @@ export class CategoriesComponent {
       description: 'Merge, split, compress and convert PDF files',
       toolCount: 15,
       color: '#EF4444',
-      route: '/pdf-tools'
+      route: '/categories/pdf'
     },
     {
       name: 'Image Tools',
@@ -33,7 +33,7 @@ export class CategoriesComponent {
       description: 'Resize, crop, compress and convert images',
       toolCount: 12,
       color: '#8B5CF6',
-      route: '/image-tools'
+      route: '/categories/images'
     },
     {
       name: 'Text Tools',
@@ -41,7 +41,7 @@ export class CategoriesComponent {
       description: 'Format, count, and transform text easily',
       toolCount: 18,
       color: '#10B981',
-      route: '/text-tools'
+      route: '/categories/text'
     },
     {
       name: 'Developer Tools',
@@ -49,7 +49,7 @@ export class CategoriesComponent {
       description: 'JSON, XML, Base64 and more dev utilities',
       toolCount: 25,
       color: '#3B82F6',
-      route: '/developer-tools'
+      route: '/categories/developer'
     },
     {
       name: 'Calculators',
@@ -57,7 +57,7 @@ export class CategoriesComponent {
       description: 'BMI, EMI, GST and various calculators',
       toolCount: 20,
       color: '#F59E0B',
-      route: '/calculators'
+      route: '/categories/calculators'
     },
     {
       name: 'Converters',
@@ -65,7 +65,7 @@ export class CategoriesComponent {
       description: 'Convert units, currency and measurements',
       toolCount: 16,
       color: '#06B6D4',
-      route: '/converters'
+      route: '/categories/converters'
     },
     {
       name: 'QR Tools',
@@ -73,7 +73,7 @@ export class CategoriesComponent {
       description: 'Generate and scan QR codes instantly',
       toolCount: 8,
       color: '#EC4899',
-      route: '/qr-tools'
+      route: '/categories/qr'
     },
     {
       name: 'AI Tools',
@@ -81,7 +81,7 @@ export class CategoriesComponent {
       description: 'AI-powered tools for productivity',
       toolCount: 10,
       color: '#6366F1',
-      route: '/ai-tools'
+      route: '/categories/ai'
     },
     {
       name: 'Security Tools',
@@ -89,7 +89,7 @@ export class CategoriesComponent {
       description: 'Password generators and encryption tools',
       toolCount: 12,
       color: '#DC2626',
-      route: '/security-tools'
+      route: '/categories/security'
     }
   ];
 }

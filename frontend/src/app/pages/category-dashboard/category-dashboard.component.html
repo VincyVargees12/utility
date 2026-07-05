@@ -1,0 +1,44 @@
+<div class="category-dashboard">
+  @if (category(); as cat) {
+    <!-- Header -->
+    <section class="header-section">
+      <div class="container">
+        <h1 class="title">{{ cat.name }}</h1>
+        <p class="description">{{ cat.description }}</p>
+      </div>
+    </section>
+
+    <!-- Filter Tabs -->
+    <section class="filter-section">
+      <div class="container">
+        <div class="filter-tabs">
+          @for (filter of getUniqueFilters(); track filter) {
+            <button 
+              class="filter-tab"
+              [class.active]="selectedFilter() === filter"
+              (click)="setFilter(filter)">
+              {{ filter === 'all' ? 'All' : filter.charAt(0).toUpperCase() + filter.slice(1) }}
+            </button>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="tools-section">
+      <div class="container">
+        <div class="tools-grid">
+          @for (tool of filterTools(selectedFilter()); track tool.id) {
+            <div class="tool-card" (click)="navigateToTool(tool.route)">
+              <div class="tool-icon" [style.background-color]="cat.color + '20'">
+                <span class="icon-emoji">{{ tool.icon }}</span>
+              </div>
+              <h3 class="tool-name">{{ tool.name }}</h3>
+              <p class="tool-description">{{ tool.description }}</p>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+</div>

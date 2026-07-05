@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { CategoriesPageComponent } from './pages/categories-page/categories-page.component';
+import { CategoryDashboardComponent } from './pages/category-dashboard/category-dashboard.component';
 import { AboutComponent } from './pages/about/about.component';
 import { ContactComponent } from './pages/contact/contact.component';
 import { BlogComponent } from './pages/blog/blog.component';
@@ -15,6 +16,11 @@ export const routes: Routes = [
     path: 'categories',
     component: CategoriesPageComponent,
     title: 'Categories - DataUtil'
+  },
+  {
+    path: 'categories/:category',
+    component: CategoryDashboardComponent,
+    title: 'Tools - DataUtil'
   },
   {
     path: 'about',
