@@ -13,7 +13,6 @@ import { SeoService } from '../../services/seo.service';
 @Component({
   selector: 'app-home',
   imports: [
-    NavbarComponent,
     HeroComponent,
     CategoriesComponent,
     TrendingToolsComponent,
@@ -21,10 +20,8 @@ import { SeoService } from '../../services/seo.service';
     StatisticsComponent,
     FaqComponent,
     NewsletterComponent,
-    FooterComponent
   ],
   template: `
-    <app-navbar />
     <main>
       <app-hero />
       <app-categories />
@@ -34,7 +31,6 @@ import { SeoService } from '../../services/seo.service';
       <app-faq />
       <app-newsletter />
     </main>
-    <app-footer />
   `,
   styles: [`
     :host {

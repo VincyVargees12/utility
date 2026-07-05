@@ -1,0 +1,12 @@
+<nav class="breadcrumb">
+  @for (item of items(); track $index) {
+    @if ($index > 0) {
+      <span class="separator">›</span>
+    }
+    @if (item.route) {
+      <a [routerLink]="item.route" class="breadcrumb-link">{{ item.label }}</a>
+    } @else {
+      <span class="breadcrumb-current">{{ item.label }}</span>
+    }
+  }
+</nav>

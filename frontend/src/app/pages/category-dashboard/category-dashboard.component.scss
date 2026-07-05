@@ -9,7 +9,7 @@
 
 // Header Section
 .header-section {
-  padding: 4rem 0 2rem;
+  padding: 2rem 0 1rem;
   text-align: center;
 }
 
@@ -39,7 +39,7 @@
 
 // Filter Section
 .filter-section {
-  padding: 2rem 0;
+  padding: 1rem 0;
   border-bottom: 1px solid #e2e8f0;
 }
 
@@ -100,12 +100,12 @@
 
 // Tools Section
 .tools-section {
-  padding: 3rem 0 6rem;
+  padding: 2rem 0 3rem;
 }
 
 .tools-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 1.5rem;
 
   @media (min-width: 640px) {
@@ -124,7 +124,7 @@
 .tool-card {
   background: white;
   border-radius: 16px;
-  padding: 2rem 1.5rem;
+  padding: 1rem;
   text-align: center;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -153,10 +153,10 @@
 }
 
 .tool-icon {
-  width: 80px;
-  height: 80px;
-  margin: 0 auto 1.25rem;
-  border-radius: 16px;
+  width: 50px;
+  height: 50px;
+  margin: 0 auto .5rem;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,12 +164,12 @@
 }
 
 .icon-emoji {
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   line-height: 1;
 }
 
 .tool-name {
-  font-size: 1.125rem;
+  font-size: .8rem;
   font-weight: 600;
   color: #111827;
   margin-bottom: 0.5rem;
@@ -180,7 +180,7 @@
 }
 
 .tool-description {
-  font-size: 0.9375rem;
+  font-size: 0.8375rem;
   color: #64748b;
   line-height: 1.6;
   margin: 0;

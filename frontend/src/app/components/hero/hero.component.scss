@@ -1,13 +1,13 @@
 .hero {
   position: relative;
-  padding: 6rem 0 4rem;
+  padding: 3rem 0 2rem;
   overflow: hidden;
-  min-height: 80vh;
+  min-height: auto;
   display: flex;
   align-items: center;
 
   @media (max-width: 768px) {
-    padding: 5rem 0 3rem;
+    padding: 2rem 0 1.5rem;
     min-height: auto;
   }
 }
@@ -60,7 +60,7 @@
 
 .hero-title {
   font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   margin-bottom: 1.5rem;
   color: #111827;
@@ -82,7 +82,7 @@
   font-size: clamp(1rem, 1.8vw, 1.25rem);
   color: #64748b;
   max-width: 700px;
-  margin: 0 auto 3rem;
+  margin: 0 auto 2rem;
   line-height: 1.7;
   animation-delay: 0.2s;
 }

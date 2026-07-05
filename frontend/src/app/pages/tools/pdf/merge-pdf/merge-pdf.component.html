@@ -1,0 +1,184 @@
+<div class="merge-pdf-container">
+  <!-- Header -->
+  <div class="page-header">
+    <app-breadcrumb [items]="breadcrumbs" />
+    <h1>Merge PDF files</h1>
+    <p class="subtitle">Combine PDFs in the order you want with the easiest PDF merger available.</p>
+  </div>
+
+  <!-- Main Content -->
+  @if (state() !== 'complete') {
+    <div class="upload-section">
+      <!-- Upload Area -->
+      @if (files().length === 0) {
+        <div class="upload-zone" 
+             (drop)="onFileDrop($event)"
+             (dragover)="onDragOver($event)">
+          <div class="upload-icon">📄</div>
+          <h2>Select PDF files</h2>
+          <p>or drop PDFs here</p>
+          <input type="file" 
+                 #fileInput
+                 (change)="onFileInput($event)"
+                 accept="application/pdf"
+                 multiple
+                 hidden />
+          <button class="upload-btn" (click)="fileInput.click()">
+            Select PDF files
+          </button>
+        </div>
+      }
+
+      <!-- File List -->
+      @if (files().length > 0 && state() === 'idle') {
+        <div class="files-container">
+          <div class="files-header">
+            <div class="select-all">
+              <input type="checkbox" 
+                     [checked]="allSelected"
+                     (change)="toggleSelectAll()"
+                     id="selectAll" />
+              <label for="selectAll">
+                {{ selectedCount }} of {{ files().length }} selected
+              </label>
+            </div>
+            <div class="order-indicator" (click)="toggleSortOrder()">
+              <span class="order-icon">🔤</span>
+              <span>{{ sortOrder() === 'asc' ? 'A-Z' : 'Z-A' }}</span>
+            </div>
+          </div>
+
+          <div class="files-list" 
+               cdkDropList
+               (cdkDropListDropped)="onDrop($event)">
+            @for (file of files(); track file.id) {
+              <div class="file-item" cdkDrag>
+                <div class="drag-handle" cdkDragHandle>
+                  <span class="drag-icon">⋮⋮</span>
+                </div>
+                <input type="checkbox" 
+                       [(ngModel)]="file.selected"
+                       [id]="'file-' + file.id" />
+                <label [for]="'file-' + file.id" class="file-info">
+                  <div class="file-icon">📄</div>
+                  <div class="file-details">
+                    <div class="file-name">{{ file.name }}</div>
+                    <div class="file-size">{{ formatFileSize(file.size) }}</div>
+                  </div>
+                </label>
+                <button class="remove-btn" 
+                        (click)="removeFile(file.id)"
+                        type="button">
+                  ×
+                </button>
+              </div>
+            }
+          </div>
+
+          <div class="actions">
+            <input type="file" 
+                   #moreFilesInput
+                   (change)="onFileInput($event)"
+                   accept="application/pdf"
+                   multiple
+                   hidden />
+            <button class="add-more-btn" (click)="moreFilesInput.click()">
+              + Add more files
+            </button>
+            <button class="merge-btn" 
+                    [disabled]="!canMerge"
+                    (click)="mergePDFs()">
+              Merge PDF
+            </button>
+          </div>
+        </div>
+      }
+
+      <!-- Processing -->
+      @if (state() === 'processing') {
+        <div class="processing">
+          <div class="spinner"></div>
+          <h3>Merging PDFs...</h3>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="progress()"></div>
+          </div>
+          <p>{{ progress() }}%</p>
+        </div>
+      }
+
+      <!-- Error -->
+      @if (state() === 'error') {
+        <div class="error">
+          <div class="error-icon">❌</div>
+          <h3>Error</h3>
+          <p>{{ errorMessage() }}</p>
+          <button class="retry-btn" (click)="resetState()">Try Again</button>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Success / Download -->
+  @if (state() === 'complete') {
+    <div class="success-section">
+      <h2 class="success-title">PDFs have been merged!</h2>
+      
+      <div class="download-wrapper">
+        <button class="back-btn-circle" (click)="startNewMerge()" title="Go back">
+          ←
+        </button>
+        <a [href]="downloadUrl()" 
+           [download]="downloadFileName()" 
+           class="download-btn-main">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Download merged PDF
+        </a>
+      </div>
+
+      <div class="continue-section">
+        <h3>Continue to...</h3>
+        <div class="related-tools-grid">
+          <a href="/categories/pdf/compress-pdf" class="tool-link">
+            <div class="tool-icon-wrapper green">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+              </svg>
+            </div>
+            <span>Compress PDF</span>
+            <span class="arrow">›</span>
+          </a>
+          <a href="/categories/pdf/split-pdf" class="tool-link">
+            <div class="tool-icon-wrapper red">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+              </svg>
+            </div>
+            <span>Split PDF</span>
+            <span class="arrow">›</span>
+          </a>
+          <a href="/categories/pdf/rotate-pdf" class="tool-link">
+            <div class="tool-icon-wrapper blue">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0118.8-4.3M22 12.5a10 10 0 01-18.8 4.2"/>
+              </svg>
+            </div>
+            <span>Rotate PDF</span>
+            <span class="arrow">›</span>
+          </a>
+          <a href="/categories/pdf/pdf-to-word" class="tool-link">
+            <div class="tool-icon-wrapper pink">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M10 9H8M16 13H8M16 17H8"/>
+              </svg>
+            </div>
+            <span>PDF to Word</span>
+            <span class="arrow">›</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  }
+</div>
+

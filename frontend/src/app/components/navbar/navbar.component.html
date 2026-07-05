@@ -23,11 +23,21 @@
             </button>
             
             @if (activeDropdown() === item.label) {
-              <div class="dropdown-menu">
-                @for (dropItem of item.dropdown; track dropItem.route) {
-                  <a [routerLink]="dropItem.route" class="dropdown-item" (click)="closeDropdown()">
-                    <span class="dropdown-icon">{{ dropItem.icon }}</span>
-                    <span class="dropdown-label">{{ dropItem.label }}</span>
+              <div 
+                class="dropdown-menu"
+                [class.mega-menu]="item.label === 'ALL TOOLS'">
+                <div class="dropdown-content">
+                  @for (dropItem of item.dropdown; track dropItem.route) {
+                    <a [routerLink]="dropItem.route" class="dropdown-item" (click)="closeDropdown()">
+                      <span class="dropdown-icon">{{ dropItem.icon }}</span>
+                      <span class="dropdown-label">{{ dropItem.label }}</span>
+                    </a>
+                  }
+                </div>
+                @if (item.categoryRoute && item.label !== 'ALL TOOLS') {
+                  <a [routerLink]="item.categoryRoute" class="dropdown-item dropdown-more" (click)="closeDropdown()">
+                    <span class="dropdown-icon">➕</span>
+                    <span class="dropdown-label">More...</span>
                   </a>
                 }
               </div>
@@ -86,6 +96,12 @@
               <a [routerLink]="dropItem.route" class="mobile-link" (click)="closeMobileMenu()">
                 <span class="mobile-icon">{{ dropItem.icon }}</span>
                 {{ dropItem.label }}
+              </a>
+            }
+            @if (item.categoryRoute) {
+              <a [routerLink]="item.categoryRoute" class="mobile-link mobile-link-more" (click)="closeMobileMenu()">
+                <span class="mobile-icon">➕</span>
+                More...
               </a>
             }
           </div>
