@@ -1,0 +1,124 @@
+.why-choose {
+  background: linear-gradient(180deg, #f8fafc 0%, white 100%);
+}
+
+:host-context(.dark) .why-choose {
+  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 1rem;
+}
+
+:host-context(.dark) .section-title {
+  color: #f1f5f9;
+}
+
+.section-subtitle {
+  font-size: 1.2rem;
+  color: #64748b;
+}
+
+:host-context(.dark) .section-subtitle {
+  color: #cbd5e1;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.feature-card {
+  text-align: center;
+  padding: 2rem;
+  background: white;
+  border-radius: 16px;
+  border: 2px solid #f1f5f9;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #2563EB;
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(37, 99, 235, 0.1);
+
+    .feature-icon {
+      transform: scale(1.1);
+      background: linear-gradient(135deg, #2563EB, #7C3AED);
+
+      ::ng-deep svg {
+        color: white;
+      }
+    }
+  }
+}
+
+:host-context(.dark) .feature-card {
+  background: #0f172a;
+  border-color: #334155;
+
+  &:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 20px 60px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.feature-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.5rem;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1), rgba(124, 58, 237, 0.1));
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+
+  ::ng-deep svg {
+    width: 36px;
+    height: 36px;
+    color: #2563EB;
+    transition: color 0.3s ease;
+  }
+}
+
+:host-context(.dark) .feature-icon ::ng-deep svg {
+  color: #3b82f6;
+}
+
+.feature-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 0.75rem;
+}
+
+:host-context(.dark) .feature-title {
+  color: #f1f5f9;
+}
+
+.feature-description {
+  font-size: 1rem;
+  color: #64748b;
+  line-height: 1.6;
+}
+
+:host-context(.dark) .feature-description {
+  color: #94a3b8;
+}

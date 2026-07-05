@@ -1,0 +1,33 @@
+<section class="section categories">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Explore by Category</h2>
+      <p class="section-subtitle">
+        Choose from hundreds of tools organized into categories for your convenience
+      </p>
+    </div>
+
+    <div class="categories-grid">
+      @for (category of categories; track category.name) {
+        <a [routerLink]="category.route" class="category-card">
+          <div class="card-icon" [style.background]="'linear-gradient(135deg, ' + category.color + '20, ' + category.color + '05)'">
+            <svg [style.color]="category.color" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="category.icon" />
+            </svg>
+          </div>
+          
+          <div class="card-content">
+            <h3 class="card-title">{{ category.name }}</h3>
+            <p class="card-description">{{ category.description }}</p>
+            <div class="card-footer">
+              <span class="tool-count">{{ category.toolCount }} tools</span>
+              <svg class="arrow-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+  </div>
+</section>
