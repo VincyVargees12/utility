@@ -14,9 +14,14 @@ export const routes: Routes = [
     title: 'Tools - DataUtil'
   },
   {
-    path: 'categories/:category/:toolId',
+    path: 'categories/pdf/merge-pdf',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Merge PDF - DataUtil'
+  },
+  {
+    path: 'categories/:category/:toolId',
+    loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
+    title: 'Tool - DataUtil'
   },
   {
     path: '**',

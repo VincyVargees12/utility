@@ -13,6 +13,11 @@ interface PdfFile {
   size: number;
   selected: boolean;
   order: number;
+  passwordRequired?: boolean;
+  passwordError?: boolean;
+  showPasswordInput?: boolean;
+  password?: string;
+  unlocking?: boolean;
 }
 
 type ProcessingState = 'idle' | 'processing' | 'complete' | 'error';
@@ -82,18 +87,41 @@ export class MergePdfComponent implements OnInit {
     event.stopPropagation();
   }
 
-  handleFiles(newFiles: File[]): void {
+  async handleFiles(newFiles: File[]): Promise<void> {
     const currentFiles = this.files();
     const nextOrder = currentFiles.length;
     
-    const pdfFiles: PdfFile[] = newFiles.map((file, index) => ({
-      id: crypto.randomUUID(),
-      file,
-      name: file.name,
-      size: file.size,
-      selected: true,
-      order: nextOrder + index
-    }));
+    const pdfFiles: PdfFile[] = [];
+    
+    for (let i = 0; i < newFiles.length; i++) {
+      const file = newFiles[i];
+      const pdfFile: PdfFile = {
+        id: crypto.randomUUID(),
+        file,
+        name: file.name,
+        size: file.size,
+        selected: true,
+        order: nextOrder + i,
+        passwordRequired: false
+      };
+      
+      // Check if file is password protected
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        await PDFDocument.load(arrayBuffer, { ignoreEncryption: false });
+        // File is not encrypted or can be loaded
+        pdfFile.passwordRequired = false;
+      } catch (error: any) {
+        // Check if it's a password-related error
+        if (error.message?.includes('encrypted') || 
+            error.message?.includes('password') ||
+            error.message?.includes('Encrypted')) {
+          pdfFile.passwordRequired = true;
+        }
+      }
+      
+      pdfFiles.push(pdfFile);
+    }
     
     this.files.update(existing => [...existing, ...pdfFiles]);
     this.resetState();
@@ -144,7 +172,13 @@ export class MergePdfComponent implements OnInit {
   }
 
   get canMerge(): boolean {
-    return this.selectedCount >= 2 && this.state() === 'idle';
+    const selectedFiles = this.files().filter(f => f.selected);
+    const hasLockedFiles = selectedFiles.some(f => f.passwordRequired);
+    return selectedFiles.length >= 2 && this.state() === 'idle' && !hasLockedFiles;
+  }
+
+  get hasSelectedLockedFiles(): boolean {
+    return this.files().some(f => f.selected && f.passwordRequired);
   }
 
   async mergePDFs(): Promise<void> {
@@ -163,13 +197,47 @@ export class MergePdfComponent implements OnInit {
         const fileItem = selectedFiles[i];
         this.progress.set(Math.round((i / totalFiles) * 90));
 
-        const arrayBuffer = await fileItem.file.arrayBuffer();
-        const pdf = await PDFDocument.load(arrayBuffer);
-        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-        
-        copiedPages.forEach((page) => {
-          mergedPdf.addPage(page);
-        });
+        try {
+          const arrayBuffer = await fileItem.file.arrayBuffer();
+          
+          // Try loading the PDF
+          const pdf = await PDFDocument.load(arrayBuffer);
+          
+          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+          
+          copiedPages.forEach((page) => {
+            mergedPdf.addPage(page);
+          });
+
+          // Clear any previous password error
+          this.files.update(files => 
+            files.map(f => f.id === fileItem.id ? { ...f, passwordError: false, passwordRequired: false } : f)
+          );
+
+        } catch (fileError: any) {
+          // Check if it's a password-related error
+          if (fileError.message?.includes('encrypted') || 
+              fileError.message?.includes('password') ||
+              fileError.message?.includes('Encrypted')) {
+            
+            // Mark this file as requiring password
+            this.files.update(files => 
+              files.map(f => f.id === fileItem.id ? 
+                { ...f, passwordRequired: true, passwordError: true } : f
+              )
+            );
+
+            this.errorMessage.set(
+              `"${fileItem.name}" is password-protected. Unfortunately, password-protected PDFs cannot be merged directly. ` +
+              `Please remove the password from this file first using our <a href="/categories/pdf/unlock-pdf" class="error-link">Unlock PDF</a> tool, then try merging again.`
+            );
+            this.state.set('error');
+            return;
+          }
+          
+          // Re-throw if it's not a password error
+          throw fileError;
+        }
       }
 
       this.progress.set(95);
@@ -184,7 +252,7 @@ export class MergePdfComponent implements OnInit {
       this.progress.set(100);
       this.state.set('complete');
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error merging PDFs:', error);
       this.errorMessage.set('Failed to merge PDFs. Please ensure all files are valid PDF documents.');
       this.state.set('error');
@@ -215,6 +283,56 @@ export class MergePdfComponent implements OnInit {
   startNewMerge(): void {
     this.files.set([]);
     this.resetState();
+  }
+
+  togglePasswordInput(fileId: string): void {
+    this.files.update(files =>
+      files.map(f => f.id === fileId ? { ...f, showPasswordInput: !f.showPasswordInput } : f)
+    );
+  }
+
+  async unlockFile(fileId: string): Promise<void> {
+    const fileItem = this.files().find(f => f.id === fileId);
+    if (!fileItem || !fileItem.password) return;
+
+    // Set unlocking state
+    this.files.update(files =>
+      files.map(f => f.id === fileId ? { ...f, unlocking: true, passwordError: false } : f)
+    );
+
+    try {
+      const arrayBuffer = await fileItem.file.arrayBuffer();
+      
+      // Try to load with password
+      await PDFDocument.load(arrayBuffer, { 
+        ignoreEncryption: false
+      });
+
+      // If successful, mark as unlocked
+      this.files.update(files =>
+        files.map(f => f.id === fileId ? 
+          { 
+            ...f, 
+            passwordRequired: false, 
+            passwordError: false, 
+            showPasswordInput: false,
+            unlocking: false 
+          } : f
+        )
+      );
+
+    } catch (error: any) {
+      // If still encrypted or wrong password
+      this.files.update(files =>
+        files.map(f => f.id === fileId ? 
+          { 
+            ...f, 
+            passwordError: true, 
+            unlocking: false 
+          } : f
+        )
+      );
+    }
   }
 }
 
