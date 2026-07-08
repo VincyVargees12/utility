@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PDFDocument } from 'pdf-lib';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { BreadcrumbComponent, BreadcrumbItem } from '../../../../shared/components/breadcrumb/breadcrumb.component';
+import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { SeoService } from '../../../../services/seo.service';
 
 interface PdfFile {
@@ -29,19 +29,13 @@ type ProcessingState = 'idle' | 'processing' | 'complete' | 'error';
     CommonModule,
     FormsModule,
     DragDropModule,
-    BreadcrumbComponent
+    ToolHeaderComponent
   ],
   templateUrl: './merge-pdf.component.html',
   styleUrls: ['./merge-pdf.component.scss']
 })
 export class MergePdfComponent implements OnInit {
   private readonly seoService = inject(SeoService);
-
-  breadcrumbs: BreadcrumbItem[] = [
-    { label: 'Home', route: '/' },
-    { label: 'PDF Tools', route: '/categories/pdf' },
-    { label: 'Merge PDF' }
-  ];
 
   files = signal<PdfFile[]>([]);
   state = signal<ProcessingState>('idle');

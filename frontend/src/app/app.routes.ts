@@ -19,6 +19,11 @@ export const routes: Routes = [
     title: 'Merge PDF - DataUtil'
   },
   {
+    path: 'categories/pdf/split-pdf',
+    loadComponent: () => import('./pages/tools/pdf/split-pdf/split-pdf.component').then(m => m.SplitPdfComponent),
+    title: 'Split PDF - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'

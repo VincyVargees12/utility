@@ -1,0 +1,572 @@
+<app-tool-header
+  [title]="state() !== 'configure' ? 'Split PDF file' : ''"
+  [subtitle]="state() !== 'configure' ? 'Separate one page or a whole set for easy conversion into independent PDF files.' : ''"
+  [breadcrumbs]="[
+    { label: 'Home', route: '/' },
+    { label: 'PDF Tools', route: '/categories/pdf' },
+    { label: 'Split PDF' }
+  ]"
+></app-tool-header>
+
+<!-- Upload State -->
+@if (state() === 'upload') {
+  <div class="max-w-4xl mx-auto px-4 pb-12">
+    <div class="flex justify-center">
+      <div class="w-full max-w-2xl">
+        <div 
+          class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-red-500 transition-colors cursor-pointer bg-white"
+          (drop)="onFileDrop($event)"
+          (dragover)="onDragOver($event)"
+          (click)="fileInput.click()">
+          
+          <div class="mb-6">
+            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+          </div>
+          
+          <button class="btn btn-primary text-lg px-8 py-3 mb-4">
+            Select PDF file
+          </button>
+          
+          <p class="text-sm text-gray-500">or drop PDF here</p>
+          
+          <input 
+            #fileInput
+            type="file" 
+            accept="application/pdf"
+            class="hidden"
+            (change)="onFileInput($event)">
+        </div>
+
+        @if (errorMessage()) {
+          <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            {{ errorMessage() }}
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Configure State -->
+@if (state() === 'configure') {
+  <div class="pr-0 lg:pr-[380px]">
+    <div class="px-6 py-2">
+      <div class="max-w-4xl mx-auto">
+        <!-- Left: Page Preview -->
+        @if (splitMode() === 'range') {
+          @if (rangeMode() === 'custom') {
+            @for (range of ranges(); track range.id; let rangeIdx = $index) {
+              <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-700 mb-2 text-center">Range {{ rangeIdx + 1 }}</h3>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                  <div class="flex gap-3 flex-wrap justify-center">
+                    @let pageCount = range.toPage - range.fromPage + 1;
+                    
+                    <!-- Show first page of range -->
+                    @for (page of pages(); track page.pageNumber) {
+                      @if (page.pageNumber === range.fromPage) {
+                        <div class="relative">
+                          <div class="w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                            @if (page.thumbnail) {
+                              <img
+                                [src]="page.thumbnail"
+                                [alt]="'Preview page ' + page.pageNumber"
+                                class="w-full h-full object-contain bg-gray-50">
+                            } @else {
+                              <div class="w-full h-full flex items-center justify-center bg-gray-50">
+                                <span class="text-gray-500 text-xs font-medium">Loading...</span>
+                              </div>
+                            }
+                          </div>
+                          <div class="text-center text-sm text-gray-600 mt-1.5">{{ page.pageNumber }}</div>
+                        </div>
+                      }
+                    }
+
+                    @if (pageCount > 2) {
+                      <div class="w-32 h-44 flex items-center justify-center">
+                        <span class="material-icons text-gray-400 text-4xl">more_horiz</span>
+                      </div>
+                    }
+
+                    <!-- Show last page of range, if different from first -->
+                    @if (range.toPage > range.fromPage) {
+                      @for (page of pages(); track page.pageNumber) {
+                        @if (page.pageNumber === range.toPage) {
+                          <div class="relative">
+                            <div class="w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                              @if (page.thumbnail) {
+                                <img
+                                  [src]="page.thumbnail"
+                                  [alt]="'Preview page ' + page.pageNumber"
+                                  class="w-full h-full object-contain bg-gray-50">
+                              } @else {
+                                <div class="w-full h-full flex items-center justify-center bg-gray-50">
+                                  <span class="text-gray-500 text-xs font-medium">Loading...</span>
+                                </div>
+                              }
+                            </div>
+                            <div class="text-center text-sm text-gray-600 mt-1.5">{{ page.pageNumber }}</div>
+                          </div>
+                        }
+                      }
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          }
+
+          @if (rangeMode() === 'fixed') {
+            @let rangeCount = outputFileCount;
+            <div class="mb-6">
+              <div class="flex gap-4 flex-wrap">
+                @for (rangeIdx of Array.from({length: rangeCount}, (_, i) => i); track rangeIdx) {
+                  @let startPage = rangeIdx * fixedPageCount() + 1;
+                  @let endPage = Math.min(startPage + fixedPageCount() - 1, pages().length);
+                  <div class="flex-1 min-w-[200px]">
+                    <h3 class="text-sm font-semibold text-gray-700 mb-2 text-center">Range {{ rangeIdx + 1 }}</h3>
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-3">
+                      <div class="flex gap-2 flex-wrap justify-center">
+                        @for (page of pages(); track page.pageNumber) {
+                          @if (page.pageNumber >= startPage && page.pageNumber <= endPage) {
+                            <div class="relative">
+                              <div class="w-24 h-32 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                                @if (page.thumbnail) {
+                                  <img
+                                    [src]="page.thumbnail"
+                                    [alt]="'Preview page ' + page.pageNumber"
+                                    class="w-full h-full object-contain bg-gray-50">
+                                } @else {
+                                  <div class="w-full h-full flex items-center justify-center bg-gray-50">
+                                    <span class="text-gray-500 text-xs font-medium">Loading...</span>
+                                  </div>
+                                }
+                              </div>
+                              <div class="text-center text-xs text-gray-600 mt-1">{{ page.pageNumber }}</div>
+                            </div>
+                          }
+                        }
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        }
+
+        @if (splitMode() === 'fixed') {
+          @let rangeCount = outputFileCount;
+          @for (rangeIdx of Array.from({length: rangeCount}, (_, i) => i); track rangeIdx) {
+            @let startPage = rangeIdx * fixedPageCount() + 1;
+            @let endPage = Math.min(startPage + fixedPageCount() - 1, pages().length);
+            <div class="mb-6">
+              <h3 class="text-sm font-semibold text-gray-700 mb-3">Range {{ rangeIdx + 1 }}</h3>
+              <div class="border-2 border-dashed border-gray-300 rounded-lg p-4">
+                <div class="flex gap-3 flex-wrap justify-center">
+                  @for (page of pages(); track page.pageNumber) {
+                    @if (page.pageNumber >= startPage && page.pageNumber <= endPage) {
+                      <div class="relative">
+                        <div class="w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                          @if (page.thumbnail) {
+                            <img
+                              [src]="page.thumbnail"
+                              [alt]="'Preview page ' + page.pageNumber"
+                              class="w-full h-full object-contain bg-gray-50">
+                          } @else {
+                            <div class="w-full h-full flex items-center justify-center bg-gray-50">
+                              <span class="text-gray-500 text-xs font-medium">Loading...</span>
+                            </div>
+                          }
+                        </div>
+                        <div class="text-center text-sm text-gray-600 mt-1.5">{{ page.pageNumber }}</div>
+                      </div>
+                    }
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        }
+
+        @if (splitMode() === 'pages') {
+          <div class="mb-6">
+            <div class="flex gap-3 flex-wrap justify-center">
+              @for (page of pages(); track page.pageNumber) {
+                <div class="relative">
+                  <div 
+                    class="w-32 h-44 border-2 rounded-lg bg-white shadow-sm flex items-center justify-center cursor-pointer transition-all hover:shadow-md overflow-hidden"
+                    [class.border-green-500]="page.selected"
+                    [class.bg-green-50]="page.selected"
+                    [class.border-gray-200]="!page.selected"
+                    (click)="extractMode() === 'select' && togglePageSelection(page.pageNumber)">
+                    @if (page.selected) {
+                      <span class="material-icons absolute -top-2 -right-2 text-green-500 bg-white rounded-full text-xl shadow-md">
+                        check_circle
+                      </span>
+                    }
+                    @if (page.thumbnail) {
+                      <img
+                        [src]="page.thumbnail"
+                        [alt]="'Preview page ' + page.pageNumber"
+                        class="w-full h-full object-contain bg-gray-50">
+                    } @else {
+                      <div class="w-full h-full flex items-center justify-center bg-gray-50">
+                        <span class="text-gray-500 text-xs font-medium">Loading...</span>
+                      </div>
+                    }
+                  </div>
+                  <div class="text-center text-sm text-gray-600 mt-1.5">{{ page.pageNumber }}</div>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Right: Split Options (Fixed Sidebar) -->
+  <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+    <div class="p-6 flex-1">
+      <h2 class="text-2xl font-bold text-gray-900 mb-6">Split</h2>
+
+          <!-- Mode Tabs -->
+          <div class="flex gap-3 mb-6">
+            <!-- Range Tab -->
+            <button
+              class="relative flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-colors"
+              [class.border-gray-300]="splitMode() === 'range'"
+              [class.bg-white]="splitMode() === 'range'"
+              [class.border-gray-200]="splitMode() !== 'range'"
+              [class.bg-gray-50]="splitMode() !== 'range'"
+              (click)="setSplitMode('range')">
+              @if (splitMode() === 'range') {
+                <span class="absolute top-1 left-1 flex items-center justify-center w-5 h-5 rounded-full bg-green-500">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                </span>
+              }
+              <svg class="w-8 h-8" [class.text-gray-800]="splitMode() === 'range'" [class.text-gray-400]="splitMode() !== 'range'" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <rect x="2" y="5" width="7" height="14" rx="1" stroke-width="1.5"/>
+                <rect x="15" y="5" width="7" height="14" rx="1" stroke-width="1.5"/>
+                <line x1="9" y1="12" x2="15" y2="12" stroke-width="1.5" stroke-dasharray="2 1"/>
+              </svg>
+              <span class="text-xs font-medium" [class.text-gray-800]="splitMode() === 'range'" [class.text-gray-400]="splitMode() !== 'range'">Range</span>
+            </button>
+
+            <!-- Pages Tab -->
+            <button
+              class="relative flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-colors"
+              [class.border-gray-300]="splitMode() === 'pages'"
+              [class.bg-white]="splitMode() === 'pages'"
+              [class.border-gray-200]="splitMode() !== 'pages'"
+              [class.bg-gray-50]="splitMode() !== 'pages'"
+              (click)="setSplitMode('pages')">
+              @if (splitMode() === 'pages') {
+                <span class="absolute top-1 left-1 flex items-center justify-center w-5 h-5 rounded-full bg-green-500">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                </span>
+              }
+              <svg class="w-8 h-8" [class.text-gray-800]="splitMode() === 'pages'" [class.text-gray-400]="splitMode() !== 'pages'" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <rect x="3" y="3" width="7" height="9" rx="1" stroke-width="1.5"/>
+                <rect x="14" y="3" width="7" height="5" rx="1" stroke-width="1.5"/>
+                <rect x="14" y="12" width="7" height="9" rx="1" stroke-width="1.5"/>
+                <rect x="3" y="16" width="7" height="5" rx="1" stroke-width="1.5"/>
+              </svg>
+              <span class="text-xs font-medium" [class.text-gray-800]="splitMode() === 'pages'" [class.text-gray-400]="splitMode() !== 'pages'">Pages</span>
+            </button>
+
+            <!-- Fixed Tab -->
+            <button
+              class="relative flex-1 flex flex-col items-center gap-2 p-3 rounded-lg border-2 transition-colors"
+              [class.border-gray-300]="splitMode() === 'fixed'"
+              [class.bg-white]="splitMode() === 'fixed'"
+              [class.border-gray-200]="splitMode() !== 'fixed'"
+              [class.bg-gray-50]="splitMode() !== 'fixed'"
+              (click)="setSplitMode('fixed')">
+              @if (splitMode() === 'fixed') {
+                <span class="absolute top-1 left-1 flex items-center justify-center w-5 h-5 rounded-full bg-green-500">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                </span>
+              }
+              <svg class="w-8 h-8" [class.text-gray-800]="splitMode() === 'fixed'" [class.text-gray-400]="splitMode() !== 'fixed'" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <rect x="2" y="4" width="20" height="16" rx="1" stroke-width="1.5"/>
+                <rect x="5" y="7" width="14" height="10" rx="1" stroke-width="1.5"/>
+                <rect x="8" y="10" width="8" height="7" rx="1" stroke-width="1.5" fill="currentColor" fill-opacity="0.15"/>
+              </svg>
+              <span class="text-xs font-medium" [class.text-gray-800]="splitMode() === 'fixed'" [class.text-gray-400]="splitMode() !== 'fixed'">Size</span>
+            </button>
+          </div>
+
+          <!-- Range Mode Options -->
+          @if (splitMode() === 'range') {
+            <div class="mb-6">
+              <h3 class="text-sm font-semibold text-gray-700 mb-3">Range mode:</h3>
+              <div class="flex gap-2 mb-4">
+                <button 
+                  class="flex-1 py-1.5 px-3 rounded-md border-2 text-sm font-medium transition-colors"
+                  [class.border-red-500]="rangeMode() === 'custom'"
+                  [class.bg-red-500]="rangeMode() === 'custom'"
+                  [class.text-white]="rangeMode() === 'custom'"
+                  [class.border-gray-300]="rangeMode() !== 'custom'"
+                  [class.text-gray-700]="rangeMode() !== 'custom'"
+                  (click)="setRangeMode('custom')">Custom</button>
+                <button 
+                  class="flex-1 py-1.5 px-3 rounded-md border-2 text-sm font-medium transition-colors hover:border-gray-400"
+                  [class.border-red-500]="rangeMode() === 'fixed'"
+                  [class.bg-red-500]="rangeMode() === 'fixed'"
+                  [class.text-white]="rangeMode() === 'fixed'"
+                  [class.border-gray-300]="rangeMode() !== 'fixed'"
+                  [class.text-gray-700]="rangeMode() !== 'fixed'"
+                  (click)="setRangeMode('fixed')">Fixed</button>
+              </div>
+
+              <!-- Custom Range Mode -->
+              @if (rangeMode() === 'custom') {
+                @for (range of ranges(); track range.id; let idx = $index) {
+                  <div class="mb-4">
+                    <div class="flex items-center justify-between mb-2">
+                      <div class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4"/></svg>
+                        <span class="text-sm font-medium text-gray-700">Range</span>
+                        <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">{{ idx + 1 }}</span>
+                      </div>
+                      @if (ranges().length > 1) {
+                        <button 
+                          class="text-gray-400 hover:text-red-500 transition-colors"
+                          (click)="removeRange(range.id)">
+                          <span class="material-icons text-lg">close</span>
+                        </button>
+                      }
+                    </div>
+                    
+                    <div class="flex gap-2 items-end">
+                      <div class="flex-1">
+                        <label class="text-xs text-gray-500 block mb-1">from page</label>
+                        <input 
+                          type="number" 
+                          [value]="range.fromPage"
+                          [min]="1"
+                          [max]="pages().length"
+                          (input)="updateRange(range.id, 'fromPage', +$any($event.target).value)"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                      </div>
+                      
+                      <span class="text-gray-500 text-sm pb-2">to</span>
+                      
+                      <div class="flex-1">
+                        <label class="text-xs text-gray-500 block mb-1">to page</label>
+                        <input 
+                          type="number" 
+                          [value]="range.toPage"
+                          [min]="range.fromPage"
+                          [max]="pages().length"
+                          (input)="updateRange(range.id, 'toPage', +$any($event.target).value)"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                      </div>
+                    </div>
+                  </div>
+                }
+
+                <button 
+                  class="w-full py-2 border-2 border-dashed border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+                  (click)="addRange()">
+                  <span class="material-icons text-base">add</span>
+                  <span>Add Range</span>
+                </button>
+
+                <div class="mt-4">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      [checked]="mergeRanges()"
+                      (change)="mergeRanges.set($any($event.target).checked)"
+                      class="rounded border-gray-300">
+                    <span class="text-sm text-gray-600">Merge all ranges in one PDF file.</span>
+                  </label>
+                </div>
+              }
+
+              <!-- Fixed Range Mode -->
+              @if (rangeMode() === 'fixed') {
+                <div class="mb-4">
+                  <label class="text-sm font-medium text-gray-700 mb-2 block">Split into page ranges of:</label>
+                  <select 
+                    [value]="fixedPageCount()"
+                    (change)="setFixedPageCount(+$any($event.target).value)"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                    @for (num of [1, 2, 3, 4, 5, 10, 15, 20]; track num) {
+                      @if (num <= pages().length) {
+                        <option [value]="num">{{ num }}</option>
+                      }
+                    }
+                  </select>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div class="flex gap-2">
+                    <span class="material-icons text-blue-600 text-lg">info</span>
+                    <div class="text-sm text-blue-900">
+                      This PDF will be split into files of <strong>{{ fixedPageCount() }} page{{ fixedPageCount() > 1 ? 's' : '' }}</strong>.<br>
+                      <strong>{{ outputFileCount }} PDF{{ outputFileCount > 1 ? 's' : '' }}</strong> will be created.
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Fixed Mode Options -->
+          @if (splitMode() === 'fixed') {
+            <div class="mb-6">
+              <div class="mb-4">
+                <label class="text-sm font-medium text-gray-700 mb-2 block">Split into page ranges of:</label>
+                <select 
+                  [value]="fixedPageCount()"
+                  (change)="setFixedPageCount(+$any($event.target).value)"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                  @for (num of [1, 2, 3, 4, 5, 10, 15, 20]; track num) {
+                    @if (num <= pages().length) {
+                      <option [value]="num">{{ num }}</option>
+                    }
+                  }
+                </select>
+              </div>
+
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div class="flex gap-2">
+                  <span class="material-icons text-blue-600 text-lg">info</span>
+                  <div class="text-sm text-blue-900">
+                    This PDF will be split into files of <strong>{{ fixedPageCount() }} page{{ fixedPageCount() > 1 ? 's' : '' }}</strong>.<br>
+                    <strong>{{ outputFileCount }} PDF{{ outputFileCount > 1 ? 's' : '' }}</strong> will be created.
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Pages Mode (Extract) Options -->
+          @if (splitMode() === 'pages') {
+            <div class="mb-6">
+              <h3 class="text-sm font-semibold text-gray-700 mb-3">Extract mode:</h3>
+              <div class="flex gap-2 mb-4">
+                <button 
+                  class="flex-1 py-2 rounded-lg border-2 transition-colors"
+                  [class.border-red-500]="extractMode() === 'all'"
+                  [class.bg-red-50]="extractMode() === 'all'"
+                  [class.text-red-700]="extractMode() === 'all'"
+                  [class.border-gray-200]="extractMode() !== 'all'"
+                  [class.text-gray-700]="extractMode() !== 'all'"
+                  (click)="setExtractMode('all')">
+                  Extract all pages
+                </button>
+                <button 
+                  class="flex-1 py-2 rounded-lg border-2 transition-colors"
+                  [class.border-red-500]="extractMode() === 'select'"
+                  [class.bg-red-50]="extractMode() === 'select'"
+                  [class.text-red-700]="extractMode() === 'select'"
+                  [class.border-gray-200]="extractMode() !== 'select'"
+                  [class.text-gray-700]="extractMode() !== 'select'"
+                  (click)="setExtractMode('select')">
+                  Select pages
+                </button>
+              </div>
+
+              @if (extractMode() === 'select') {
+                <div class="mb-4">
+                  <label class="text-sm font-medium text-gray-700 mb-2 block">Pages to extract:</label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="pagesInput"
+                    (blur)="updatePagesFromInput()"
+                    placeholder="example: 1,5-8"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent">
+                  <p class="text-xs text-gray-500 mt-1">Click on pages or enter page numbers/ranges</p>
+                </div>
+
+                <div class="mb-4">
+                  <label class="flex items-center gap-2">
+                    <input type="checkbox" class="rounded">
+                    <span class="text-sm text-gray-700">Merge extracted pages into one PDF file.</span>
+                  </label>
+                </div>
+              }
+
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div class="flex gap-2">
+                  <span class="material-icons text-blue-600 text-lg">info</span>
+                  <div class="text-sm text-blue-900">
+                    Selected pages will be converted into separate PDF files.<br>
+                    <strong>{{ outputFileCount }} PDF{{ outputFileCount > 1 ? 's' : '' }}</strong> will be created.
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Split Button -->
+          <button 
+            class="btn btn-primary w-full py-3 text-lg flex items-center justify-center gap-2"
+            [disabled]="!canSplit"
+            (click)="splitPdf()">
+            <span>Split PDF</span>
+            <span class="material-icons">arrow_circle_right</span>
+          </button>
+
+          @if (errorMessage()) {
+            <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+              {{ errorMessage() }}
+            </div>
+          }
+    </div>
+  </div>
+}
+
+<!-- Processing State -->
+@if (state() === 'processing') {
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="text-center">
+      <div class="mb-8">
+        <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-gray-200 border-t-red-500"></div>
+      </div>
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">Splitting PDF...</h2>
+      <p class="text-lg text-gray-600">Please wait while we process your document</p>
+    </div>
+  </div>
+}
+
+<!-- Complete State -->
+@if (state() === 'complete') {
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="text-center">
+      <div class="mb-8">
+        <span class="material-icons text-green-500 text-6xl">check_circle</span>
+      </div>
+      
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">PDF has been split!</h2>
+      
+      <div class="flex justify-center gap-4 mb-8">
+        <button 
+          class="btn btn-primary text-lg px-8 py-3 flex items-center gap-2"
+          (click)="downloadAll()">
+          <span class="material-icons">download</span>
+          <span>Download split PDF</span>
+        </button>
+        
+        <button 
+          class="btn btn-back"
+          (click)="reset()"
+          title="Split another PDF">
+          <span class="material-icons">arrow_back</span>
+        </button>
+      </div>
+
+      <div class="text-sm text-gray-600">
+        <p><strong>{{ outputFileCount }}</strong> PDF file{{ outputFileCount > 1 ? 's' : '' }} created</p>
+      </div>
+    </div>
+  </div>
+}

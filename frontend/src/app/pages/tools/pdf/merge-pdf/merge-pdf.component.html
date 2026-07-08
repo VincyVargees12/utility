@@ -1,13 +1,17 @@
-<div class="merge-pdf-container">
-  <!-- Header - Only show when not complete -->
-  @if (state() !== 'complete') {
-    <div class="page-header">
-      <app-breadcrumb [items]="breadcrumbs" />
-      <h1>Merge PDF files</h1>
-      <p class="subtitle">Combine PDFs in the order you want with the easiest PDF merger available.</p>
-    </div>
-  }
+<!-- Header - Only show when not complete -->
+@if (state() !== 'complete') {
+  <app-tool-header
+    title="Merge PDF files"
+    subtitle="Combine PDFs in the order you want with the easiest PDF merger available."
+    [breadcrumbs]="[
+      { label: 'Home', route: '/' },
+      { label: 'PDF Tools', route: '/categories/pdf' },
+      { label: 'Merge PDF' }
+    ]"
+  ></app-tool-header>
+}
 
+<div class="merge-pdf-container">
   <!-- Main Content -->
   @if (state() !== 'complete') {
     <div class="upload-section">
