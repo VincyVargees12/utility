@@ -1,0 +1,239 @@
+<app-tool-header
+  [title]="state() !== 'configure' ? 'Compress PDF file' : ''"
+  [subtitle]="state() !== 'configure' ? 'Reduce file size while optimizing for maximal PDF quality.' : ''"
+  [breadcrumbs]="[
+    { label: 'Home', route: '/' },
+    { label: 'PDF Tools', route: '/categories/pdf' },
+    { label: 'Compress PDF' }
+  ]"
+></app-tool-header>
+
+<!-- Upload State -->
+@if (state() === 'upload') {
+  <div class="max-w-4xl mx-auto px-4 pb-12">
+    <div class="flex justify-center">
+      <div class="w-full max-w-2xl">
+        <div 
+          class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-red-500 transition-colors cursor-pointer bg-white"
+          (drop)="onFileDrop($event)"
+          (dragover)="onDragOver($event)"
+          (click)="fileInput.click()">
+          
+          <div class="mb-6">
+            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+            </svg>
+          </div>
+          
+          <button class="btn btn-primary text-lg px-8 py-3 mb-4">
+            Select PDF file
+          </button>
+          
+          <p class="text-sm text-gray-500">or drop PDF here</p>
+          
+          <input 
+            #fileInput
+            type="file" 
+            accept="application/pdf"
+            class="hidden"
+            (change)="onFileInput($event)">
+        </div>
+
+        @if (errorMessage()) {
+          <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
+            {{ errorMessage() }}
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Configure State -->
+@if (state() === 'configure') {
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4">Compression Settings</h2>
+      
+      <div class="mb-6">
+        <label class="text-sm font-medium text-gray-700 mb-3 block">Compression Level:</label>
+        <div class="space-y-2">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input 
+              type="radio" 
+              [value]="'low'" 
+              [checked]="compressionLevel() === 'low'"
+              (change)="compressionLevel.set('low')"
+              name="compression-level"
+              class="rounded border-gray-300">
+            <div>
+              <div class="text-sm font-medium text-gray-900">Low Compression</div>
+              <div class="text-xs text-gray-500">Smaller file reduction, maximum quality</div>
+            </div>
+          </label>
+          
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input 
+              type="radio" 
+              [value]="'medium'" 
+              [checked]="compressionLevel() === 'medium'"
+              (change)="compressionLevel.set('medium')"
+              name="compression-level"
+              class="rounded border-gray-300">
+            <div>
+              <div class="text-sm font-medium text-gray-900">Medium Compression (Recommended)</div>
+              <div class="text-xs text-gray-500">Balanced quality and file size</div>
+            </div>
+          </label>
+          
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input 
+              type="radio" 
+              [value]="'high'" 
+              [checked]="compressionLevel() === 'high'"
+              (change)="compressionLevel.set('high')"
+              name="compression-level"
+              class="rounded border-gray-300">
+            <div>
+              <div class="text-sm font-medium text-gray-900">High Compression</div>
+              <div class="text-xs text-gray-500">Maximum file reduction, lower quality</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div class="flex gap-3">
+          <span class="material-icons text-blue-600 text-lg">info</span>
+          <div class="text-sm text-blue-900">
+            <div class="font-medium mb-1">Selected File: {{ pdfFile()?.name }}</div>
+            <div>File size: <strong>{{ formatFileSize(originalSize()) }}</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <button 
+        (click)="compressPdf()"
+        class="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+        Compress PDF
+      </button>
+
+      <button 
+        (click)="resetUpload()"
+        class="w-full mt-3 border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors">
+        Choose Another File
+      </button>
+    </div>
+  </div>
+}
+
+<!-- Processing State -->
+@if (state() === 'processing') {
+  <div class="max-w-4xl mx-auto px-4 py-8">
+    <div class="flex justify-center items-center min-h-[400px]">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
+          <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent"></div>
+        </div>
+        <h2 class="text-lg font-semibold text-gray-900 mb-2">Compressing PDF...</h2>
+        <p class="text-gray-500">This may take a moment depending on file size</p>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Complete State -->
+@if (state() === 'complete') {
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <!-- Success Header -->
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-gray-900 mb-2">PDFs have been compressed!</h2>
+      <p class="text-lg text-gray-600">Your PDF are now {{ getCompressionPercentage() }}% smaller!</p>
+    </div>
+
+    <!-- Circular Progress Indicator + File Sizes -->
+    <div class="flex flex-col items-center justify-center mb-12">
+      <div class="flex items-center gap-8 mb-8">
+        <!-- Original Size -->
+        <div class="text-center">
+          <div class="text-lg font-semibold text-gray-700 mb-2">{{ formatFileSize(originalSize()) }}</div>
+        </div>
+
+        <!-- Circular Indicator -->
+        <div class="relative w-40 h-40">
+          <svg class="w-full h-full" viewBox="0 0 140 140">
+            <!-- Background circle -->
+            <circle cx="70" cy="70" r="65" fill="none" stroke="#e5e7eb" stroke-width="8"/>
+            <!-- Progress circle -->
+            <circle 
+              cx="70" 
+              cy="70" 
+              r="65" 
+              fill="none" 
+              stroke="#ef4444" 
+              stroke-width="8"
+              [attr.stroke-dasharray]="(getCompressionPercentage() / 100) * 408.4 + ' ' + 408.4"
+              stroke-linecap="round"
+              transform="rotate(-90 70 70)"
+              style="transition: stroke-dasharray 0.5s ease"/>
+          </svg>
+          <!-- Center Text -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <div class="text-4xl font-bold text-red-500">{{ getCompressionPercentage() }}%</div>
+            <div class="text-sm text-gray-600">Reduced</div>
+          </div>
+        </div>
+
+        <!-- Compressed Size -->
+        <div class="text-center">
+          <div class="text-lg font-semibold text-green-600 mb-2">{{ formatFileSize(compressedSize()) }}</div>
+        </div>
+      </div>
+
+      <!-- File Size Text -->
+      <div class="text-center text-gray-600">
+        {{ formatFileSize(originalSize()) }} → {{ formatFileSize(compressedSize()) }}
+      </div>
+    </div>
+
+    <!-- Download Button -->
+    <div class="flex gap-3 justify-center mb-12">
+      <button 
+        (click)="downloadPdf()"
+        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-4 px-12 rounded-lg transition-colors flex items-center gap-2">
+        <span class="material-icons">download</span>
+        Download compressed PDF
+      </button>
+    </div>
+
+    <!-- Continue To Section -->
+    <div class="mb-12">
+      <h3 class="text-center text-gray-700 font-semibold mb-6">Continue to...</h3>
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <a href="/categories/pdf/merge-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all">
+          <span class="material-icons text-red-500 text-2xl">merge_type</span>
+          <span class="font-medium text-gray-700">Merge PDF</span>
+        </a>
+        <a href="/categories/pdf/split-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all">
+          <span class="material-icons text-red-500 text-2xl">cut</span>
+          <span class="font-medium text-gray-700">Split PDF</span>
+        </a>
+        <a href="/categories/pdf/compress-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all" (click)="resetUpload()">
+          <span class="material-icons text-red-500 text-2xl">compress</span>
+          <span class="font-medium text-gray-700">Compress PDF</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Security Message -->
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+      <div class="flex items-center justify-center gap-2 mb-2">
+        <span class="material-icons text-blue-600">lock</span>
+        <h4 class="font-semibold text-blue-900">Secure. Private. In your control</h4>
+      </div>
+      <p class="text-sm text-blue-800">
+        Your files are processed securely without any storage or tracking. Files are automatically deleted after processing.
+      </p>
+    </div>
+  </div>
+}

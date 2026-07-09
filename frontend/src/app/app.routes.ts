@@ -24,6 +24,16 @@ export const routes: Routes = [
     title: 'Split PDF - DataUtil'
   },
   {
+    path: 'categories/pdf/compress-pdf',
+    loadComponent: () => import('./pages/tools/pdf/compress-pdf/compress-pdf.component').then(m => m.CompressPdfComponent),
+    title: 'Compress PDF - DataUtil'
+  },
+  {
+    path: 'categories/pdf/rotate-pdf',
+    loadComponent: () => import('./pages/tools/pdf/rotate-pdf/rotate-pdf.component').then(m => m.RotatePdfComponent),
+    title: 'Rotate PDF - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
