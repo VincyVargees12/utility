@@ -34,6 +34,11 @@ export const routes: Routes = [
     title: 'Rotate PDF - DataUtil'
   },
   {
+    path: 'categories/pdf/pdf-to-word',
+    loadComponent: () => import('./pages/tools/pdf/pdf-to-word/pdf-to-word.component').then(m => m.PdfToWordComponent),
+    title: 'PDF to WORD - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'

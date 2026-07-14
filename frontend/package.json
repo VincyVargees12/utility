@@ -22,6 +22,7 @@
     "@angular/platform-server": "^22.0.0",
     "@angular/router": "^22.0.0",
     "@angular/ssr": "^22.0.5",
+    "docx": "^9.7.1",
     "express": "^5.1.0",
     "jszip": "^3.10.1",
     "ng2-pdf-viewer": "^10.4.0",
