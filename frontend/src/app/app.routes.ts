@@ -39,6 +39,11 @@ export const routes: Routes = [
     title: 'PDF to WORD - DataUtil'
   },
   {
+    path: 'categories/pdf/word-to-pdf',
+    loadComponent: () => import('./pages/tools/pdf/word-to-pdf/word-to-pdf.component').then(m => m.WordToPdfComponent),
+    title: 'Word to PDF - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
