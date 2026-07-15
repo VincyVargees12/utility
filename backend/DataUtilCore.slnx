@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="datautilcore.client/datautilcore.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="DataUtilCore.Server/DataUtilCore.Server.csproj" />
+</Solution>
