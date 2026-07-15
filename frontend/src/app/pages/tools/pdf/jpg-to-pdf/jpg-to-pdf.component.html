@@ -1,0 +1,242 @@
+<app-tool-header
+  [title]="''"
+  [subtitle]="''"
+  [breadcrumbs]="[
+    { label: 'Home', route: '/' },
+    { label: 'PDF Tools', route: '/categories/pdf' },
+    { label: 'JPG to PDF' }
+  ]"
+></app-tool-header>
+
+<!-- Upload State -->
+@if (state() === 'upload') {
+  <div class="text-center py-10 px-4">
+    <h1 class="text-4xl font-bold text-[#33333b] mb-4 tracking-tight">JPG to PDF Converter</h1>
+    <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-1">Convert your JPG or PNG images to PDF documents instantly.</p>
+    <p class="text-[15px] text-gray-500 max-w-2xl mx-auto">Upload multiple images to combine them into one PDF.</p>
+  </div>
+
+  <div class="max-w-4xl mx-auto px-4 pb-24 mt-2">
+    <div class="flex justify-center">
+      <div class="w-full max-w-2xl text-center">
+        <div 
+          class="py-6 transition-colors cursor-pointer bg-transparent"
+          (drop)="onFileDrop($event)"
+          (dragover)="onDragOver($event)">
+          
+          <div class="mb-5 flex justify-center items-center space-x-3">
+            <button class="btn bg-[#e5322d] hover:bg-red-700 text-white text-[22px] px-12 py-5 rounded-lg font-bold shadow-sm transition-transform active:scale-95" (click)="fileInput.click()">
+              Select Image files
+            </button>
+          </div>
+          
+          <p class="text-[15px] text-gray-500 mt-2">or drop images here</p>
+          
+          <input 
+            #fileInput
+            type="file" 
+            accept="image/jpeg,image/png,image/jpg"
+            multiple
+            class="hidden"
+            (change)="onFileInput($event)">
+        </div>
+
+        @if (errorMessage()) {
+          <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 font-medium inline-block">
+            {{ errorMessage() }}
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Configure State -->
+@if (state() === 'configure') {
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+      
+      <!-- Main Content Area: Image Grid -->
+      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+        
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 pt-4 pb-10 custom-scrollbar">
+          
+          @for (img of images(); track img.id) {
+            <div class="relative bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col h-48 sm:h-56">
+              <button 
+                class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                (click)="removeImage(img.id, $event)"
+                title="Remove image">
+                &times;
+              </button>
+              <div class="flex-1 p-2 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg">
+                <img [src]="img.previewUrl" class="max-h-full max-w-full object-contain shadow-sm bg-white" [alt]="img.name" />
+              </div>
+              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs font-medium text-gray-700 truncate rounded-b-lg">
+                {{ img.name }}
+              </div>
+            </div>
+          }
+          
+          <!-- Add more button -->
+          <div 
+            class="relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center h-48 sm:h-56 hover:bg-gray-100 cursor-pointer transition-colors"
+            (click)="addMoreInput.click()"
+            (drop)="onFileDrop($event)"
+            (dragover)="onDragOver($event)">
+            <div class="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mb-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </div>
+            <span class="text-sm font-medium text-gray-600">Add more</span>
+            <input 
+              #addMoreInput
+              type="file" 
+              accept="image/jpeg,image/png,image/jpg"
+              multiple
+              class="hidden"
+              (change)="onFileInput($event)">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-gray-900 border-b p-6 text-center">JPG to PDF</h3>
+        
+        <div class="flex flex-col mb-auto p-6 space-y-8">
+          
+          <!-- Page Size -->
+          <div>
+            <h4 class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">Page Size</h4>
+            <div class="grid grid-cols-2 gap-3">
+              <button 
+                class="py-3 px-2 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
+                [class.bg-[#fef2f2]]="pageSize() === 'fit'"
+                [class.border-red-500]="pageSize() === 'fit'"
+                [class.text-red-700]="pageSize() === 'fit'"
+                [class.border-gray-200]="pageSize() !== 'fit'"
+                [class.text-gray-600]="pageSize() !== 'fit'"
+                [class.hover:bg-gray-50]="pageSize() !== 'fit'"
+                (click)="pageSize.set('fit')">
+                Fit (same size)
+              </button>
+              <button 
+                class="py-3 px-2 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
+                [class.bg-[#fef2f2]]="pageSize() === 'a4'"
+                [class.border-red-500]="pageSize() === 'a4'"
+                [class.text-red-700]="pageSize() === 'a4'"
+                [class.border-gray-200]="pageSize() !== 'a4'"
+                [class.text-gray-600]="pageSize() !== 'a4'"
+                [class.hover:bg-gray-50]="pageSize() !== 'a4'"
+                (click)="pageSize.set('a4')">
+                A4 (210x297mm)
+              </button>
+            </div>
+          </div>
+
+          <!-- Margin -->
+          <div>
+            <h4 class="text-sm font-semibold text-gray-900 mb-3 uppercase tracking-wider">Margin</h4>
+            <div class="grid grid-cols-3 gap-2">
+              <button 
+                class="py-2 px-1 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
+                [class.bg-[#fef2f2]]="margin() === 'none'"
+                [class.border-red-500]="margin() === 'none'"
+                [class.text-red-700]="margin() === 'none'"
+                [class.border-gray-200]="margin() !== 'none'"
+                [class.text-gray-600]="margin() !== 'none'"
+                [class.hover:bg-gray-50]="margin() !== 'none'"
+                (click)="margin.set('none')">
+                None
+              </button>
+              <button 
+                class="py-2 px-1 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
+                [class.bg-[#fef2f2]]="margin() === 'small'"
+                [class.border-red-500]="margin() === 'small'"
+                [class.text-red-700]="margin() === 'small'"
+                [class.border-gray-200]="margin() !== 'small'"
+                [class.text-gray-600]="margin() !== 'small'"
+                [class.hover:bg-gray-50]="margin() !== 'small'"
+                (click)="margin.set('small')">
+                Small
+              </button>
+              <button 
+                class="py-2 px-1 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
+                [class.bg-[#fef2f2]]="margin() === 'big'"
+                [class.border-red-500]="margin() === 'big'"
+                [class.text-red-700]="margin() === 'big'"
+                [class.border-gray-200]="margin() !== 'big'"
+                [class.text-gray-600]="margin() !== 'big'"
+                [class.hover:bg-gray-50]="margin() !== 'big'"
+                (click)="margin.set('big')">
+                Big
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="p-6 mt-auto">
+          @if (errorMessage()) {
+            <div class="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded border border-red-100">
+              {{ errorMessage() }}
+            </div>
+          }
+          <button 
+            class="w-full btn bg-[#e5322d] hover:bg-red-700 text-white px-6 py-4 rounded font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2 transition-all active:scale-95"
+            (click)="processConversion()"
+            [disabled]="state() === 'processing' || images().length === 0">
+            Convert to PDF
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Processing State -->
+@if (state() === 'processing') {
+  <div class="max-w-4xl mx-auto px-4 py-16">
+    <div class="text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent mb-4"></div>
+      <h2 class="text-xl font-semibold text-gray-900 mb-2">Generating PDF...</h2>
+      <p class="text-gray-500">Please wait while we process your images.</p>
+    </div>
+  </div>
+}
+
+<!-- Complete State -->
+@if (state() === 'complete') {
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">Images converted to PDF!</h2>
+      <p class="text-gray-600 mb-8">Your document is ready for download.</p>
+      
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button 
+          class="btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-medium"
+          (click)="reset()">
+          Convert More
+        </button>
+        
+        <button 
+          class="btn bg-[#e5322d] hover:bg-red-700 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+          (click)="downloadResult()">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          Download PDF
+        </button>
+      </div>
+    </div>
+  </div>
+}

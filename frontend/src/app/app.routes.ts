@@ -44,6 +44,11 @@ export const routes: Routes = [
     title: 'PDF to JPG - DataUtil'
   },
   {
+    path: 'categories/pdf/jpg-to-pdf',
+    loadComponent: () => import('./pages/tools/pdf/jpg-to-pdf/jpg-to-pdf.component').then(m => m.JpgToPdfComponent),
+    title: 'JPG to PDF - DataUtil'
+  },
+  {
     path: 'categories/pdf/word-to-pdf',
     loadComponent: () => import('./pages/tools/pdf/word-to-pdf/word-to-pdf.component').then(m => m.WordToPdfComponent),
     title: 'Word to PDF - DataUtil'
