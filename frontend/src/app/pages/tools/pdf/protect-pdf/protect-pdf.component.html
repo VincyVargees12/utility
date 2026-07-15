@@ -4,16 +4,16 @@
   [breadcrumbs]="[
     { label: 'Home', route: '/' },
     { label: 'PDF Tools', route: '/categories/pdf' },
-    { label: 'Unlock PDF' }
+    { label: 'Protect PDF' }
   ]"
 ></app-tool-header>
 
 <!-- Upload State -->
 @if (state() === 'upload') {
   <div class="text-center py-10 px-4">
-    <h1 class="text-4xl font-bold text-[#33333b] mb-4 tracking-tight">Unlock PDF</h1>
-    <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-1">Remove PDF password security, granting you the freedom to use your PDFs as you want.</p>
-    <p class="text-[15px] text-gray-500 max-w-2xl mx-auto">100% free and secure.</p>
+    <h1 class="text-4xl font-bold text-[#33333b] mb-4 tracking-tight">Protect PDF file</h1>
+    <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-1">Encrypt your PDF with a password to keep sensitive data confidential.</p>
+    <p class="text-[15px] text-gray-500 max-w-2xl mx-auto">100% free, secure, and easy to use.</p>
   </div>
 
   <div class="max-w-4xl mx-auto px-4 pb-24 mt-2">
@@ -50,8 +50,8 @@
   </div>
 }
 
-<!-- Password Prompt State -->
-@if (state() === 'password') {
+<!-- Configure Password State -->
+@if (state() === 'configure') {
   <div class="max-w-4xl mx-auto px-4 py-8">
     <div class="flex flex-col items-center justify-center pt-8">
       
@@ -63,7 +63,7 @@
           &times;
         </button>
         <div class="flex-1 p-6 flex flex-col items-center justify-center bg-gray-50 rounded-t-lg text-center h-48">
-          <svg class="w-16 h-16 text-yellow-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-16 h-16 text-[#e5322d] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
           </svg>
           <p class="font-medium text-gray-800">{{ pdfFileName() }}</p>
@@ -72,11 +72,18 @@
       </div>
 
       <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-        <h3 class="text-xl font-bold text-gray-900 mb-3 text-center">This document is protected</h3>
-        <p class="text-sm text-gray-600 mb-6 text-center">Please enter the correct password to unlock the file.</p>
+        <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">Set Password</h3>
+        <p class="text-sm text-gray-600 mb-4 text-center">Enter a password to encrypt and secure your PDF document.</p>
         
-        <form (submit)="submitPassword(); $event.preventDefault()">
+        @if (errorMessage()) {
+          <div class="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium text-center">
+            {{ errorMessage() }}
+          </div>
+        }
+        
+        <form (submit)="processProtection(); $event.preventDefault()">
           <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Type password</label>
             <input 
               type="password" 
               name="password"
@@ -85,10 +92,24 @@
               class="w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-shadow"
               [class.border-red-300]="passwordError()"
               [class.border-gray-200]="!passwordError()"
-              placeholder="Enter password"
+              placeholder="Min. 4 characters"
               autocomplete="new-password"
               autofocus>
-            
+          </div>
+          
+          <div class="mb-6">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Repeat password</label>
+            <input 
+              type="password" 
+              name="repeatPassword"
+              [ngModel]="repeatPassword()" 
+              (ngModelChange)="repeatPassword.set($event)"
+              class="w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-shadow"
+              [class.border-red-300]="passwordError()"
+              [class.border-gray-200]="!passwordError()"
+              placeholder="Confirm password"
+              autocomplete="new-password">
+              
             @if (passwordError()) {
               <p class="mt-2 text-sm text-red-600 flex items-center gap-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -96,11 +117,12 @@
               </p>
             }
           </div>
+
           <button 
             type="submit"
             class="w-full btn bg-[#e5322d] hover:bg-red-700 text-white px-6 py-3 rounded-lg font-bold transition-transform active:scale-95 flex items-center justify-center gap-2">
-            Unlock PDF
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path></svg>
+            Protect PDF
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
           </button>
         </form>
       </div>
@@ -114,8 +136,8 @@
   <div class="max-w-4xl mx-auto px-4 py-16">
     <div class="text-center">
       <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent mb-4"></div>
-      <h2 class="text-xl font-semibold text-gray-900 mb-2">Unlocking Document...</h2>
-      <p class="text-gray-500">Checking password and stripping encryption.</p>
+      <h2 class="text-xl font-semibold text-gray-900 mb-2">Protecting Document...</h2>
+      <p class="text-gray-500">Encrypting your file with military-grade security.</p>
     </div>
   </div>
 }
@@ -124,20 +146,20 @@
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
     <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200">
-      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+      <div class="w-16 h-16 bg-[#e5322d] rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
+        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
         </svg>
       </div>
       
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">PDF successfully unlocked!</h2>
-      <p class="text-gray-600 mb-8">Your document is now free from password protection.</p>
+      <h2 class="text-2xl font-bold text-gray-900 mb-2">PDF successfully protected!</h2>
+      <p class="text-gray-600 mb-8">Your document is now encrypted and secured with your password.</p>
       
       <div class="flex flex-col sm:flex-row justify-center gap-4">
         <button 
           class="btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-medium"
           (click)="reset()">
-          Unlock Another
+          Protect Another
         </button>
         
         <button 

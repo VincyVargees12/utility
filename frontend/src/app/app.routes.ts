@@ -39,6 +39,11 @@ export const routes: Routes = [
     title: 'Unlock PDF - DataUtil'
   },
   {
+    path: 'categories/pdf/protect-pdf',
+    loadComponent: () => import('./pages/tools/pdf/protect-pdf/protect-pdf.component').then(m => m.ProtectPdfComponent),
+    title: 'Protect PDF - DataUtil'
+  },
+  {
     path: 'categories/pdf/pdf-to-word',
     loadComponent: () => import('./pages/tools/pdf/pdf-to-word/pdf-to-word.component').then(m => m.PdfToWordComponent),
     title: 'PDF to WORD - DataUtil'

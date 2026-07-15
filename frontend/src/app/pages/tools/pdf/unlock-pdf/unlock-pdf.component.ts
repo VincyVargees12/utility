@@ -93,36 +93,25 @@ export class UnlockPdfComponent implements OnInit {
   async checkPdfEncryption() {
     if (!this.rawPdfBuffer || typeof window === 'undefined') return;
     
-    const pdfjs = await import('pdfjs-dist');
-    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-      'pdfjs-dist/build/pdf.worker.min.mjs',
-      import.meta.url
-    ).toString();
-
-    const loadingTask = pdfjs.getDocument({ data: new Uint8Array(this.rawPdfBuffer) });
-    
-    loadingTask.onPassword = (updatePassword: (pwd: string) => void, reason: number) => {
-      // reason === 1: Document requires a password
-      // reason === 2: Incorrect password provided
-      if (reason === 1) {
-        this.passwordUpdateCallback = updatePassword;
-        this.state.set('password');
-      } else if (reason === 2) {
-        this.passwordError.set('Incorrect password. Please try again.');
-        this.state.set('password');
-      }
-    };
-
     try {
-      await loadingTask.promise;
+      const { PDFDocument } = await import('pdf-lib');
+      // Attempt to load the PDF. If it's encrypted, it will throw an EncryptedPDFError.
+      // Or if we bypass it, we can check .isEncrypted.
+      const doc = await PDFDocument.load(this.rawPdfBuffer, { ignoreEncryption: true });
       
-      // If it doesn't trigger onPassword and successfully loads...
-      this.errorMessage.set('This PDF is not password protected. No need to unlock.');
-      this.state.set('upload'); // reset
-    } catch (err: any) {
-      if (err.name !== 'PasswordException') {
-        this.errorMessage.set('Error opening PDF document.');
+      if (doc.isEncrypted) {
+        this.state.set('password');
+      } else {
+        this.errorMessage.set('This PDF is not password protected. No need to unlock.');
         this.state.set('upload');
+      }
+    } catch (err: any) {
+      if (err.message && err.message.toLowerCase().includes('encrypted')) {
+        this.state.set('password');
+      } else {
+        // Fallback: If it's severely encrypted and pdf-lib completely fails to parse, 
+        // assume it needs a password to unlock.
+        this.state.set('password');
       }
     }
   }
@@ -134,61 +123,40 @@ export class UnlockPdfComponent implements OnInit {
     }
     this.passwordError.set('');
     
-    if (this.passwordUpdateCallback) {
-      // Provide password to pdf.js
-      this.passwordUpdateCallback(this.password());
-      
-      // If password was right, onPassword won't trigger again, the promise resolves.
-      // But we need to listen locally. Instead of relying purely on onPassword, we can just test it directly again.
-      this.verifyAndProcessPassword(this.password());
-    }
+    // Process password directly through the backend
+    this.unlockAndSave(this.password());
   }
 
   async verifyAndProcessPassword(pwd: string) {
-    this.state.set('processing');
-    this.passwordError.set('');
-
-    const pdfjs = await import('pdfjs-dist');
-    const loadingTask = pdfjs.getDocument({ 
-      data: new Uint8Array(this.rawPdfBuffer!), 
-      password: pwd 
-    });
-
-    try {
-      const pdf = await loadingTask.promise;
-      // Password is correct! Now unlock it.
-      await this.unlockAndSave(pwd);
-    } catch (err: any) {
-      if (err.name === 'PasswordException') {
-        this.passwordError.set('Incorrect password. Please try again.');
-        this.state.set('password');
-      } else {
-        this.errorMessage.set('An unknown error occurred while verifying the document.');
-        this.state.set('upload');
-      }
-    }
+    // Deprecated for direct API connection
   }
 
   async unlockAndSave(validPassword: string) {
-    try {
-      // pdf-lib does not support decrypting PDFs directly in the browser right now,
-      // so a full server-side or qpdf WASM module is normally required to perfectly decrypt the structure while keeping forms/metadata.
-      // Since this is a browser-only tool suite, the workaround is to tell the user standard AES isn't fully supported client-side without an external service.
-      
-      // For demonstration in this frontend-only app, we simulate the output generation so the tool functions cohesively.
-      // In a real environment, you would POST this file + password to a backend to securely strip the encryption wrapper.
-      
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate processing
+    this.state.set('processing');
+    this.passwordError.set('');
 
-      // We fallback to just creating a clean empty PDF for the UI loop, or we could rasterize the pages via pdfjs 
-      // and inject them into a new pdf-lib document. For text retention, a backend is required.
-      const { PDFDocument } = await import('pdf-lib');
-      const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([595, 842]);
-      page.drawText('Document successfully unlocked (Simulated)', { x: 50, y: 800, size: 14 });
-      
-      const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' });
+    try {
+      const formData = new FormData();
+      formData.append('file', this.pdfFile()!);
+      formData.append('password', validPassword);
+
+      // Assumes your backend runs on https://localhost:7219
+      const response = await fetch('https://localhost:7219/api/pdf/unlock', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        if (response.status === 400 && errText.toLowerCase().includes('password')) {
+          this.passwordError.set('Incorrect password. Please try again.');
+          this.state.set('password');
+          return;
+        }
+        throw new Error(errText);
+      }
+
+      const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
       
       const a = document.createElement('a');
@@ -205,8 +173,8 @@ export class UnlockPdfComponent implements OnInit {
       this.state.set('complete');
     } catch (error) {
       console.error(error);
-      this.errorMessage.set('Failed to generate unlocked PDF.');
-      this.state.set('upload');
+      this.passwordError.set('Failed to unlock the PDF. Processing error via backend.');
+      this.state.set('password');
     }
   }
 
