@@ -44,11 +44,6 @@ export const routes: Routes = [
     title: 'Protect PDF - DataUtil'
   },
   {
-    path: 'categories/pdf/pdf-to-word',
-    loadComponent: () => import('./pages/tools/pdf/pdf-to-word/pdf-to-word.component').then(m => m.PdfToWordComponent),
-    title: 'PDF to WORD - DataUtil'
-  },
-  {
     path: 'categories/pdf/pdf-to-jpg',
     loadComponent: () => import('./pages/tools/pdf/pdf-to-jpg/pdf-to-jpg.component').then(m => m.PdfToJpgComponent),
     title: 'PDF to JPG - DataUtil'
@@ -57,11 +52,6 @@ export const routes: Routes = [
     path: 'categories/pdf/jpg-to-pdf',
     loadComponent: () => import('./pages/tools/pdf/jpg-to-pdf/jpg-to-pdf.component').then(m => m.JpgToPdfComponent),
     title: 'JPG to PDF - DataUtil'
-  },
-  {
-    path: 'categories/pdf/word-to-pdf',
-    loadComponent: () => import('./pages/tools/pdf/word-to-pdf/word-to-pdf.component').then(m => m.WordToPdfComponent),
-    title: 'Word to PDF - DataUtil'
   },
   {
     path: 'categories/:category/:toolId',

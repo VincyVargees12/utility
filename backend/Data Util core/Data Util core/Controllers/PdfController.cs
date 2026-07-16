@@ -26,7 +26,7 @@ namespace Data_Util_core.Controllers
                 memoryStream.Position = 0;
 
                 // Load the uploaded PDF document
-                using PdfDocument document = PdfReader.Open(memoryStream, PdfDocumentOpenMode.Modify);
+                using PdfSharp.Pdf.PdfDocument document = PdfReader.Open(memoryStream, PdfDocumentOpenMode.Modify);
 
                 // Setup security settings
                 var securitySettings = document.SecuritySettings;
@@ -60,10 +60,10 @@ namespace Data_Util_core.Controllers
 
                 // Load the encrypted document using Import mode.
                 // Import mode ignores document-level features like encryption when the pages are copied.
-                using PdfDocument document = PdfReader.Open(memoryStream, password ?? "", PdfDocumentOpenMode.Import);
+                using PdfSharp.Pdf.PdfDocument document = PdfReader.Open(memoryStream, password ?? "", PdfDocumentOpenMode.Import);
 
                 // Create a completely new document (which is unencrypted by default)
-                using PdfDocument outDoc = new PdfDocument();
+                using PdfSharp.Pdf.PdfDocument outDoc = new PdfSharp.Pdf.PdfDocument();
                 
                 // Copy all pages from the encrypted document to the clean document
                 for (int i = 0; i < document.PageCount; i++)
