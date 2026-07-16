@@ -59,6 +59,16 @@ export const routes: Routes = [
     title: 'Resize Image - DataUtil'
   },
   {
+    path: 'categories/images/compress-image',
+    loadComponent: () => import('./pages/tools/images/compress-image/compress-image.component').then(m => m.CompressImageComponent),
+    title: 'Compress Image - DataUtil'
+  },
+  {
+    path: 'categories/images/crop-image',
+    loadComponent: () => import('./pages/tools/images/crop-image/crop-image.component').then(m => m.CropImageComponent),
+    title: 'Crop Image - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
