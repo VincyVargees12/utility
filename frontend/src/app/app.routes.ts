@@ -54,6 +54,11 @@ export const routes: Routes = [
     title: 'JPG to PDF - DataUtil'
   },
   {
+    path: 'categories/images/resize-image',
+    loadComponent: () => import('./pages/tools/images/resize-image/resize-image.component').then(m => m.ResizeImageComponent),
+    title: 'Resize Image - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
