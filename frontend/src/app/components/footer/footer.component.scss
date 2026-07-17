@@ -1,3 +1,5 @@
+@use 'styles/variables' as *;
+
 .footer {
   background: #0f172a;
   color: #cbd5e1;
@@ -148,7 +150,7 @@
 }
 
 .heart {
-  color: #EF4444;
+  color: $accent-red;
   animation: heartbeat 1.5s ease-in-out infinite;
 }
 

@@ -1,6 +1,6 @@
 <app-tool-header
-  [title]="''"
-  [subtitle]="''"
+  [title]="'PDF to JPG Converter'"
+  [subtitle]="'Convert every page of a PDF into high-quality JPG images.'"
   [breadcrumbs]="[
     { label: 'Home', route: '/' },
     { label: 'PDF Tools', route: '/categories/pdf' },
@@ -10,45 +10,12 @@
 
 <!-- Upload State -->
 @if (state() === 'upload') {
-  
-  <div class="text-center py-10 px-4">
-    <h1 class="text-4xl font-bold text-[#33333b] mb-4 tracking-tight">PDF to JPG Converter</h1>
-    <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-1">Convert every page of a PDF into high-quality JPG images.</p>
-    <p class="text-[15px] text-gray-500 max-w-2xl mx-auto">Extract images instantly. 100% free and private.</p>
-  </div>
-
-  <div class="max-w-4xl mx-auto px-4 pb-24 mt-2">
-    <div class="flex justify-center">
-      <div class="w-full max-w-2xl text-center">
-        <div 
-          class="py-6 transition-colors cursor-pointer bg-transparent"
-          (drop)="onFileDrop($event)"
-          (dragover)="onDragOver($event)">
-          
-          <div class="mb-5 flex justify-center items-center space-x-3">
-            <button class="btn bg-blue-600 hover:bg-blue-700 text-white text-[22px] px-12 py-5 rounded-lg font-bold shadow-sm transition-transform active:scale-95" (click)="fileInput.click()">
-              Select PDF file
-            </button>
-          </div>
-          
-          <p class="text-[15px] text-gray-500 mt-2">or drop PDF here</p>
-          
-          <input 
-            #fileInput
-            type="file" 
-            accept="application/pdf"
-            class="hidden"
-            (change)="onFileInput($event)">
-        </div>
-
-        @if (errorMessage()) {
-          <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 font-medium inline-block">
-            {{ errorMessage() }}
-          </div>
-        }
-      </div>
-    </div>
-  </div>
+  <app-file-uploader
+    [buttonText]="'Select PDF file'"
+    [subtitleText]="'or drop PDF here'"
+    [errorMessage]="errorMessage()"
+    (fileSelected)="onFileSelected($event)">
+  </app-file-uploader>
 }
 
 <!-- Configure State -->
@@ -72,7 +39,7 @@
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-gray-600"></div>
               }
             </div>
-            <div class="bg-white border-t border-gray-100 p-3 text-center text-sm font-medium text-gray-700 truncate rounded-b-lg">
+            <div class="bg-white border-t border-gray-100 p-3 text-center text-sm font-medium text-primary truncate rounded-b-lg">
               {{ pdfFileName() }}
             </div>
           </div>
@@ -81,7 +48,7 @@
 
       <!-- Sidebar -->
       <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
-        <h3 class="text-xl font-bold text-gray-900 border-b p-6 text-center">PDF to JPG</h3>
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">PDF to JPG</h3>
         
         <!-- Options List -->
         <div class="flex flex-col mb-auto">
@@ -92,8 +59,8 @@
             [class.hover:bg-gray-50]="quality() !== 'normal'"
             (click)="quality.set('normal')">
             <div class="flex-1">
-              <h4 class="text-sm font-semibold mb-1" [class.text-blue-600]="quality() === 'normal'" [class.text-gray-500]="quality() !== 'normal'">Normal Quality</h4>
-              <p class="text-[13px] text-gray-600 leading-tight">Good image quality while keeping file size small. Best for screen viewing.</p>
+              <h4 class="text-sm font-semibold mb-1" [class.text-blue-600]="quality() === 'normal'" [class.text-tertiary]="quality() !== 'normal'">Normal Quality</h4>
+              <p class="text-[13px] text-secondary leading-tight">Good image quality while keeping file size small. Best for screen viewing.</p>
             </div>
             @if (quality() === 'normal') {
               <div class="ml-4 flex-shrink-0">
@@ -113,8 +80,8 @@
             [class.hover:bg-gray-50]="quality() !== 'high'"
             (click)="quality.set('high')">
             <div class="flex-1">
-              <h4 class="text-sm font-semibold mb-1" [class.text-blue-600]="quality() === 'high'" [class.text-gray-500]="quality() !== 'high'">High Quality</h4>
-              <p class="text-[13px] text-gray-600 leading-tight">Excellent image quality for printing or editing. File size will be larger.</p>
+              <h4 class="text-sm font-semibold mb-1" [class.text-blue-600]="quality() === 'high'" [class.text-tertiary]="quality() !== 'high'">High Quality</h4>
+              <p class="text-[13px] text-secondary leading-tight">Excellent image quality for printing or editing. File size will be larger.</p>
             </div>
             @if (quality() === 'high') {
               <div class="ml-4 flex-shrink-0">
@@ -130,7 +97,7 @@
 
         <div class="p-6">
           <button 
-            class="w-full btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2 transition-all active:scale-95"
+            class="w-full btn btn-primary px-6 py-4 font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2"
             (click)="processConversion()"
             [disabled]="state() === 'processing'">
             Convert to JPG
@@ -164,7 +131,7 @@
           </button>
         </div>
         <button 
-          class="w-full btn bg-[#e5322d] hover:bg-red-700 text-white px-6 py-4 rounded font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2 transition-all active:scale-95"
+          class="w-full btn btn-primary px-6 py-4 font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2"
           (click)="processConversion()"
           [disabled]="state() === 'processing'">
           Convert to JPG
@@ -180,8 +147,8 @@
   <div class="max-w-4xl mx-auto px-4 py-16">
     <div class="text-center">
       <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4"></div>
-      <h2 class="text-xl font-semibold text-gray-900 mb-2">Converting to JPG...</h2>
-      <p class="text-gray-500">Please wait while we process your file.</p>
+      <h2 class="text-xl font-semibold text-primary mb-2">Converting to JPG...</h2>
+      <p class="text-tertiary">Please wait while we process your file.</p>
     </div>
   </div>
 }
@@ -196,18 +163,18 @@
         </svg>
       </div>
       
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">PDF successfully converted to JPG!</h2>
-      <p class="text-gray-600 mb-8">Your image files are ready for download.</p>
+      <h2 class="text-2xl font-bold text-primary mb-2">PDF successfully converted to JPG!</h2>
+      <p class="text-secondary mb-8">Your image files are ready for download.</p>
       
       <div class="flex flex-col sm:flex-row justify-center gap-4">
         <button 
-          class="btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-medium"
+          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium"
           (click)="reset()">
           Convert Another
         </button>
         
         <button 
-          class="btn bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+          class="btn btn-primary px-8 py-3 flex items-center justify-center gap-2"
           (click)="downloadResult()">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>

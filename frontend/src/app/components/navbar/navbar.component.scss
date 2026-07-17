@@ -1,3 +1,5 @@
+@use 'styles/variables' as *;
+
 .navbar {
   position: sticky;
   top: 0;
@@ -313,7 +315,7 @@
   padding: 0.625rem 1.5rem;
   border-radius: 10px;
   border: none;
-  background: #ef4444;
+  background: $primary-purple;
   color: white;
   font-weight: 600;
   font-size: 0.875rem;
@@ -321,16 +323,16 @@
   transition: all 0.2s ease;
 
   &:hover {
-    background: #dc2626;
+    background: $primary-purple-light;
     transform: translateY(-1px);
   }
 }
 
 :host-context(.dark) .btn-primary {
-  background: #ef4444;
+  background: $primary-purple;
 
   &:hover {
-    background: #dc2626;
+    background: $primary-purple-light;
   }
 }
 
@@ -495,7 +497,7 @@
   padding: 0.875rem;
   border-radius: 10px;
   border: none;
-  background: #ef4444;
+  background: $primary-purple;
   color: white;
   font-weight: 600;
   font-size: 0.9rem;
@@ -503,7 +505,7 @@
   transition: all 0.2s ease;
 
   &:hover {
-    background: #dc2626;
+    background: $primary-purple-light;
   }
 }
 

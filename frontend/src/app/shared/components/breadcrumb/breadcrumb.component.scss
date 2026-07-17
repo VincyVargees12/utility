@@ -12,7 +12,7 @@
   color: $gray-400;
 
   @include dark-mode {
-    color: $primary-blue-light;
+    color: $secondary-blue-light;
   }
 }
 
@@ -22,14 +22,14 @@
   transition: color $transition-base $ease-in-out;
 
   &:hover {
-    color: $primary-blue;
+    color: $secondary-blue;
   }
 
   @include dark-mode {
-    color: $primary-blue;
+    color: $secondary-blue;
 
     &:hover {
-      color: $primary-blue-light;
+      color: $secondary-blue-light;
     }
   }
 }
@@ -39,6 +39,6 @@
   font-weight: $font-weight-semibold;
 
   @include dark-mode {
-    color: $primary-blue-light; // Lighter blue for current page - maintains theme consistency
+    color: $secondary-blue-light; // Lighter blue for current page - maintains theme consistency
   }
 }

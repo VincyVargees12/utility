@@ -14,25 +14,16 @@
 <div class="merge-pdf-container">
   <!-- Main Content -->
   @if (state() !== 'complete') {
-    <div class="upload-section">
+    <!-- <div class="upload-section"> -->
       <!-- Upload Area -->
       @if (files().length === 0) {
-        <div class="upload-zone" 
-             (drop)="onFileDrop($event)"
-             (dragover)="onDragOver($event)">
-          <div class="upload-icon">📄</div>
-          <h2>Select PDF files</h2>
-          <p>or drop PDFs here</p>
-          <input type="file" 
-                 #fileInput
-                 (change)="onFileInput($event)"
-                 accept="application/pdf"
-                 multiple
-                 hidden />
-          <button class="upload-btn" (click)="fileInput.click()">
-            Select PDF files
-          </button>
-        </div>
+        <app-file-uploader
+          [buttonText]="'Select PDF files'"
+          [subtitleText]="'or drop PDFs here'"
+          [accept]="'application/pdf'"
+          [multiple]="true"
+          (fileSelected)="onFileSelected($event)">
+        </app-file-uploader>
       }
 
       <!-- File List -->
@@ -179,7 +170,7 @@
           <button class="retry-btn" (click)="resetState()">Try Again</button>
         </div>
       }
-    </div>
+    <!-- </div> -->
   }
 
   <!-- Success / Download -->

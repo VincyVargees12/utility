@@ -10,53 +10,22 @@
 
 <!-- Upload State -->
 @if (state() === 'upload') {
-  <div class="max-w-4xl mx-auto px-4 pb-12">
-    <div class="flex justify-center">
-      <div class="w-full max-w-2xl">
-        <div 
-          class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-12 text-center hover:border-red-500 dark:hover:border-red-400 transition-colors cursor-pointer bg-white dark:bg-gray-800"
-          (drop)="onFileDrop($event)"
-          (dragover)="onDragOver($event)"
-          (click)="fileInput.click()">
-          
-          <div class="mb-6">
-            <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-            </svg>
-          </div>
-          
-          <button class="btn btn-primary text-lg px-8 py-3 mb-4">
-            Select PDF file
-          </button>
-          
-          <p class="text-sm text-gray-500">or drop PDF here</p>
-          
-          <input 
-            #fileInput
-            type="file" 
-            accept="application/pdf"
-            class="hidden"
-            (change)="onFileInput($event)">
-        </div>
-
-        @if (errorMessage()) {
-          <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
-            {{ errorMessage() }}
-          </div>
-        }
-      </div>
-    </div>
-  </div>
+  <app-file-uploader
+    [buttonText]="'Select PDF file'"
+    [subtitleText]="'or drop PDF here'"
+    [errorMessage]="errorMessage()"
+    (fileSelected)="onFileSelected($event)">
+  </app-file-uploader>
 }
 
 <!-- Configure State -->
 @if (state() === 'configure') {
   <div class="max-w-4xl mx-auto px-4 py-8">
     <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">Compression Settings</h2>
+      <h2 class="text-lg font-semibold text-primary mb-4">Compression Settings</h2>
       
       <div class="mb-6">
-        <label class="text-sm font-medium text-gray-700 mb-3 block">Compression Level:</label>
+        <label class="text-sm font-medium text-primary mb-3 block">Compression Level:</label>
         <div class="space-y-2">
           <label class="flex items-center gap-3 cursor-pointer">
             <input 
@@ -67,8 +36,8 @@
               name="compression-level"
               class="rounded border-gray-300">
             <div>
-              <div class="text-sm font-medium text-gray-900">Low Compression</div>
-              <div class="text-xs text-gray-500">Smaller file reduction, maximum quality</div>
+              <div class="text-sm font-medium text-primary">Low Compression</div>
+              <div class="text-xs text-tertiary">Smaller file reduction, maximum quality</div>
             </div>
           </label>
           
@@ -81,8 +50,8 @@
               name="compression-level"
               class="rounded border-gray-300">
             <div>
-              <div class="text-sm font-medium text-gray-900">Medium Compression (Recommended)</div>
-              <div class="text-xs text-gray-500">Balanced quality and file size</div>
+              <div class="text-sm font-medium text-primary">Medium Compression (Recommended)</div>
+              <div class="text-xs text-tertiary">Balanced quality and file size</div>
             </div>
           </label>
           
@@ -95,8 +64,8 @@
               name="compression-level"
               class="rounded border-gray-300">
             <div>
-              <div class="text-sm font-medium text-gray-900">High Compression</div>
-              <div class="text-xs text-gray-500">Maximum file reduction, lower quality</div>
+              <div class="text-sm font-medium text-primary">High Compression</div>
+              <div class="text-xs text-tertiary">Maximum file reduction, lower quality</div>
             </div>
           </label>
         </div>
@@ -120,7 +89,7 @@
 
       <button 
         (click)="resetUpload()"
-        class="w-full mt-3 border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-3 px-6 rounded-lg transition-colors">
+        class="w-full mt-3 border-2 border-gray-300 hover:border-gray-400 text-primary font-semibold py-3 px-6 rounded-lg transition-colors">
         Choose Another File
       </button>
     </div>
@@ -135,8 +104,8 @@
         <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
           <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent"></div>
         </div>
-        <h2 class="text-lg font-semibold text-gray-900 mb-2">Compressing PDF...</h2>
-        <p class="text-gray-500">This may take a moment depending on file size</p>
+        <h2 class="text-lg font-semibold text-primary mb-2">Compressing PDF...</h2>
+        <p class="text-tertiary">This may take a moment depending on file size</p>
       </div>
     </div>
   </div>
@@ -147,8 +116,8 @@
   <div class="max-w-4xl mx-auto px-4 py-12">
     <!-- Success Header -->
     <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-gray-900 mb-2">PDFs have been compressed!</h2>
-      <p class="text-lg text-gray-600">Your PDF are now {{ getCompressionPercentage() }}% smaller!</p>
+      <h2 class="text-4xl font-bold text-primary mb-2">PDFs have been compressed!</h2>
+      <p class="text-lg text-secondary">Your PDF are now {{ getCompressionPercentage() }}% smaller!</p>
     </div>
 
     <!-- Circular Progress Indicator + File Sizes -->
@@ -156,7 +125,7 @@
       <div class="flex items-center gap-8 mb-8">
         <!-- Original Size -->
         <div class="text-center">
-          <div class="text-lg font-semibold text-gray-700 mb-2">{{ formatFileSize(originalSize()) }}</div>
+          <div class="text-lg font-semibold text-primary mb-2">{{ formatFileSize(originalSize()) }}</div>
         </div>
 
         <!-- Circular Indicator -->
@@ -180,7 +149,7 @@
           <!-- Center Text -->
           <div class="absolute inset-0 flex flex-col items-center justify-center">
             <div class="text-4xl font-bold text-red-500">{{ getCompressionPercentage() }}%</div>
-            <div class="text-sm text-gray-600">Reduced</div>
+            <div class="text-sm text-secondary">Reduced</div>
           </div>
         </div>
 
@@ -191,7 +160,7 @@
       </div>
 
       <!-- File Size Text -->
-      <div class="text-center text-gray-600">
+      <div class="text-center text-secondary">
         {{ formatFileSize(originalSize()) }} → {{ formatFileSize(compressedSize()) }}
       </div>
     </div>
@@ -200,7 +169,7 @@
     <div class="flex gap-3 justify-center mb-12">
       <button 
         (click)="downloadPdf()"
-        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-4 px-12 rounded-lg transition-colors flex items-center gap-2">
+        class="btn btn-primary py-4 px-12 flex items-center gap-2">
         <span class="material-icons">download</span>
         Download compressed PDF
       </button>
@@ -208,19 +177,19 @@
 
     <!-- Continue To Section -->
     <div class="mb-12">
-      <h3 class="text-center text-gray-700 font-semibold mb-6">Continue to...</h3>
+      <h3 class="text-center text-primary font-semibold mb-6">Continue to...</h3>
       <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
         <a href="/categories/pdf/merge-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all">
           <span class="material-icons text-red-500 text-2xl">merge_type</span>
-          <span class="font-medium text-gray-700">Merge PDF</span>
+          <span class="font-medium text-primary">Merge PDF</span>
         </a>
         <a href="/categories/pdf/split-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all">
           <span class="material-icons text-red-500 text-2xl">cut</span>
-          <span class="font-medium text-gray-700">Split PDF</span>
+          <span class="font-medium text-primary">Split PDF</span>
         </a>
         <a href="/categories/pdf/compress-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all" (click)="resetUpload()">
           <span class="material-icons text-red-500 text-2xl">compress</span>
-          <span class="font-medium text-gray-700">Compress PDF</span>
+          <span class="font-medium text-primary">Compress PDF</span>
         </a>
       </div>
     </div>

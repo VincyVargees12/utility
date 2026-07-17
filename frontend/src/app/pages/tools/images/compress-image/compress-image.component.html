@@ -1,6 +1,6 @@
 <app-tool-header
-  [title]="''"
-  [subtitle]="''"
+  [title]="'Compress IMAGE'"
+  [subtitle]="'Compress JPG, PNG, SVG or GIF with the best quality and compression.'"
   [breadcrumbs]="[
     { label: 'Home', route: '/' },
     { label: 'Image Tools', route: '/categories/images' },
@@ -10,45 +10,14 @@
 
 <!-- Upload State -->
 @if (state() === 'upload') {
-  <div class="text-center py-10 px-4">
-    <h1 class="text-4xl font-bold text-[#33333b] mb-4 tracking-tight">Compress IMAGE</h1>
-    <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-1">Compress JPG, PNG, SVG or GIF with the best quality and compression.</p>
-    <p class="text-[15px] text-gray-500 max-w-2xl mx-auto">Reduce the filesize of your images at once.</p>
-  </div>
-
-  <div class="max-w-4xl mx-auto px-4 pb-24 mt-2">
-    <div class="flex justify-center">
-      <div class="w-full max-w-2xl text-center">
-        <div 
-          class="py-6 transition-colors cursor-pointer bg-transparent"
-          (drop)="onFileDrop($event)"
-          (dragover)="onDragOver($event)">
-          
-          <div class="mb-5 flex justify-center items-center space-x-3">
-            <button class="btn bg-blue-500 hover:bg-blue-600 text-white text-[22px] px-12 py-5 rounded-lg font-bold shadow-sm transition-transform active:scale-95" (click)="fileInput.click()">
-              Select images
-            </button>
-          </div>
-          
-          <p class="text-[15px] text-gray-500 mt-2">or drop images here</p>
-          
-          <input 
-            #fileInput
-            type="file" 
-            accept="image/*"
-            multiple
-            class="hidden"
-            (change)="onFileInput($event)">
-        </div>
-
-        @if (errorMessage()) {
-          <div class="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 font-medium inline-block">
-            {{ errorMessage() }}
-          </div>
-        }
-      </div>
-    </div>
-  </div>
+  <app-file-uploader
+    [buttonText]="'Select images'"
+    [subtitleText]="'or drop images here'"
+    [accept]="'image/*'"
+    [multiple]="true"
+    [errorMessage]="errorMessage()"
+    (fileSelected)="onFileSelected($event)">
+  </app-file-uploader>
 }
 
 <!-- Configure State -->
@@ -90,7 +59,7 @@
             <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-500 flex items-center justify-center mb-2">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             </div>
-            <span class="text-sm font-medium text-gray-600">Add more</span>
+            <span class="text-sm font-medium text-secondary">Add more</span>
             <input 
               #addMoreInput
               type="file" 
@@ -105,7 +74,7 @@
 
       <!-- Sidebar -->
       <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
-        <h3 class="text-xl font-bold text-gray-900 border-b p-6 text-center bg-gray-50">Compression level</h3>
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center bg-gray-50">Compression level</h3>
         
         <div class="flex flex-col mb-auto p-4 gap-3">
           
@@ -129,8 +98,8 @@
               }
             </div>
             <div>
-              <h4 class="font-bold text-gray-900 mb-1" [class.text-blue-700]="compressionLevel() === 'extreme'">Extreme compression</h4>
-              <p class="text-[13px] text-gray-600 leading-tight">Less quality, high compression.</p>
+              <h4 class="font-bold text-primary mb-1" [class.text-blue-700]="compressionLevel() === 'extreme'">Extreme compression</h4>
+              <p class="text-[13px] text-secondary leading-tight">Less quality, high compression.</p>
             </div>
           </button>
 
@@ -154,8 +123,8 @@
               }
             </div>
             <div>
-              <h4 class="font-bold text-gray-900 mb-1" [class.text-blue-700]="compressionLevel() === 'recommended'">Recommended compression</h4>
-              <p class="text-[13px] text-gray-600 leading-tight">Good quality, good compression.</p>
+              <h4 class="font-bold text-primary mb-1" [class.text-blue-700]="compressionLevel() === 'recommended'">Recommended compression</h4>
+              <p class="text-[13px] text-secondary leading-tight">Good quality, good compression.</p>
             </div>
           </button>
 
@@ -179,8 +148,8 @@
               }
             </div>
             <div>
-              <h4 class="font-bold text-gray-900 mb-1" [class.text-blue-700]="compressionLevel() === 'less'">Less compression</h4>
-              <p class="text-[13px] text-gray-600 leading-tight">High quality, less compression.</p>
+              <h4 class="font-bold text-primary mb-1" [class.text-blue-700]="compressionLevel() === 'less'">Less compression</h4>
+              <p class="text-[13px] text-secondary leading-tight">High quality, less compression.</p>
             </div>
           </button>
 
@@ -188,7 +157,7 @@
 
         <div class="p-6 mt-auto">
           <button 
-            class="w-full btn bg-blue-500 hover:bg-blue-600 text-white px-6 py-4 rounded font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2 transition-all active:scale-95"
+            class="w-full btn btn-primary px-6 py-4 font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2"
             (click)="processCompression()"
             [disabled]="state() === 'processing' || images().length === 0">
             Compress IMAGES
@@ -206,8 +175,8 @@
   <div class="max-w-4xl mx-auto px-4 py-16">
     <div class="text-center">
       <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4"></div>
-      <h2 class="text-xl font-semibold text-gray-900 mb-2">Compressing Images...</h2>
-      <p class="text-gray-500">Please wait while we reduce your file sizes.</p>
+      <h2 class="text-xl font-semibold text-primary mb-2">Compressing Images...</h2>
+      <p class="text-tertiary">Please wait while we reduce your file sizes.</p>
     </div>
   </div>
 }
@@ -222,18 +191,18 @@
         </svg>
       </div>
       
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Images Compressed!</h2>
-      <p class="text-gray-600 mb-6">You saved <strong>{{ formatBytes(savedBytes()) }}</strong> by compressing these files.</p>
+      <h2 class="text-2xl font-bold text-primary mb-2">Images Compressed!</h2>
+      <p class="text-secondary mb-6">You saved <strong>{{ formatBytes(savedBytes()) }}</strong> by compressing these files.</p>
       
       <div class="flex flex-col sm:flex-row justify-center gap-4">
         <button 
-          class="btn bg-gray-100 hover:bg-gray-200 text-gray-800 px-8 py-3 rounded-lg font-medium"
+          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium"
           (click)="reset()">
           Compress More
         </button>
         
         <button 
-          class="btn bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+          class="btn btn-primary px-8 py-3 flex items-center justify-center gap-2"
           (click)="downloadResult()">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>

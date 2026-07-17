@@ -8,15 +8,16 @@
 // Color Palette
 // -----------------------------------------------------
 
-// Primary Colors
-$primary-blue: #3b82f6;           // Blue 500 - Primary brand color
-$primary-blue-light: #60a5fa;     // Blue 400 - Hover states
-$primary-blue-dark: #2563eb;      // Blue 600 - Active states
-$primary-blue-lighter: #93c5fd;   // Blue 300 - Subtle accents
+// Primary Colors - Dark Bluish Purple (Logo Color)
+$primary-purple: #5B21B6;          // Purple 700 - Primary brand color (dark bluish purple)
+$primary-purple-light: #7C3AED;    // Purple 600 - Hover states
+$primary-purple-dark: #4C1D95;     // Purple 800 - Active states
+$primary-purple-lighter: #8B5CF6;  // Purple 500 - Subtle accents
 
-// Secondary Colors
-$secondary-purple: #8b5cf6;       // Violet 500
-$secondary-purple-light: #a78bfa; // Violet 400
+// Secondary Colors - Mild Blue
+$secondary-blue: #3B82F6;          // Blue 500 - Secondary color (mild blue)
+$secondary-blue-light: #60A5FA;    // Blue 400 - Light variant
+$secondary-blue-dark: #2563EB;     // Blue 600 - Dark variant
 
 // Accent Colors
 $accent-green: #10b981;           // Emerald 500 - Success
@@ -61,9 +62,9 @@ $border-dark: $gray-700;
 
 // Link Colors
 $link-light: $gray-600;
-$link-light-hover: $primary-blue;
-$link-dark: $primary-blue;
-$link-dark-hover: $primary-blue-light;
+$link-light-hover: $secondary-blue;
+$link-dark: $secondary-blue;
+$link-dark-hover: $secondary-blue-light;
 
 // -----------------------------------------------------
 // Typography
@@ -281,12 +282,12 @@ $footer-padding: $spacing-3xl $spacing-lg;
 // Primary Button
 @mixin btn-primary {
   @include btn-base;
-  background-color: $primary-blue;
+  background-color: $primary-purple;
   color: white;
   padding: $btn-padding-md;
   
   &:hover:not(:disabled) {
-    background-color: $primary-blue-dark;
+    background-color: $primary-purple-light;
   }
   
   &:active:not(:disabled) {
@@ -318,7 +319,7 @@ $footer-padding: $spacing-3xl $spacing-lg;
 
 // Focus Ring
 @mixin focus-ring {
-  outline: 2px solid $primary-blue;
+  outline: 2px solid $primary-purple;
   outline-offset: 2px;
 }
 

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
+import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { SeoService } from '../../../../services/seo.service';
 
 type AppState = 'upload' | 'password' | 'processing' | 'complete';
@@ -9,7 +10,7 @@ type AppState = 'upload' | 'password' | 'processing' | 'complete';
 @Component({
   selector: 'app-unlock-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent],
   templateUrl: './unlock-pdf.component.html',
   styleUrl: './unlock-pdf.component.scss'
 })
@@ -40,25 +41,10 @@ export class UnlockPdfComponent implements OnInit {
     });
   }
 
-  onFileInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.loadPdfFile(input.files[0]);
+  onFileSelected(files: FileList): void {
+    if (files && files[0]) {
+      this.loadPdfFile(files[0]);
     }
-  }
-
-  onFileDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    if (event.dataTransfer?.files && event.dataTransfer.files[0]) {
-      this.loadPdfFile(event.dataTransfer.files[0]);
-    }
-  }
-
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
   }
 
   formatBytes(bytes: number, decimals = 2): string {

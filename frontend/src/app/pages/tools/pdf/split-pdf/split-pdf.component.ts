@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PDFDocument } from 'pdf-lib';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
+import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { SeoService } from '../../../../services/seo.service';
 
 type SplitMode = 'range' | 'fixed' | 'pages';
@@ -25,7 +26,7 @@ interface PageRange {
 @Component({
   selector: 'app-split-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent],
   templateUrl: './split-pdf.component.html',
   styleUrl: './split-pdf.component.scss'
 })
@@ -62,25 +63,10 @@ export class SplitPdfComponent implements OnInit {
     });
   }
 
-  onFileInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.loadPdfFile(input.files[0]);
+  onFileSelected(files: FileList): void {
+    if (files && files[0]) {
+      this.loadPdfFile(files[0]);
     }
-  }
-
-  onFileDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    if (event.dataTransfer?.files && event.dataTransfer.files[0]) {
-      this.loadPdfFile(event.dataTransfer.files[0]);
-    }
-  }
-
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
   }
 
   async loadPdfFile(file: File): Promise<void> {

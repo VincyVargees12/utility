@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PDFDocument } from 'pdf-lib';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
+import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { SeoService } from '../../../../services/seo.service';
 
 interface PdfFile {
@@ -29,7 +30,8 @@ type ProcessingState = 'idle' | 'processing' | 'complete' | 'error';
     CommonModule,
     FormsModule,
     DragDropModule,
-    ToolHeaderComponent
+    ToolHeaderComponent,
+    FileUploaderComponent
   ],
   templateUrl: './merge-pdf.component.html',
   styleUrls: ['./merge-pdf.component.scss']
@@ -57,28 +59,10 @@ export class MergePdfComponent implements OnInit {
     });
   }
 
-  onFileInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files) {
-      this.handleFiles(Array.from(input.files));
+  onFileSelected(files: FileList): void {
+    if (files) {
+      this.handleFiles(Array.from(files));
     }
-  }
-
-  onFileDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    if (event.dataTransfer?.files) {
-      const pdfFiles = Array.from(event.dataTransfer.files).filter(
-        file => file.type === 'application/pdf'
-      );
-      this.handleFiles(pdfFiles);
-    }
-  }
-
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
   }
 
   async handleFiles(newFiles: File[]): Promise<void> {

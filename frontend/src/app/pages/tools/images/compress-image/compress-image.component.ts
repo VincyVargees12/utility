@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
+import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { SeoService } from '../../../../services/seo.service';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
@@ -18,7 +19,7 @@ interface ImageItem {
 @Component({
   selector: 'app-compress-image',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent],
   templateUrl: './compress-image.component.html',
   styleUrl: './compress-image.component.scss'
 })
@@ -53,24 +54,10 @@ export class CompressImageComponent implements OnInit {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 
-  onFileInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.loadImages(Array.from(input.files));
+  onFileSelected(files: FileList): void {
+    if (files && files.length > 0) {
+      this.loadImages(Array.from(files));
     }
-  }
-
-  onFileDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
-      this.loadImages(Array.from(event.dataTransfer.files));
-    }
-  }
-
-  onDragOver(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
   }
 
   loadImages(files: File[]): void {
