@@ -81,8 +81,14 @@ export class ProtectPdfComponent implements OnInit {
         this.state.set('configure');
       })
       .catch((error) => {
-        console.error('PDF validation error:', error);
-        this.errorMessage.set('Failed to validate PDF. Please try another file.');
+        console.warn('PDF validation skipped:', error);
+        // Fallback: if validation fails for technical reasons (e.g., worker loading),
+        // still allow the file to proceed. Backend will catch locked PDFs.
+        this.pdfFile.set(file);
+        this.pdfFileName.set(file.name);
+        this.pdfFileSize.set(this.formatBytes(file.size));
+        this.errorMessage.set('');
+        this.state.set('configure');
       });
   }
 
@@ -91,10 +97,16 @@ export class ProtectPdfComponent implements OnInit {
       const arrayBuffer = await file.arrayBuffer();
       const pdfjs = await import('pdfjs-dist');
       
-      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-        'pdfjs-dist/build/pdf.worker.min.mjs',
-        import.meta.url
-      ).toString();
+      // Try to set worker source with fallback paths for production
+      try {
+        pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+          'pdfjs-dist/build/pdf.worker.min.mjs',
+          import.meta.url
+        ).toString();
+      } catch (e) {
+        // Fallback for production builds where import.meta.url might not resolve correctly
+        pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+      }
 
       const loadingTask = pdfjs.getDocument({ 
         data: new Uint8Array(arrayBuffer),
