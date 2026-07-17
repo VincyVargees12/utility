@@ -1,3 +1,7 @@
+/* Theme Variables & Utilities */
+@use 'styles/variables' as *;
+@use 'styles/utilities';
+
 /* Tailwind CSS */
 @tailwind base;
 @tailwind components;

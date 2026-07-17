@@ -1,0 +1,338 @@
+// =====================================================
+// Theme Variables - DataUtil
+// =====================================================
+// This file contains all theme variables used throughout the application.
+// Import this file in component SCSS files: @import 'styles/variables';
+
+// -----------------------------------------------------
+// Color Palette
+// -----------------------------------------------------
+
+// Primary Colors
+$primary-blue: #3b82f6;           // Blue 500 - Primary brand color
+$primary-blue-light: #60a5fa;     // Blue 400 - Hover states
+$primary-blue-dark: #2563eb;      // Blue 600 - Active states
+$primary-blue-lighter: #93c5fd;   // Blue 300 - Subtle accents
+
+// Secondary Colors
+$secondary-purple: #8b5cf6;       // Violet 500
+$secondary-purple-light: #a78bfa; // Violet 400
+
+// Accent Colors
+$accent-green: #10b981;           // Emerald 500 - Success
+$accent-red: #ef4444;             // Red 500 - Error/Danger
+$accent-yellow: #f59e0b;          // Amber 500 - Warning
+$accent-orange: #f97316;          // Orange 500
+
+// Neutral Colors (Light Mode)
+$gray-50: #f8fafc;
+$gray-100: #f1f5f9;
+$gray-200: #e2e8f0;
+$gray-300: #cbd5e1;
+$gray-400: #94a3b8;
+$gray-500: #64748b;
+$gray-600: #475569;
+$gray-700: #334155;
+$gray-800: #1e293b;
+$gray-900: #0f172a;
+
+// Background Colors
+$bg-light: $gray-50;
+$bg-light-elevated: #ffffff;
+$bg-dark: $gray-900;
+$bg-dark-elevated: #1e293b;
+
+// Text Colors (Light Mode)
+$text-primary-light: $gray-900;
+$text-secondary-light: $gray-600;
+$text-tertiary-light: $gray-500;
+
+// Text Colors (Dark Mode)
+// Note: Avoid using pure white or $gray-100 for links/buttons in dark mode
+// as it breaks the blue theme consistency. Use blue tones instead.
+// Reserve light grays only for body text and non-interactive content.
+$text-primary-dark: $gray-100;
+$text-secondary-dark: $gray-300;
+$text-tertiary-dark: $gray-400;
+
+// Border Colors
+$border-light: $gray-200;
+$border-dark: $gray-700;
+
+// Link Colors
+$link-light: $gray-600;
+$link-light-hover: $primary-blue;
+$link-dark: $primary-blue;
+$link-dark-hover: $primary-blue-light;
+
+// -----------------------------------------------------
+// Typography
+// -----------------------------------------------------
+
+$font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-mono: 'Fira Code', 'Courier New', monospace;
+
+// Font Sizes
+$font-size-xs: 0.75rem;      // 12px
+$font-size-sm: 0.875rem;     // 14px
+$font-size-base: 1rem;       // 16px
+$font-size-lg: 1.125rem;     // 18px
+$font-size-xl: 1.25rem;      // 20px
+$font-size-2xl: 1.5rem;      // 24px
+$font-size-3xl: 1.875rem;    // 30px
+$font-size-4xl: 2.25rem;     // 36px
+$font-size-5xl: 3rem;        // 48px
+
+// Font Weights
+$font-weight-light: 300;
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+$font-weight-black: 900;
+
+// Line Heights
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+$line-height-loose: 2;
+
+// -----------------------------------------------------
+// Spacing
+// -----------------------------------------------------
+
+$spacing-xs: 0.25rem;    // 4px
+$spacing-sm: 0.5rem;     // 8px
+$spacing-md: 1rem;       // 16px
+$spacing-lg: 1.5rem;     // 24px
+$spacing-xl: 2rem;       // 32px
+$spacing-2xl: 3rem;      // 48px
+$spacing-3xl: 4rem;      // 64px
+$spacing-4xl: 6rem;      // 96px
+$spacing-5xl: 8rem;      // 128px
+
+// -----------------------------------------------------
+// Border Radius
+// -----------------------------------------------------
+
+$radius-sm: 0.25rem;     // 4px
+$radius-md: 0.375rem;    // 6px
+$radius-lg: 0.5rem;      // 8px
+$radius-xl: 0.75rem;     // 12px
+$radius-2xl: 1rem;       // 16px
+$radius-3xl: 1.5rem;     // 24px
+$radius-full: 9999px;    // Fully rounded
+
+// -----------------------------------------------------
+// Shadows
+// -----------------------------------------------------
+
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+$shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+
+// Dark Mode Shadows
+$shadow-dark-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+$shadow-dark-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+$shadow-dark-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+$shadow-dark-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.5);
+
+// -----------------------------------------------------
+// Transitions
+// -----------------------------------------------------
+
+$transition-fast: 150ms;
+$transition-base: 200ms;
+$transition-slow: 300ms;
+$transition-slower: 500ms;
+
+$ease-in: cubic-bezier(0.4, 0, 1, 1);
+$ease-out: cubic-bezier(0, 0, 0.2, 1);
+$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+// -----------------------------------------------------
+// Z-Index Scale
+// -----------------------------------------------------
+
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+
+// -----------------------------------------------------
+// Breakpoints (Match Tailwind defaults)
+// -----------------------------------------------------
+
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+$breakpoint-2xl: 1536px;
+
+// -----------------------------------------------------
+// Container Max Widths
+// -----------------------------------------------------
+
+$container-sm: 640px;
+$container-md: 768px;
+$container-lg: 1024px;
+$container-xl: 1280px;
+$container-2xl: 1536px;
+
+// -----------------------------------------------------
+// Component-Specific Variables
+// -----------------------------------------------------
+
+// Buttons
+$btn-padding-sm: $spacing-sm $spacing-md;
+$btn-padding-md: $spacing-md $spacing-lg;
+$btn-padding-lg: $spacing-lg $spacing-xl;
+$btn-border-radius: $radius-lg;
+$btn-transition: all $transition-base $ease-in-out;
+
+// Cards
+$card-padding: $spacing-lg;
+$card-border-radius: $radius-xl;
+$card-shadow: $shadow-md;
+$card-shadow-hover: $shadow-lg;
+
+// Input Fields
+$input-padding: $spacing-md;
+$input-border-radius: $radius-lg;
+$input-border-width: 1px;
+$input-transition: all $transition-base $ease-in-out;
+
+// Navbar
+$navbar-height: 64px;
+$navbar-padding: $spacing-md $spacing-lg;
+$navbar-shadow: $shadow-sm;
+
+// Footer
+$footer-padding: $spacing-3xl $spacing-lg;
+
+// -----------------------------------------------------
+// Mixins
+// -----------------------------------------------------
+
+// Responsive Typography
+@mixin heading-1 {
+  font-size: $font-size-4xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-3xl;
+  }
+}
+
+@mixin heading-2 {
+  font-size: $font-size-3xl;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-2xl;
+  }
+}
+
+@mixin heading-3 {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-normal;
+  
+  @media (max-width: $breakpoint-md) {
+    font-size: $font-size-xl;
+  }
+}
+
+// Dark Mode Mixin
+@mixin dark-mode {
+  :host-context(.dark) & {
+    @content;
+  }
+}
+
+// Button Base
+@mixin btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-medium;
+  border-radius: $btn-border-radius;
+  transition: $btn-transition;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  text-decoration: none;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// Primary Button
+@mixin btn-primary {
+  @include btn-base;
+  background-color: $primary-blue;
+  color: white;
+  padding: $btn-padding-md;
+  
+  &:hover:not(:disabled) {
+    background-color: $primary-blue-dark;
+  }
+  
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+}
+
+// Card Base
+@mixin card {
+  background-color: white;
+  border-radius: $card-border-radius;
+  padding: $card-padding;
+  box-shadow: $card-shadow;
+  transition: box-shadow $transition-base $ease-in-out;
+  
+  @include dark-mode {
+    background-color: $bg-dark-elevated;
+    box-shadow: $shadow-dark-md;
+  }
+  
+  &:hover {
+    box-shadow: $card-shadow-hover;
+    
+    @include dark-mode {
+      box-shadow: $shadow-dark-lg;
+    }
+  }
+}
+
+// Focus Ring
+@mixin focus-ring {
+  outline: 2px solid $primary-blue;
+  outline-offset: 2px;
+}
+
+// Truncate Text
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Line Clamp
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

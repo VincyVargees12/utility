@@ -64,11 +64,6 @@
         }
       </button>
 
-      <!-- Login -->
-      <button class="btn-text desktop-only">Login</button>
-
-      <!-- Sign up -->
-      <button class="btn-primary desktop-only">Sign up</button>
 
       <!-- Mobile Menu Toggle -->
       <button class="icon-btn mobile-only" (click)="toggleMobileMenu()" aria-label="Menu">
@@ -109,10 +104,6 @@
           <a [routerLink]="item.route" class="mobile-link" (click)="closeMobileMenu()">{{ item.label }}</a>
         }
       }
-      <div class="mobile-actions">
-        <button class="btn-text-mobile">Login</button>
-        <button class="btn-primary-mobile">Sign up</button>
-      </div>
     </div>
   }
 </nav>

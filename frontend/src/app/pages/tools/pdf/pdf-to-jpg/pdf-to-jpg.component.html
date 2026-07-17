@@ -26,7 +26,7 @@
           (dragover)="onDragOver($event)">
           
           <div class="mb-5 flex justify-center items-center space-x-3">
-            <button class="btn bg-[#e5322d] hover:bg-red-700 text-white text-[22px] px-12 py-5 rounded-lg font-bold shadow-sm transition-transform active:scale-95" (click)="fileInput.click()">
+            <button class="btn bg-blue-600 hover:bg-blue-700 text-white text-[22px] px-12 py-5 rounded-lg font-bold shadow-sm transition-transform active:scale-95" (click)="fileInput.click()">
               Select PDF file
             </button>
           </div>
@@ -60,7 +60,7 @@
         <div class="flex flex-col items-center justify-center pt-8">
           <div class="relative w-56 bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col">
             <button 
-              class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20"
+              class="absolute -top-3 -right-3 bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
               (click)="reset()"
               title="Remove file">
               &times;
@@ -92,7 +92,7 @@
             [class.hover:bg-gray-50]="quality() !== 'normal'"
             (click)="quality.set('normal')">
             <div class="flex-1">
-              <h4 class="text-sm font-semibold mb-1" [class.text-red-500]="quality() === 'normal'" [class.text-gray-500]="quality() !== 'normal'">Normal Quality</h4>
+              <h4 class="text-sm font-semibold mb-1" [class.text-blue-600]="quality() === 'normal'" [class.text-gray-500]="quality() !== 'normal'">Normal Quality</h4>
               <p class="text-[13px] text-gray-600 leading-tight">Good image quality while keeping file size small. Best for screen viewing.</p>
             </div>
             @if (quality() === 'normal') {
@@ -113,7 +113,7 @@
             [class.hover:bg-gray-50]="quality() !== 'high'"
             (click)="quality.set('high')">
             <div class="flex-1">
-              <h4 class="text-sm font-semibold mb-1" [class.text-red-500]="quality() === 'high'" [class.text-gray-500]="quality() !== 'high'">High Quality</h4>
+              <h4 class="text-sm font-semibold mb-1" [class.text-blue-600]="quality() === 'high'" [class.text-gray-500]="quality() !== 'high'">High Quality</h4>
               <p class="text-[13px] text-gray-600 leading-tight">Excellent image quality for printing or editing. File size will be larger.</p>
             </div>
             @if (quality() === 'high') {
@@ -130,7 +130,7 @@
 
         <div class="p-6">
           <button 
-            class="w-full btn bg-[#e5322d] hover:bg-red-700 text-white px-6 py-4 rounded font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2 transition-all active:scale-95"
+            class="w-full btn bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2 transition-all active:scale-95"
             (click)="processConversion()"
             [disabled]="state() === 'processing'">
             Convert to JPG
@@ -179,7 +179,7 @@
 @if (state() === 'processing') {
   <div class="max-w-4xl mx-auto px-4 py-16">
     <div class="text-center">
-      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent mb-4"></div>
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4"></div>
       <h2 class="text-xl font-semibold text-gray-900 mb-2">Converting to JPG...</h2>
       <p class="text-gray-500">Please wait while we process your file.</p>
     </div>
@@ -207,7 +207,7 @@
         </button>
         
         <button 
-          class="btn bg-[#e5322d] hover:bg-red-700 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
+          class="btn bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium flex items-center justify-center gap-2"
           (click)="downloadResult()">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>

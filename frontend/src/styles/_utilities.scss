@@ -1,0 +1,638 @@
+// =====================================================
+// Utility Classes - DataUtil
+// =====================================================
+// This file contains reusable utility classes for common patterns.
+// These classes complement Tailwind CSS with app-specific utilities.
+
+@use 'variables' as *;
+@use 'sass:color';
+
+// -----------------------------------------------------
+// Typography Utilities
+// -----------------------------------------------------
+
+.text-gradient {
+  background: linear-gradient(135deg, $primary-blue 0%, $secondary-purple 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+// -----------------------------------------------------
+// Button Utilities
+// -----------------------------------------------------
+
+.btn-primary {
+  @include btn-primary;
+}
+
+.btn-secondary {
+  @include btn-base;
+  background-color: $gray-200;
+  color: $gray-900;
+  padding: $btn-padding-md;
+  
+  &:hover:not(:disabled) {
+    background-color: $gray-300;
+  }
+  
+  @include dark-mode {
+    background-color: $gray-700;
+    color: $gray-100;
+    
+    &:hover:not(:disabled) {
+      background-color: $gray-600;
+    }
+  }
+}
+
+.btn-outline {
+  @include btn-base;
+  background-color: transparent;
+  color: $primary-blue;
+  padding: $btn-padding-md;
+  border: 2px solid $primary-blue;
+  
+  &:hover:not(:disabled) {
+    background-color: $primary-blue;
+    color: white;
+  }
+  
+  @include dark-mode {
+    color: $primary-blue-light;
+    border-color: $primary-blue-light;
+    
+    &:hover:not(:disabled) {
+      background-color: $primary-blue-light;
+      color: $gray-900;
+    }
+  }
+}
+
+.btn-ghost {
+  @include btn-base;
+  background-color: transparent;
+  color: $gray-700;
+  padding: $btn-padding-md;
+  
+  &:hover:not(:disabled) {
+    background-color: $gray-100;
+  }
+  
+  @include dark-mode {
+    color: $gray-300;
+    
+    &:hover:not(:disabled) {
+      background-color: $gray-800;
+    }
+  }
+}
+
+.btn-sm {
+  padding: $btn-padding-sm !important;
+  font-size: $font-size-sm;
+}
+
+.btn-lg {
+  padding: $btn-padding-lg !important;
+  font-size: $font-size-lg;
+}
+
+// -----------------------------------------------------
+// Card Utilities
+// -----------------------------------------------------
+
+.card {
+  @include card;
+}
+
+.card-flat {
+  @include card;
+  box-shadow: none;
+  border: 1px solid $border-light;
+  
+  @include dark-mode {
+    border-color: $border-dark;
+  }
+  
+  &:hover {
+    box-shadow: none;
+  }
+}
+
+.card-interactive {
+  @include card;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// -----------------------------------------------------
+// Container Utilities
+// -----------------------------------------------------
+
+.container-custom {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: $spacing-lg;
+  padding-right: $spacing-lg;
+  
+  @media (min-width: $breakpoint-sm) {
+    max-width: $container-sm;
+  }
+  
+  @media (min-width: $breakpoint-md) {
+    max-width: $container-md;
+  }
+  
+  @media (min-width: $breakpoint-lg) {
+    max-width: $container-lg;
+    padding-left: $spacing-xl;
+    padding-right: $spacing-xl;
+  }
+  
+  @media (min-width: $breakpoint-xl) {
+    max-width: $container-xl;
+  }
+  
+  @media (min-width: $breakpoint-2xl) {
+    max-width: $container-2xl;
+  }
+}
+
+// -----------------------------------------------------
+// Link Utilities
+// -----------------------------------------------------
+
+.link-primary {
+  color: $link-light;
+  text-decoration: none;
+  transition: color $transition-base $ease-in-out;
+  
+  &:hover {
+    color: $link-light-hover;
+  }
+  
+  @include dark-mode {
+    color: $link-dark;
+    
+    &:hover {
+      color: $link-dark-hover;
+    }
+  }
+}
+
+.link-underline {
+  @extend .link-primary;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+// -----------------------------------------------------
+// Badge Utilities
+// -----------------------------------------------------
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: $spacing-xs $spacing-sm;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  border-radius: $radius-full;
+  white-space: nowrap;
+}
+
+.badge-primary {
+  @extend .badge;
+  background-color: rgba($primary-blue, 0.1);
+  color: $primary-blue;
+  
+  @include dark-mode {
+    background-color: rgba($primary-blue-light, 0.2);
+    color: $primary-blue-light;
+  }
+}
+
+.badge-success {
+  @extend .badge;
+  background-color: rgba($accent-green, 0.1);
+  color: $accent-green;
+  
+  @include dark-mode {
+    background-color: rgba($accent-green, 0.2);
+    color: color.scale($accent-green, $lightness: 16.5%);
+  }
+}
+
+.badge-warning {
+  @extend .badge;
+  background-color: rgba($accent-yellow, 0.1);
+  color: $accent-yellow;
+  
+  @include dark-mode {
+    background-color: rgba($accent-yellow, 0.2);
+    color: color.scale($accent-yellow, $lightness: 20%);
+  }
+}
+
+.badge-danger {
+  @extend .badge;
+  background-color: rgba($accent-red, 0.1);
+  color: $accent-red;
+  
+  @include dark-mode {
+    background-color: rgba($accent-red, 0.2);
+    color: color.scale($accent-red, $lightness: 25%);
+  }
+}
+
+// -----------------------------------------------------
+// Input Utilities
+// -----------------------------------------------------
+
+.input-field {
+  width: 100%;
+  padding: $input-padding;
+  font-size: $font-size-base;
+  font-family: $font-family-base;
+  border: $input-border-width solid $border-light;
+  border-radius: $input-border-radius;
+  background-color: white;
+  color: $text-primary-light;
+  transition: $input-transition;
+  outline: none;
+  
+  &:focus {
+    border-color: $primary-blue;
+    box-shadow: 0 0 0 3px rgba($primary-blue, 0.1);
+  }
+  
+  &::placeholder {
+    color: $text-tertiary-light;
+  }
+  
+  &:disabled {
+    background-color: $gray-100;
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  @include dark-mode {
+    background-color: $bg-dark-elevated;
+    border-color: $border-dark;
+    color: $text-primary-dark;
+    
+    &:focus {
+      border-color: $primary-blue-light;
+      box-shadow: 0 0 0 3px rgba($primary-blue-light, 0.1);
+    }
+    
+    &::placeholder {
+      color: $text-tertiary-dark;
+    }
+    
+    &:disabled {
+      background-color: $gray-800;
+    }
+  }
+}
+
+.input-error {
+  border-color: $accent-red !important;
+  
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($accent-red, 0.1) !important;
+  }
+}
+
+// -----------------------------------------------------
+// Divider Utilities
+// -----------------------------------------------------
+
+.divider {
+  height: 1px;
+  background-color: $border-light;
+  border: none;
+  margin: $spacing-lg 0;
+  
+  @include dark-mode {
+    background-color: $border-dark;
+  }
+}
+
+.divider-vertical {
+  width: 1px;
+  height: 100%;
+  background-color: $border-light;
+  
+  @include dark-mode {
+    background-color: $border-dark;
+  }
+}
+
+// -----------------------------------------------------
+// Loading Utilities
+// -----------------------------------------------------
+
+.spinner {
+  border: 2px solid rgba($primary-blue, 0.2);
+  border-top-color: $primary-blue;
+  border-radius: $radius-full;
+  animation: spin 0.8s linear infinite;
+}
+
+.spinner-sm {
+  @extend .spinner;
+  width: 16px;
+  height: 16px;
+}
+
+.spinner-md {
+  @extend .spinner;
+  width: 24px;
+  height: 24px;
+}
+
+.spinner-lg {
+  @extend .spinner;
+  width: 32px;
+  height: 32px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// -----------------------------------------------------
+// Skeleton Loader
+// -----------------------------------------------------
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    $gray-200 0%,
+    $gray-300 50%,
+    $gray-200 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: $radius-md;
+  
+  @include dark-mode {
+    background: linear-gradient(
+      90deg,
+      $gray-800 0%,
+      $gray-700 50%,
+      $gray-800 100%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// -----------------------------------------------------
+// Visibility Utilities
+// -----------------------------------------------------
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.not-sr-only {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+// -----------------------------------------------------
+// Text Utilities
+// -----------------------------------------------------
+
+.truncate-text {
+  @include truncate;
+}
+
+.line-clamp-1 {
+  @include line-clamp(1);
+}
+
+.line-clamp-2 {
+  @include line-clamp(2);
+}
+
+.line-clamp-3 {
+  @include line-clamp(3);
+}
+
+// -----------------------------------------------------
+// Scroll Utilities
+// -----------------------------------------------------
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.scrollbar-thin {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $gray-100;
+    border-radius: $radius-full;
+    
+    @include dark-mode {
+      background: $gray-800;
+    }
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $gray-400;
+    border-radius: $radius-full;
+    
+    &:hover {
+      background: $gray-500;
+    }
+    
+    @include dark-mode {
+      background: $gray-600;
+      
+      &:hover {
+        background: $gray-500;
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------
+// Layout Utilities
+// -----------------------------------------------------
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-start {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+// -----------------------------------------------------
+// Aspect Ratio Utilities
+// -----------------------------------------------------
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+// -----------------------------------------------------
+// Glassmorphism Effect
+// -----------------------------------------------------
+
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  
+  @include dark-mode {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+// -----------------------------------------------------
+// Focus Visible Utilities
+// -----------------------------------------------------
+
+.focus-ring {
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+// -----------------------------------------------------
+// Transition Utilities
+// -----------------------------------------------------
+
+.transition-all {
+  transition: all $transition-base $ease-in-out;
+}
+
+.transition-colors {
+  transition: color $transition-base $ease-in-out,
+              background-color $transition-base $ease-in-out,
+              border-color $transition-base $ease-in-out;
+}
+
+.transition-transform {
+  transition: transform $transition-base $ease-in-out;
+}
+
+// -----------------------------------------------------
+// Hover Effects
+// -----------------------------------------------------
+
+.hover-lift {
+  transition: transform $transition-base $ease-out;
+  
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.hover-scale {
+  transition: transform $transition-base $ease-out;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.hover-brightness {
+  transition: filter $transition-base $ease-out;
+  
+  &:hover {
+    filter: brightness(1.1);
+  }
+}

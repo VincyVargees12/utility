@@ -14,13 +14,13 @@
     <div class="flex justify-center">
       <div class="w-full max-w-2xl">
         <div 
-          class="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:border-red-500 transition-colors cursor-pointer bg-white"
+          class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-12 text-center hover:border-red-500 dark:hover:border-red-400 transition-colors cursor-pointer bg-white dark:bg-gray-800"
           (drop)="onFileDrop($event)"
           (dragover)="onDragOver($event)"
           (click)="fileInput.click()">
           
           <div class="mb-6">
-            <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="mx-auto h-16 w-16 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
             </svg>
           </div>
@@ -29,7 +29,7 @@
             Select PDF file
           </button>
           
-          <p class="text-sm text-gray-500">or drop PDF here</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">or drop PDF here</p>
           
           <input 
             #fileInput
@@ -308,16 +308,16 @@
               <div class="flex gap-2 mb-4">
                 <button 
                   class="flex-1 py-1.5 px-3 rounded-md border-2 text-sm font-medium transition-colors"
-                  [class.border-red-500]="rangeMode() === 'custom'"
-                  [class.bg-red-500]="rangeMode() === 'custom'"
+                  [class.border-blue-500]="rangeMode() === 'custom'"
+                  [class.bg-blue-50]="rangeMode() === 'custom'"
                   [class.text-white]="rangeMode() === 'custom'"
                   [class.border-gray-300]="rangeMode() !== 'custom'"
                   [class.text-gray-700]="rangeMode() !== 'custom'"
                   (click)="setRangeMode('custom')">Custom</button>
                 <button 
                   class="flex-1 py-1.5 px-3 rounded-md border-2 text-sm font-medium transition-colors hover:border-gray-400"
-                  [class.border-red-500]="rangeMode() === 'fixed'"
-                  [class.bg-red-500]="rangeMode() === 'fixed'"
+                  [class.border-blue-500]="rangeMode() === 'fixed'"
+                  [class.bg-blue-50]="rangeMode() === 'fixed'"
                   [class.text-white]="rangeMode() === 'fixed'"
                   [class.border-gray-300]="rangeMode() !== 'fixed'"
                   [class.text-gray-700]="rangeMode() !== 'fixed'"
@@ -336,7 +336,7 @@
                       </div>
                       @if (ranges().length > 1) {
                         <button 
-                          class="text-gray-400 hover:text-red-500 transition-colors"
+                          class="text-gray-400 hover:text-blue-500 transition-colors"
                           (click)="removeRange(range.id)">
                           <span class="material-icons text-lg">close</span>
                         </button>
@@ -372,7 +372,7 @@
                 }
 
                 <button 
-                  class="w-full py-2 border-2 border-dashed border-red-400 text-red-500 rounded-lg hover:bg-red-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
+                  class="w-full py-2 border-2 border-dashed border-blue-400 text-blue-600 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors flex items-center justify-center gap-2 text-sm font-medium"
                   (click)="addRange()">
                   <span class="material-icons text-base">add</span>
                   <span>Add Range</span>
@@ -455,9 +455,9 @@
               <div class="flex gap-2 mb-4">
                 <button 
                   class="flex-1 py-2 rounded-lg border-2 transition-colors"
-                  [class.border-red-500]="extractMode() === 'all'"
-                  [class.bg-red-50]="extractMode() === 'all'"
-                  [class.text-red-700]="extractMode() === 'all'"
+                  [class.border-blue-500]="extractMode() === 'all'"
+                  [class.bg-blue-50]="extractMode() === 'all'"
+                  [class.text-blue-700]="extractMode() === 'all'"
                   [class.border-gray-200]="extractMode() !== 'all'"
                   [class.text-gray-700]="extractMode() !== 'all'"
                   (click)="setExtractMode('all')">
@@ -465,9 +465,9 @@
                 </button>
                 <button 
                   class="flex-1 py-2 rounded-lg border-2 transition-colors"
-                  [class.border-red-500]="extractMode() === 'select'"
-                  [class.bg-red-50]="extractMode() === 'select'"
-                  [class.text-red-700]="extractMode() === 'select'"
+                  [class.border-blue-500]="extractMode() === 'select'"
+                  [class.bg-blue-50]="extractMode() === 'select'"
+                  [class.text-blue-700]="extractMode() === 'select'"
                   [class.border-gray-200]="extractMode() !== 'select'"
                   [class.text-gray-700]="extractMode() !== 'select'"
                   (click)="setExtractMode('select')">

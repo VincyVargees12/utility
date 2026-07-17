@@ -1,38 +1,44 @@
+@use 'styles/variables' as *;
+
 .breadcrumb {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 0;
-  font-size: 0.875rem;
+  gap: $spacing-sm;
+  padding: $spacing-md 0;
+  font-size: $font-size-sm;
 }
 
 .separator {
-  color: #94a3b8;
-}
+  color: $gray-400;
 
-.breadcrumb-link {
-  color: #64748b;
-  text-decoration: none;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: #3b82f6;
+  @include dark-mode {
+    color: $primary-blue-light;
   }
 }
 
-:host-context(.dark) .breadcrumb-link {
-  color: #94a3b8;
+.breadcrumb-link {
+  color: $text-secondary-light;
+  text-decoration: none;
+  transition: color $transition-base $ease-in-out;
 
   &:hover {
-    color: #60a5fa;
+    color: $primary-blue;
+  }
+
+  @include dark-mode {
+    color: $primary-blue;
+
+    &:hover {
+      color: $primary-blue-light;
+    }
   }
 }
 
 .breadcrumb-current {
-  color: #1e293b;
-  font-weight: 600;
-}
+  color: $text-primary-light;
+  font-weight: $font-weight-semibold;
 
-:host-context(.dark) .breadcrumb-current {
-  color: #f1f5f9;
+  @include dark-mode {
+    color: $primary-blue-light; // Lighter blue for current page - maintains theme consistency
+  }
 }
