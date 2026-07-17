@@ -1,0 +1,164 @@
+<div class="w-full">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full pr-0 lg:pr-[380px]">
+        <!-- Title and Subtitle -->
+        <div class="mb-8">
+          <h1 class="text-4xl font-bold text-primary mb-3">Word Counter & Text Analyzer</h1>
+          <p class="text-lg text-secondary">Count words, characters, sentences, and calculate reading time. Upload files or paste content.</p>
+        </div>
+
+        <!-- Text Input Area -->
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+        <!-- Input Header -->
+        <div class="border-b border-gray-200 px-6 py-4 bg-gray-50">
+          <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
+        </div>
+
+        <!-- Textarea -->
+        <div class="p-6">
+          <textarea
+            [value]="text()"
+            (input)="text.set($event.target.value); onTextChange()"
+            placeholder="Start typing or paste your content here... You can also upload a file below."
+            class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+          ></textarea>
+        </div>
+
+        <!-- File Upload Area -->
+        <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
+          <div class="flex items-center gap-4">
+            <label class="flex-1">
+              <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
+                <p class="text-xs text-secondary">Supported: .txt, .md</p>
+                <input
+                  type="file"
+                  accept=".txt,.md"
+                  (change)="onFileSelected($event)"
+                  class="hidden"
+                >
+              </div>
+            </label>
+            <button
+              (click)="clearText()"
+              class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium text-sm"
+            >
+              🗑️ Clear
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Stats Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
+        <!-- Words Card -->
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-6 text-center">
+          <p class="text-xs font-semibold text-blue-600 mb-2">WORDS</p>
+          <p class="text-3xl font-bold text-blue-900">{{ stats().words }}</p>
+        </div>
+
+        <!-- Sentences Card -->
+        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-6 text-center">
+          <p class="text-xs font-semibold text-green-600 mb-2">SENTENCES</p>
+          <p class="text-3xl font-bold text-green-900">{{ stats().sentences }}</p>
+        </div>
+
+        <!-- Paragraphs Card -->
+        <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-6 text-center">
+          <p class="text-xs font-semibold text-purple-600 mb-2">PARAGRAPHS</p>
+          <p class="text-3xl font-bold text-purple-900">{{ stats().paragraphs }}</p>
+        </div>
+
+        <!-- Reading Time Card -->
+        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200 p-6 text-center">
+          <p class="text-xs font-semibold text-orange-600 mb-2">READING TIME</p>
+          <p class="text-2xl font-bold text-orange-900">{{ stats().readingTime }}</p>
+          <p class="text-xs text-orange-700 mt-1">(~200 wpm)</p>
+        </div>
+
+        <!-- Chars with Spaces Card -->
+        <div class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-lg border border-pink-200 p-6 text-center">
+          <p class="text-xs font-semibold text-pink-600 mb-2">CHARACTERS (WITH SPACES)</p>
+          <p class="text-3xl font-bold text-pink-900">{{ stats().charactersWithSpaces }}</p>
+        </div>
+
+        <!-- Chars without Spaces Card -->
+        <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg border border-indigo-200 p-6 text-center">
+          <p class="text-xs font-semibold text-indigo-600 mb-2">CHARACTERS (WITHOUT SPACES)</p>
+          <p class="text-3xl font-bold text-indigo-900">{{ stats().charactersWithoutSpaces }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fixed Right Sidebar -->
+    <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+      <h3 class="text-lg font-bold text-primary border-b p-6 text-center sticky top-0 bg-white">📊 Statistics</h3>
+      
+      <div class="p-6 flex-1 overflow-y-auto">
+        <div class="grid grid-cols-2 gap-3">
+          <!-- Words Card -->
+          <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-4 text-center">
+            <p class="text-xs font-semibold text-blue-600 mb-2">WORDS</p>
+            <p class="text-2xl font-bold text-blue-900">{{ stats().words }}</p>
+          </div>
+
+          <!-- Sentences Card -->
+          <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-4 text-center">
+            <p class="text-xs font-semibold text-green-600 mb-2">SENTENCES</p>
+            <p class="text-2xl font-bold text-green-900">{{ stats().sentences }}</p>
+          </div>
+
+          <!-- Paragraphs Card -->
+          <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-4 text-center">
+            <p class="text-xs font-semibold text-purple-600 mb-2">PARAGRAPHS</p>
+            <p class="text-2xl font-bold text-purple-900">{{ stats().paragraphs }}</p>
+          </div>
+
+          <!-- Reading Time Card -->
+          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200 p-4 text-center">
+            <p class="text-xs font-semibold text-orange-600 mb-2">READING TIME</p>
+            <p class="text-2xl font-bold text-orange-900">{{ stats().readingTime }}</p>
+          </div>
+
+          <!-- Chars with Spaces Card -->
+          <div class="bg-gradient-to-br from-pink-50 to-pink-100 rounded-lg border border-pink-200 p-4 text-center">
+            <p class="text-xs font-semibold text-pink-600 mb-2">CHARACTERS (WITH SPACES)</p>
+            <p class="text-2xl font-bold text-pink-900">{{ stats().charactersWithSpaces }}</p>
+          </div>
+
+          <!-- Chars without Spaces Card -->
+          <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg border border-indigo-200 p-4 text-center">
+            <p class="text-xs font-semibold text-indigo-600 mb-2">CHARACTERS (WITHOUT SPACES)</p>
+            <p class="text-2xl font-bold text-indigo-900">{{ stats().charactersWithoutSpaces }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 space-y-3 mt-auto">
+        <button
+          (click)="copyStats()"
+          class="w-full px-4 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium text-sm"
+        >
+          📋 Copy Stats
+        </button>
+        <button
+          (click)="downloadStats()"
+          class="w-full px-4 py-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-medium text-sm"
+        >
+          ⬇️ Download Report
+        </button>
+      </div>
+
+      <!-- Info Box -->
+      <div class="border-t border-gray-200 px-6 py-4">
+        <p class="text-xs text-secondary leading-relaxed">
+          <strong>💡 Tip:</strong> Paste your content or upload a file to instantly see word count, reading time, character count, and more analytics.
+        </p>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>

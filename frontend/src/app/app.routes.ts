@@ -114,6 +114,21 @@ export const routes: Routes = [
     title: 'Convert to WebP - DataUtil'
   },
   {
+    path: 'categories/text/word-counter',
+    loadComponent: () => import('./pages/tools/text/word-counter/word-counter.component').then(m => m.WordCounterComponent),
+    title: 'Word Counter - DataUtil'
+  },
+  {
+    path: 'categories/text/character-counter',
+    loadComponent: () => import('./pages/tools/text/character-counter/character-counter.component').then(m => m.CharacterCounterComponent),
+    title: 'Character Counter - DataUtil'
+  },
+  {
+    path: 'categories/text/case-converter',
+    loadComponent: () => import('./pages/tools/text/case-converter/case-converter.component').then(m => m.CaseConverterComponent),
+    title: 'Case Converter - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
