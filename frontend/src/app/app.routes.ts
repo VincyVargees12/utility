@@ -109,6 +109,11 @@ export const routes: Routes = [
     title: 'Remove Background - DataUtil'
   },
   {
+    path: 'categories/images/to-webp',
+    loadComponent: () => import('./pages/tools/images/to-webp/to-webp.component').then(m => m.ToWebpComponent),
+    title: 'Convert to WebP - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'

@@ -49,7 +49,7 @@ export const TOOLS_REGISTRY: Record<string, ToolCategory> = {
       { id: 'convert-image', name: 'Convert Image', description: 'Convert between JPG, PNG, WebP, GIF, and other formats.', icon: '🔄', route: '/categories/images/convert-image', category: 'convert' },
       { id: 'png-to-jpg', name: 'PNG to JPG', description: 'Convert PNG images to JPG format with optional quality settings.', icon: '🖼️', route: '/categories/images/png-to-jpg', category: 'convert' },
       { id: 'jpg-to-png', name: 'JPG to PNG', description: 'Convert JPG images to PNG format for transparency support.', icon: '🌄', route: '/categories/images/jpg-to-png', category: 'convert' },
-      { id: 'webp-converter', name: 'WebP Converter', description: 'Convert images to/from WebP format for better web performance.', icon: '⚡', route: '/categories/images/webp-converter', category: 'convert' },
+      { id: 'to-webp', name: 'Convert to WebP', description: 'Convert any image format to WebP for better compression and web performance.', icon: '⚡', route: '/categories/images/to-webp', category: 'convert' },
       { id: 'remove-bg', name: 'Remove Background', description: 'Automatically remove image backgrounds with AI precision.', icon: '🎭', route: '/categories/images/remove-bg', category: 'edit' },
       { id: 'watermark', name: 'Add Watermark', description: 'Add text or image watermarks to protect your images.', icon: '©️', route: '/categories/images/watermark', category: 'edit' },
       { id: 'image-filter', name: 'Image Filters', description: 'Apply filters and effects to enhance your images.', icon: '🎨', route: '/categories/images/filters', category: 'edit' }
