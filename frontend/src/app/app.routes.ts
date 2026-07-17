@@ -69,6 +69,16 @@ export const routes: Routes = [
     title: 'Crop Image - DataUtil'
   },
   {
+    path: 'categories/images/rotate-image',
+    loadComponent: () => import('./pages/tools/images/rotate-image/rotate-image.component').then(m => m.RotateImageComponent),
+    title: 'Rotate Image - DataUtil'
+  },
+  {
+    path: 'categories/images/flip-image',
+    loadComponent: () => import('./pages/tools/images/flip-image/flip-image.component').then(m => m.FlipImageComponent),
+    title: 'Flip Image - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'

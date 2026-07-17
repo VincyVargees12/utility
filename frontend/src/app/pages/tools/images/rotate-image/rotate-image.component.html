@@ -1,0 +1,163 @@
+<app-tool-header
+  [title]="state() === 'upload' ? 'Rotate Image' : ''"
+  [subtitle]="state() === 'upload' ? 'Rotate images by 90°, 180°, 270° or any custom angle. Quick and easy!' : ''"
+  [breadcrumbs]="[
+    { label: 'Home', route: '/' },
+    { label: 'Image Tools', route: '/categories/images' },
+    { label: 'Rotate Image' }
+  ]"
+></app-tool-header>
+
+<!-- Upload State -->
+@if (state() === 'upload') {
+  <app-file-uploader
+    [buttonText]="'Select images'"
+    [subtitleText]="'or drop images here'"
+    [accept]="'image/*'"
+    [multiple]="true"
+    [errorMessage]="errorMessage()"
+    (fileSelected)="onFileSelected($event)">
+  </app-file-uploader>
+}
+
+<!-- Configure State -->
+@if (state() === 'configure') {
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+          @for (img of images(); track img.id) {
+            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col">
+              <button 
+                class="absolute -top-2 -right-2 bg-white border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-red-600 hover:border-red-600 dark:hover:text-red-400 dark:hover:border-red-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                (click)="removeImage(img.id, $event)"
+                title="Remove image">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+              
+              <!-- Hover Rotation Icons -->
+              <div class="absolute inset-0 bg-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center space-x-4 pointer-events-none">
+                <button 
+                  class="bg-gray-800/80 hover:bg-gray-800 text-white p-2 rounded-full cursor-pointer transition-colors backdrop-blur-sm pointer-events-auto"
+                  (click)="rotateImageLeft(img.id)"
+                  title="Rotate Left">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+                </button>
+                <button 
+                  class="bg-gray-800/80 hover:bg-gray-800 text-white p-2 rounded-full cursor-pointer transition-colors backdrop-blur-sm pointer-events-auto"
+                  (click)="rotateImageRight(img.id)"
+                  title="Rotate Right">
+                  <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path></svg>
+                </button>
+              </div>
+
+              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
+                <div class="transition-transform duration-300 transform" [style.transform]="'rotate(' + img.rotation + 'deg)'">
+                  <img [src]="img.previewUrl" class="max-h-40 object-contain shadow-sm bg-white" [alt]="img.name" />
+                </div>
+              </div>
+              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg">
+                {{ img.name }}
+              </div>
+            </div>
+          }
+
+          <button 
+            class="w-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex flex-col items-center justify-center text-tertiary hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white dark:bg-gray-800 min-h-[260px]"
+            (click)="fileInputAdd.click()">
+            <div class="bg-blue-50 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center mb-2 font-bold text-2xl pb-1">
+              +
+            </div>
+            <span class="text-sm font-medium border border-blue-600 text-blue-600 rounded-full px-2 py-0.5 mt-2 bg-blue-50/50">Add more images</span>
+            <input 
+              #fileInputAdd
+              type="file" 
+              accept="image/*"
+              multiple
+              class="hidden"
+              (change)="onFileInput($event)">
+          </button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Rotate Image</h3>
+        
+        <div class="p-6 bg-blue-50/50 border-b border-gray-100">
+          <div class="flex space-x-2 text-blue-700 bg-blue-100/50 p-3 rounded text-sm">
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span>Mouse over image and a rotate icon will appear, click on the arrows to rotate images.</span>
+          </div>
+        </div>
+
+        <div class="px-6 pb-6 mt-4">
+          <h4 class="text-sm font-bold text-primary mb-4">Rotation</h4>
+          <div class="flex flex-col gap-3">
+            <button 
+              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100"
+              (click)="rotateRight()">
+              <div class="bg-blue-500 text-white p-3 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path></svg>
+              </div>
+              <span class="px-4 text-sm font-bold text-secondary tracking-wide">RIGHT</span>
+            </button>
+            <button 
+              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100"
+              (click)="rotateLeft()">
+              <div class="bg-blue-500 text-white p-3 flex items-center justify-center">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
+              </div>
+              <span class="px-4 text-sm font-bold text-secondary tracking-wide">LEFT</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6 mt-auto">
+          <button 
+            class="w-full btn btn-primary px-6 py-4 font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2"
+            (click)="processImages()"
+            [disabled]="images().length === 0 || isProcessing()">
+            @if (isProcessing()) {
+              <span>Processing...</span>
+            } @else {
+              <span>Download Rotated Images</span>
+            }
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Processing State -->
+@if (state() === 'processing') {
+  <div class="max-w-4xl mx-auto px-4 py-16">
+    <div class="text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4"></div>
+      <h2 class="text-xl font-semibold text-primary mb-2">Rotating Images...</h2>
+      <p class="text-tertiary">Please wait while we process your files.</p>
+    </div>
+  </div>
+}
+
+<!-- Complete State -->
+@if (state() === 'complete') {
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="text-center">
+      <div class="inline-block rounded-full bg-green-100 p-4 mb-4">
+        <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-primary mb-2">Success!</h2>
+      <p class="text-secondary mb-8">Your images have been rotated and downloaded.</p>
+      
+      <button class="btn btn-primary px-8 py-3" (click)="reset()">
+        Rotate More Images
+      </button>
+    </div>
+  </div>
+}
