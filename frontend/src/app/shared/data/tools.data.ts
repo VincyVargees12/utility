@@ -46,6 +46,7 @@ export const TOOLS_REGISTRY: Record<string, ToolCategory> = {
       { id: 'crop-image', name: 'Crop Image', description: 'Crop images to remove unwanted areas. Free crop or fixed aspect ratios.', icon: '✂️', route: '/categories/images/crop-image', category: 'edit' },
       { id: 'rotate-image', name: 'Rotate Image', description: 'Rotate images by any angle. Quick 90° rotation or custom angles.', icon: '🔄', route: '/categories/images/rotate-image', category: 'edit' },
       { id: 'flip-image', name: 'Flip Image', description: 'Flip images horizontally or vertically. Mirror effect tool.', icon: '🔃', route: '/categories/images/flip-image', category: 'edit' },
+      { id: 'convert-image', name: 'Convert Image', description: 'Convert between JPG, PNG, WebP, GIF, and other formats.', icon: '🔄', route: '/categories/images/convert-image', category: 'convert' },
       { id: 'png-to-jpg', name: 'PNG to JPG', description: 'Convert PNG images to JPG format with optional quality settings.', icon: '🖼️', route: '/categories/images/png-to-jpg', category: 'convert' },
       { id: 'jpg-to-png', name: 'JPG to PNG', description: 'Convert JPG images to PNG format for transparency support.', icon: '🌄', route: '/categories/images/jpg-to-png', category: 'convert' },
       { id: 'webp-converter', name: 'WebP Converter', description: 'Convert images to/from WebP format for better web performance.', icon: '⚡', route: '/categories/images/webp-converter', category: 'convert' },

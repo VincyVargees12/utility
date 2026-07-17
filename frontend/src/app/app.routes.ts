@@ -79,6 +79,16 @@ export const routes: Routes = [
     title: 'Flip Image - DataUtil'
   },
   {
+    path: 'categories/images/png-to-jpg',
+    loadComponent: () => import('./pages/tools/images/png-to-jpg/png-to-jpg.component').then(m => m.PngToJpgComponent),
+    title: 'PNG to JPG - DataUtil'
+  },
+  {
+    path: 'categories/images/convert-image',
+    loadComponent: () => import('./pages/tools/images/convert-image/convert-image.component').then(m => m.ConvertImageComponent),
+    title: 'Convert Image - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
