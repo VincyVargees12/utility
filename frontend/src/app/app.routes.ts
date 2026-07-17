@@ -84,9 +84,29 @@ export const routes: Routes = [
     title: 'PNG to JPG - DataUtil'
   },
   {
+    path: 'categories/images/jpg-to-png',
+    loadComponent: () => import('./pages/tools/images/jpg-to-png/jpg-to-png.component').then(m => m.JpgToPngComponent),
+    title: 'JPG to PNG - DataUtil'
+  },
+  {
     path: 'categories/images/convert-image',
     loadComponent: () => import('./pages/tools/images/convert-image/convert-image.component').then(m => m.ConvertImageComponent),
     title: 'Convert Image - DataUtil'
+  },
+  {
+    path: 'categories/images/watermark',
+    loadComponent: () => import('./pages/tools/images/watermark/watermark.component').then(m => m.WatermarkComponent),
+    title: 'Add Watermark - DataUtil'
+  },
+  {
+    path: 'categories/images/remove-background',
+    loadComponent: () => import('./pages/tools/images/remove-background/remove-background.component').then(m => m.RemoveBackgroundComponent),
+    title: 'Remove Background - DataUtil'
+  },
+  {
+    path: 'categories/images/remove-bg',
+    loadComponent: () => import('./pages/tools/images/remove-background/remove-background.component').then(m => m.RemoveBackgroundComponent),
+    title: 'Remove Background - DataUtil'
   },
   {
     path: 'categories/:category/:toolId',

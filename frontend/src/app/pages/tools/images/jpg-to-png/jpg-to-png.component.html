@@ -1,0 +1,187 @@
+<app-tool-header
+  [title]="state() === 'upload' ? 'JPG to PNG Converter' : ''"
+  [subtitle]="state() === 'upload' ? 'Convert JPG images to PNG format with full transparency support.' : ''"
+  [breadcrumbs]="[
+    { label: 'Home', route: '/' },
+    { label: 'Image Tools', route: '/categories/images' },
+    { label: 'JPG to PNG' }
+  ]"
+></app-tool-header>
+
+<!-- Upload State -->
+@if (state() === 'upload') {
+  <app-file-uploader
+    [buttonText]="'Select JPG files'"
+    [subtitleText]="'or drop JPG files here'"
+    [accept]="'image/jpeg'"
+    [multiple]="true"
+    [errorMessage]="errorMessage()"
+    (fileSelected)="onFileSelected($event)">
+  </app-file-uploader>
+}
+
+<!-- Configure State -->
+@if (state() === 'configure') {
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+        <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+          @for (img of images(); track img.id) {
+            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col">
+              <button 
+                class="absolute -top-2 -right-2 bg-white border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-red-600 hover:border-red-600 dark:hover:text-red-400 dark:hover:border-red-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                (click)="removeImage(img.id, $event)"
+                title="Remove image">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+
+              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
+                <img [src]="img.previewUrl" class="max-h-40 object-contain shadow-sm bg-white" [alt]="img.name" />
+              </div>
+              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg">
+                {{ img.name }}
+              </div>
+            </div>
+          }
+
+          <button 
+            class="w-48 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg flex flex-col items-center justify-center text-tertiary hover:border-blue-500 dark:hover:border-blue-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors bg-white dark:bg-gray-800 min-h-[260px]"
+            (click)="fileInputAdd.click()">
+            <div class="bg-blue-50 text-blue-600 w-10 h-10 rounded-full flex items-center justify-center mb-2 font-bold text-2xl pb-1">
+              +
+            </div>
+            <span class="text-sm font-medium border border-blue-600 text-blue-600 rounded-full px-2 py-0.5 mt-2 bg-blue-50/50">Add more images</span>
+            <input 
+              #fileInputAdd
+              type="file" 
+              accept="image/jpeg"
+              multiple
+              class="hidden"
+              (change)="onFileInput($event)">
+          </button>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">JPG to PNG</h3>
+        
+        <div class="px-6 pb-6 mt-4">
+          <h4 class="text-sm font-bold text-primary mb-4">Conversion Quality</h4>
+          <div class="flex flex-col gap-3">
+            <!-- Low Quality -->
+            <button
+              class="flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="quality() === 'low'"
+              [class.border-blue-500]="quality() === 'low'"
+              [class.hover:bg-gray-50]="quality() !== 'low'"
+              [class.border-gray-200]="quality() !== 'low'"
+              (click)="quality.set('low')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="quality() === 'low'" [class.text-secondary]="quality() !== 'low'">Low Quality</span>
+                  <span class="text-xs px-2 py-0.5 bg-yellow-100 text-yellow-700 rounded">Smallest</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">More compression, smaller file size</p>
+              </div>
+              @if (quality() === 'low') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+
+            <!-- Medium Quality -->
+            <button
+              class="flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="quality() === 'medium'"
+              [class.border-blue-500]="quality() === 'medium'"
+              [class.hover:bg-gray-50]="quality() !== 'medium'"
+              [class.border-gray-200]="quality() !== 'medium'"
+              (click)="quality.set('medium')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="quality() === 'medium'" [class.text-secondary]="quality() !== 'medium'">Medium Quality</span>
+                  <span class="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded">Recommended</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">Balanced compression and quality</p>
+              </div>
+              @if (quality() === 'medium') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+
+            <!-- High Quality -->
+            <button
+              class="flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="quality() === 'high'"
+              [class.border-blue-500]="quality() === 'high'"
+              [class.hover:bg-gray-50]="quality() !== 'high'"
+              [class.border-gray-200]="quality() !== 'high'"
+              (click)="quality.set('high')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="quality() === 'high'" [class.text-secondary]="quality() !== 'high'">High Quality</span>
+                  <span class="text-xs px-2 py-0.5 bg-purple-100 text-purple-700 rounded">Largest</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">Best compression settings, larger file size</p>
+              </div>
+              @if (quality() === 'high') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6 mt-auto">
+          <button 
+            class="w-full btn btn-primary px-6 py-4 font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2"
+            (click)="processImages()"
+            [disabled]="images().length === 0 || isProcessing()">
+            @if (isProcessing()) {
+              <span>Converting...</span>
+            } @else {
+              <span>Convert to PNG</span>
+            }
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Processing State -->
+@if (state() === 'processing') {
+  <div class="max-w-4xl mx-auto px-4 py-16">
+    <div class="text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent mb-4"></div>
+      <h2 class="text-xl font-semibold text-primary mb-2">Converting JPG to PNG...</h2>
+      <p class="text-tertiary">Please wait while we process your files.</p>
+    </div>
+  </div>
+}
+
+<!-- Complete State -->
+@if (state() === 'complete') {
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="text-center">
+      <div class="inline-block rounded-full bg-green-100 p-4 mb-4">
+        <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h2 class="text-2xl font-bold text-primary mb-2">Success!</h2>
+      <p class="text-secondary mb-8">Your JPG images have been converted to PNG and downloaded.</p>
+      
+      <button class="btn btn-primary px-8 py-3" (click)="reset()">
+        Convert More Images
+      </button>
+    </div>
+  </div>
+}
