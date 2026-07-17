@@ -1,9 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { SeoService } from '../../../../services/seo.service';
+import { environment } from '../../../../../environments/environment';
 
 type AppState = 'upload' | 'password' | 'processing' | 'complete';
 
@@ -16,6 +18,8 @@ type AppState = 'upload' | 'password' | 'processing' | 'complete';
 })
 export class UnlockPdfComponent implements OnInit {
   private seoService = inject(SeoService);
+  private http = inject(HttpClient);
+  private apiUrl = environment.apiUrl;
 
   state = signal<AppState>('upload');
   
@@ -126,37 +130,37 @@ export class UnlockPdfComponent implements OnInit {
       formData.append('file', this.pdfFile()!);
       formData.append('password', validPassword);
 
-      // Assumes your backend runs on https://localhost:7219
-      const response = await fetch('https://localhost:7219/api/pdf/unlock', {
-        method: 'POST',
-        body: formData
-      });
+      // Use configurable API endpoint from environment
+      this.http.post(`${this.apiUrl}/api/pdf/unlock`, formData, { 
+        responseType: 'blob',
+        reportProgress: true
+      }).subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = this.pdfFileName().replace(/\.pdf$/i, '_unlocked.pdf');
+          document.body.appendChild(a);
+          a.click();
+          
+          setTimeout(() => { 
+            document.body.removeChild(a); 
+            window.URL.revokeObjectURL(url); 
+          }, 100);
 
-      if (!response.ok) {
-        const errText = await response.text();
-        if (response.status === 400 && errText.toLowerCase().includes('password')) {
-          this.passwordError.set('Incorrect password. Please try again.');
+          this.state.set('complete');
+        },
+        error: (error) => {
+          console.error(error);
+          if (error.status === 400 && error.error && error.error.toString().toLowerCase().includes('password')) {
+            this.passwordError.set('Incorrect password. Please try again.');
+          } else {
+            this.passwordError.set('Failed to unlock the PDF. Processing error via backend.');
+          }
           this.state.set('password');
-          return;
         }
-        throw new Error(errText);
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = this.pdfFileName().replace(/\.pdf$/i, '_unlocked.pdf');
-      document.body.appendChild(a);
-      a.click();
-      
-      setTimeout(() => { 
-        document.body.removeChild(a); 
-        window.URL.revokeObjectURL(url); 
-      }, 100);
-
-      this.state.set('complete');
+      });
     } catch (error) {
       console.error(error);
       this.passwordError.set('Failed to unlock the PDF. Processing error via backend.');

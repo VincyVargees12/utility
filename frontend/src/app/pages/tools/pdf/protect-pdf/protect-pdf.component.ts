@@ -1,9 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { SeoService } from '../../../../services/seo.service';
+import { environment } from '../../../../../environments/environment';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 
@@ -16,6 +18,8 @@ type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 })
 export class ProtectPdfComponent implements OnInit {
   private seoService = inject(SeoService);
+  private http = inject(HttpClient);
+  private apiUrl = environment.apiUrl;
 
   state = signal<AppState>('upload');
   
@@ -28,6 +32,7 @@ export class ProtectPdfComponent implements OnInit {
   
   passwordError = signal<string>('');
   errorMessage = signal<string>('');
+  isProcessing = signal<boolean>(false);
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
@@ -61,12 +66,63 @@ export class ProtectPdfComponent implements OnInit {
       return;
     }
     
-    this.pdfFile.set(file);
-    this.pdfFileName.set(file.name);
-    this.pdfFileSize.set(this.formatBytes(file.size));
-    this.errorMessage.set('');
-    
-    this.state.set('configure');
+    // Validate PDF is not already locked
+    this.validatePdfNotLocked(file)
+      .then((isLocked) => {
+        if (isLocked) {
+          this.errorMessage.set('This PDF file is already password-protected. Please upload an unencrypted PDF to protect it with a new password.');
+          return;
+        }
+        
+        this.pdfFile.set(file);
+        this.pdfFileName.set(file.name);
+        this.pdfFileSize.set(this.formatBytes(file.size));
+        this.errorMessage.set('');
+        this.state.set('configure');
+      })
+      .catch((error) => {
+        console.error('PDF validation error:', error);
+        this.errorMessage.set('Failed to validate PDF. Please try another file.');
+      });
+  }
+
+  async validatePdfNotLocked(file: File): Promise<boolean> {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfjs = await import('pdfjs-dist');
+      
+      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/build/pdf.worker.min.mjs',
+        import.meta.url
+      ).toString();
+
+      const loadingTask = pdfjs.getDocument({ 
+        data: new Uint8Array(arrayBuffer),
+        useSystemFonts: true
+      });
+      
+      try {
+        const pdf = await loadingTask.promise;
+        // If we reach here, PDF loaded successfully, so it's not locked
+        return false;
+      } catch (error: any) {
+        // Check if error is due to password protection
+        if (error.name === 'PasswordException' || 
+            error.message?.includes('password') || 
+            error.message?.includes('encrypted')) {
+          return true;
+        }
+        // Re-throw other errors
+        throw error;
+      }
+    } catch (error) {
+      // If it's a locked PDF error, return true
+      const errorStr = String(error);
+      if (errorStr.includes('password') || errorStr.includes('encrypted')) {
+        return true;
+      }
+      throw error;
+    }
   }
 
   async processProtection(): Promise<void> {
@@ -90,46 +146,42 @@ export class ProtectPdfComponent implements OnInit {
     this.errorMessage.set('');
 
     try {
+      this.isProcessing.set(true);
       const formData = new FormData();
       formData.append('file', this.pdfFile()!);
       formData.append('password', this.password());
 
-      // Assumes your backend runs on https://localhost:7219
-      const response = await fetch('https://localhost:7219/api/pdf/protect', {
-        method: 'POST',
-        body: formData
-      });
+      // Use configurable API endpoint from environment
+      this.http.post(`${this.apiUrl}/api/pdf/protect`, formData, { 
+        responseType: 'blob',
+        reportProgress: true
+      }).subscribe({
+        next: (blob) => {
+          const url = window.URL.createObjectURL(blob);
+          
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = this.pdfFileName().replace(/\.pdf$/i, '_protected.pdf');
+          document.body.appendChild(a);
+          a.click();
+          
+          setTimeout(() => { 
+            document.body.removeChild(a); 
+            window.URL.revokeObjectURL(url); 
+          }, 100);
 
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      
-      const a = document.createElement('a');
-      a.href = url;
-      // Get filename from response header if available, otherwise fallback
-      const contentDoc = response.headers.get('Content-Disposition');
-      let outName = this.pdfFileName().replace(/\.pdf$/i, '_protected.pdf');
-      if (contentDoc && contentDoc.includes('filename=')) {
-        const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(contentDoc);
-        if (matches != null && matches[1]) {
-          outName = matches[1].replace(/['"]/g, '');
+          this.isProcessing.set(false);
+          this.state.set('complete');
+        },
+        error: (error) => {
+          this.isProcessing.set(false);
+          console.error('Protection error:', error);
+          this.errorMessage.set('Failed to protect the PDF file. Processing error via backend.');
+          this.state.set('configure');
         }
-      }
-      
-      a.download = outName;
-      document.body.appendChild(a);
-      a.click();
-      
-      setTimeout(() => { 
-        document.body.removeChild(a); 
-        window.URL.revokeObjectURL(url); 
-      }, 100);
-
-      this.state.set('complete');
+      });
     } catch (error: any) {
+      this.isProcessing.set(false);
       console.error('Protection error:', error);
       this.errorMessage.set('Failed to protect the PDF file. Processing error via backend.');
       this.state.set('configure');
