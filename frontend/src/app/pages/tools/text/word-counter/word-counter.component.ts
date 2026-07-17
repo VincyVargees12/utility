@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { SeoService } from '../../../../services/seo.service';
 
 interface TextStats {
@@ -16,7 +15,7 @@ interface TextStats {
 @Component({
   selector: 'app-word-counter',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './word-counter.component.html',
   styleUrl: './word-counter.component.scss'
 })

@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { SeoService } from '../../../../services/seo.service';
 
 interface CaseResult {
@@ -19,7 +18,7 @@ interface CaseResult {
 @Component({
   selector: 'app-case-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './case-converter.component.html',
   styleUrl: './case-converter.component.scss'
 })
