@@ -1,0 +1,191 @@
+<div class="w-full">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full pr-0 lg:pr-[380px]">
+        <!-- Title and Subtitle -->
+        <div class="mb-8">
+          <h1 class="text-4xl font-bold text-primary mb-3">Reverse Text</h1>
+          <p class="text-lg text-secondary">Reverse text, words, or entire paragraphs instantly. Multiple reverse modes for different text manipulation needs.</p>
+        </div>
+
+        <!-- Text Input Area -->
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+          <!-- Input Header -->
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50">
+            <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
+          </div>
+
+          <!-- Textarea -->
+          <div class="p-6">
+            <textarea
+              [value]="text()"
+              (input)="text.set($event.target.value); onTextChange()"
+              placeholder="Start typing or paste your content here... You can also upload a file below."
+              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+            ></textarea>
+          </div>
+
+          <!-- File Upload Area -->
+          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
+            <div class="flex items-center gap-4">
+              <label class="flex-1">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                  <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
+                  <p class="text-xs text-secondary">Supported: .txt, .md</p>
+                  <input
+                    type="file"
+                    accept=".txt,.md"
+                    (change)="onFileSelected($event)"
+                    class="hidden"
+                  >
+                </div>
+              </label>
+              <button
+                (click)="clearText()"
+                class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium text-sm"
+              >
+                🗑️ Clear
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Reversed Results -->
+        @if (text()) {
+          <div class="mt-8 space-y-4">
+            <!-- Reversed Text -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-bold text-primary">Reversed Text</h3>
+                <button
+                  (click)="copyToClipboard('text')"
+                  class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
+                >
+                  {{ copiedMode() === 'text' ? '✓ Copied' : '📋 Copy' }}
+                </button>
+              </div>
+              <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[60px] max-h-[150px] overflow-y-auto border border-gray-200">
+                {{ results().text || 'Reversed text will appear here...' }}
+              </p>
+            </div>
+
+            <!-- Reversed Words Order -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-bold text-primary">Words Reversed</h3>
+                <button
+                  (click)="copyToClipboard('words')"
+                  class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
+                >
+                  {{ copiedMode() === 'words' ? '✓ Copied' : '📋 Copy' }}
+                </button>
+              </div>
+              <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[60px] max-h-[150px] overflow-y-auto border border-gray-200">
+                {{ results().words || 'Words in reversed order will appear here...' }}
+              </p>
+            </div>
+
+            <!-- Reversed Paragraphs Order -->
+            <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="text-lg font-bold text-primary">Paragraphs Reversed</h3>
+                <button
+                  (click)="copyToClipboard('paragraphs')"
+                  class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
+                >
+                  {{ copiedMode() === 'paragraphs' ? '✓ Copied' : '📋 Copy' }}
+                </button>
+              </div>
+              <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[60px] max-h-[150px] overflow-y-auto border border-gray-200">
+                {{ results().paragraphs || 'Paragraphs in reversed order will appear here...' }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Sidebar -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Reverse Mode</h3>
+        
+        <div class="px-6 pb-6">
+          <div class="space-y-3 mt-4">
+            <!-- Reverse Full Text -->
+            <button
+              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="reverseMode() === 'text'"
+              [class.border-blue-500]="reverseMode() === 'text'"
+              [class.hover:bg-gray-50]="reverseMode() !== 'text'"
+              [class.border-gray-200]="reverseMode() !== 'text'"
+              (click)="setReverseMode('text')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="reverseMode() === 'text'" [class.text-secondary]="reverseMode() !== 'text'">Reverse Text</span>
+                  <span class="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded">Recommended</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">Reverse every character in the text</p>
+              </div>
+              @if (reverseMode() === 'text') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+
+            <!-- Reverse Words Order -->
+            <button
+              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="reverseMode() === 'words'"
+              [class.border-blue-500]="reverseMode() === 'words'"
+              [class.hover:bg-gray-50]="reverseMode() !== 'words'"
+              [class.border-gray-200]="reverseMode() !== 'words'"
+              (click)="setReverseMode('words')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="reverseMode() === 'words'" [class.text-secondary]="reverseMode() !== 'words'">Reverse Words</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">Reverse the order of words in the text</p>
+              </div>
+              @if (reverseMode() === 'words') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+
+            <!-- Reverse Paragraphs Order -->
+            <button
+              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="reverseMode() === 'paragraphs'"
+              [class.border-blue-500]="reverseMode() === 'paragraphs'"
+              [class.hover:bg-gray-50]="reverseMode() !== 'paragraphs'"
+              [class.border-gray-200]="reverseMode() !== 'paragraphs'"
+              (click)="setReverseMode('paragraphs')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="reverseMode() === 'paragraphs'" [class.text-secondary]="reverseMode() !== 'paragraphs'">Reverse Paragraphs</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">Reverse the order of paragraphs (double line breaks)</p>
+              </div>
+              @if (reverseMode() === 'paragraphs') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+          </div>
+
+          <!-- Download Button -->
+          @if (text()) {
+            <button
+              (click)="downloadReversed()"
+              class="w-full btn btn-primary px-6 py-3 font-bold flex items-center justify-center gap-2 mt-6">
+              <span>📥 Download</span>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

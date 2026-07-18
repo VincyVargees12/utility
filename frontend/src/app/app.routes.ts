@@ -134,6 +134,11 @@ export const routes: Routes = [
     title: 'Remove Extra Spaces - DataUtil'
   },
   {
+    path: 'categories/text/reverse-text',
+    loadComponent: () => import('./pages/tools/text/reverse-text/reverse-text.component').then(m => m.ReverseTextComponent),
+    title: 'Reverse Text - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'

@@ -66,7 +66,6 @@ export const TOOLS_REGISTRY: Record<string, ToolCategory> = {
       { id: 'character-counter', name: 'Character Counter', description: 'Count characters with or without spaces. Real-time counting.', icon: '📊', route: '/categories/text/character-counter', category: 'analyze' },
       { id: 'case-converter', name: 'Case Converter', description: 'Convert text to uppercase, lowercase, title case, or sentence case.', icon: '🔤', route: '/categories/text/case-converter', category: 'format' },
       { id: 'remove-spaces', name: 'Remove Extra Spaces', description: 'Remove extra spaces, tabs, and line breaks from text.', icon: '🧹', route: '/categories/text/remove-extra-spaces', category: 'format' },
-      { id: 'remove-lines', name: 'Remove Blank Lines', description: 'Remove empty lines and clean up text formatting.', icon: '📋', route: '/categories/text/remove-lines', category: 'format' },
       { id: 'reverse-text', name: 'Reverse Text', description: 'Reverse text, words, or entire paragraphs instantly.', icon: '🔄', route: '/categories/text/reverse-text', category: 'transform' },
       { id: 'sort-lines', name: 'Sort Lines', description: 'Sort text lines alphabetically or numerically.', icon: '🔢', route: '/categories/text/sort-lines', category: 'format' },
       { id: 'duplicate-remover', name: 'Remove Duplicates', description: 'Remove duplicate lines from your text.', icon: '🗑️', route: '/categories/text/duplicate-remover', category: 'format' },
