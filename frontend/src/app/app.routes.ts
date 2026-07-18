@@ -129,6 +129,11 @@ export const routes: Routes = [
     title: 'Case Converter - DataUtil'
   },
   {
+    path: 'categories/text/remove-extra-spaces',
+    loadComponent: () => import('./pages/tools/text/remove-extra-spaces/remove-extra-spaces.component').then(m => m.RemoveExtraSpacesComponent),
+    title: 'Remove Extra Spaces - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'

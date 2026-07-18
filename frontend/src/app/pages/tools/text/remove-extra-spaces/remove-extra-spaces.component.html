@@ -1,0 +1,191 @@
+<div class="w-full">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full pr-0 lg:pr-[380px]">
+        <!-- Title and Subtitle -->
+        <div class="mb-8">
+          <h1 class="text-4xl font-bold text-primary mb-3">Remove Extra Spaces</h1>
+          <p class="text-lg text-secondary">Remove leading/trailing whitespace, extra spaces between words, and blank lines from your text instantly.</p>
+        </div>
+
+        <!-- Text Input Area -->
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+          <!-- Input Header -->
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50">
+            <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
+          </div>
+
+          <!-- Textarea -->
+          <div class="p-6">
+            <textarea
+              [value]="text()"
+              (input)="text.set($event.target.value); onTextChange()"
+              placeholder="Start typing or paste your content here... You can also upload a file below."
+              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+            ></textarea>
+          </div>
+
+          <!-- File Upload Area -->
+          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
+            <div class="flex items-center gap-4">
+              <label class="flex-1">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                  <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
+                  <p class="text-xs text-secondary">Supported: .txt, .md</p>
+                  <input
+                    type="file"
+                    accept=".txt,.md"
+                    (change)="onFileSelected($event)"
+                    class="hidden"
+                  >
+                </div>
+              </label>
+              <button
+                (click)="clearText()"
+                class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium text-sm"
+              >
+                🗑️ Clear
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cleaned Result Preview -->
+        @if (cleanedText()) {
+          <div class="mt-8 bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-lg font-bold text-primary">Cleaned Text Preview</h3>
+              <button
+                (click)="copyToClipboard()"
+                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
+              >
+                {{ copiedResult() ? '✓ Copied' : '📋 Copy' }}
+              </button>
+            </div>
+            <div class="bg-gray-50 p-4 rounded text-sm font-mono text-gray-700 break-words min-h-[100px] max-h-[300px] overflow-y-auto border border-gray-200">
+              {{ cleanedText() }}
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Sidebar -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Removal Options</h3>
+        
+        <div class="px-6 pb-6">
+          <div class="space-y-3 mt-4">
+            <!-- Remove All Option -->
+            <button
+              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="removalMode() === 'all'"
+              [class.border-blue-500]="removalMode() === 'all'"
+              [class.hover:bg-gray-50]="removalMode() !== 'all'"
+              [class.border-gray-200]="removalMode() !== 'all'"
+              (click)="setRemovalMode('all')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="removalMode() === 'all'" [class.text-secondary]="removalMode() !== 'all'">Remove All</span>
+                  <span class="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded">Recommended</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">Remove extra spaces, trim lines & delete blank lines</p>
+              </div>
+              @if (removalMode() === 'all') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+
+            <!-- Single Spaces Option -->
+            <button
+              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="removalMode() === 'single'"
+              [class.border-blue-500]="removalMode() === 'single'"
+              [class.hover:bg-gray-50]="removalMode() !== 'single'"
+              [class.border-gray-200]="removalMode() !== 'single'"
+              (click)="setRemovalMode('single')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="removalMode() === 'single'" [class.text-secondary]="removalMode() !== 'single'">Single Spaces</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">Replace multiple spaces with single space, keep all lines</p>
+              </div>
+              @if (removalMode() === 'single') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+
+            <!-- Remove Blank Lines Option -->
+            <button
+              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
+              [class.bg-blue-50]="removalMode() === 'lines'"
+              [class.border-blue-500]="removalMode() === 'lines'"
+              [class.hover:bg-gray-50]="removalMode() !== 'lines'"
+              [class.border-gray-200]="removalMode() !== 'lines'"
+              (click)="setRemovalMode('lines')">
+              <div class="flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold" [class.text-blue-600]="removalMode() === 'lines'" [class.text-secondary]="removalMode() !== 'lines'">Remove Blank Lines</span>
+                </div>
+                <p class="text-xs text-tertiary mt-1">Only remove empty/blank lines, preserve spaces</p>
+              </div>
+              @if (removalMode() === 'lines') {
+                <div class="ml-2 flex-shrink-0 text-blue-500">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+                </div>
+              }
+            </button>
+          </div>
+
+          <!-- Stats Section -->
+          @if (cleanedText()) {
+            <div class="mt-6 border-t pt-4">
+              <h4 class="text-sm font-bold text-primary mb-3">Statistics</h4>
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-secondary">Original Characters:</span>
+                  <span class="font-semibold text-primary">{{ stats().originalLength }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-secondary">Cleaned Characters:</span>
+                  <span class="font-semibold text-green-600">{{ stats().cleanedLength }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-secondary">Characters Removed:</span>
+                  <span class="font-semibold text-red-600">{{ stats().spacesRemoved }}</span>
+                </div>
+                <div class="border-t pt-2 mt-2">
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Original Lines:</span>
+                    <span class="font-semibold text-primary">{{ stats().originalLines }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Cleaned Lines:</span>
+                    <span class="font-semibold text-green-600">{{ stats().cleanedLines }}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-secondary">Blank Lines Removed:</span>
+                    <span class="font-semibold text-red-600">{{ stats().blankLinesRemoved }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Download Button -->
+          @if (cleanedText()) {
+            <button
+              (click)="downloadCleaned()"
+              class="w-full btn btn-primary px-6 py-3 font-bold flex items-center justify-center gap-2 mt-6">
+              <span>📥 Download</span>
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
