@@ -1,0 +1,197 @@
+<div class="w-full">
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full pr-0 lg:pr-[380px]">
+        <!-- Title and Subtitle -->
+        <div class="mb-8">
+          <h1 class="text-4xl font-bold text-primary mb-3">Find and Replace</h1>
+          <p class="text-lg text-secondary">Find text patterns and replace them throughout your content instantly. Perfect for bulk text editing and data cleanup.</p>
+        </div>
+
+        <!-- Text Input Area -->
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+          <!-- Input Header -->
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50">
+            <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
+          </div>
+
+          <!-- Textarea -->
+          <div class="p-6">
+            <textarea
+              [value]="text()"
+              (input)="text.set($event.target.value); onTextChange()"
+              placeholder="Start typing or paste your content here... You can also upload a file below."
+              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+            ></textarea>
+          </div>
+
+          <!-- File Upload Area -->
+          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
+            <div class="flex items-center gap-4">
+              <label class="flex-1">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                  <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
+                  <p class="text-xs text-secondary">Supported: .txt, .md</p>
+                  <input
+                    type="file"
+                    accept=".txt,.md"
+                    (change)="onFileSelected($event)"
+                    class="hidden"
+                  >
+                </div>
+              </label>
+              <div class="flex gap-2">
+                <button
+                  (click)="clearText()"
+                  class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium text-sm"
+                >
+                  🗑️ Clear
+                </button>
+                @if (isReplaced()) {
+                  <button
+                    (click)="restoreOriginal()"
+                    class="px-6 py-3 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors font-medium text-sm"
+                  >
+                    ↶ Restore
+                  </button>
+                  <button
+                    (click)="copyToClipboard()"
+                    class="px-6 py-3 text-white font-medium text-sm rounded-lg transition-colors"
+                    [ngClass]="copiedToClipboard()
+                      ? 'bg-green-600 hover:bg-green-700'
+                      : 'bg-blue-600 hover:bg-blue-700'"
+                  >
+                    {{ copiedToClipboard() ? '✓ Copied' : '📋 Copy' }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remove Empty Lines Option -->
+        @if (text()) {
+          <div class="mt-6 flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+            <input
+              type="checkbox"
+              [checked]="removeEmpty()"
+              (change)="toggleRemoveEmpty()"
+              class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
+            >
+            <label class="flex-1 cursor-pointer">
+              <p class="text-sm font-semibold text-primary">Remove Empty Lines</p>
+              <p class="text-xs text-tertiary">Exclude blank lines before processing</p>
+            </label>
+          </div>
+        }
+
+        <!-- Statistics -->
+        @if (text()) {
+          <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p class="text-xs text-blue-600 font-medium mb-1">Matches Found</p>
+              <p class="text-2xl font-bold text-blue-700">{{ stats().matchesFound }}</p>
+            </div>
+            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+              <p class="text-xs text-green-600 font-medium mb-1">Replacements Made</p>
+              <p class="text-2xl font-bold text-green-700">{{ stats().replacementsMade }}</p>
+            </div>
+            <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
+              <p class="text-xs text-orange-600 font-medium mb-1">Original Length</p>
+              <p class="text-2xl font-bold text-orange-700">{{ stats().originalLength }}</p>
+            </div>
+            <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+              <p class="text-xs text-purple-600 font-medium mb-1">New Length</p>
+              <p class="text-2xl font-bold text-purple-700">{{ stats().newLength }}</p>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Right Sidebar - Tools -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Tools</h3>
+        
+        <div class="px-4 pb-6 space-y-4 mt-4">
+          <!-- Find Input -->
+          <div>
+            <label class="block text-sm font-semibold text-primary mb-2">Find</label>
+            <input
+              type="text"
+              [value]="findText()"
+              (input)="findText.set($event.target.value); onFindChange()"
+              placeholder="Text to find..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+            />
+          </div>
+
+          <!-- Replace Input -->
+          <div>
+            <label class="block text-sm font-semibold text-primary mb-2">Replace With</label>
+            <input
+              type="text"
+              [value]="replaceText()"
+              (input)="replaceText.set($event.target.value); onReplaceChange()"
+              placeholder="Replacement text..."
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+            />
+          </div>
+
+          <!-- Options -->
+          <div class="space-y-2 pt-2 border-t border-gray-200">
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                [checked]="caseSensitive()"
+                (change)="toggleCaseSensitive()"
+                class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
+              >
+              <label class="text-sm text-gray-700 cursor-pointer">Case Sensitive</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <input
+                type="checkbox"
+                [checked]="useRegex()"
+                (change)="toggleUseRegex()"
+                class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
+              >
+              <label class="text-sm text-gray-700 cursor-pointer">Use Regex Pattern</label>
+            </div>
+          </div>
+
+          <!-- Replace Button -->
+          <div class="pt-4">
+            <button
+              (click)="performReplace()"
+              [disabled]="!text() || !findText()"
+              class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
+            >
+              🔄 Replace All
+            </button>
+          </div>
+
+          <!-- Action Buttons -->
+          @if (text()) {
+            <div class="pt-4 border-t border-gray-200 space-y-3">
+              <button
+                (click)="copyToClipboard()"
+                class="w-full px-6 py-3 font-semibold text-sm rounded-lg transition-colors"
+                [ngClass]="copiedToClipboard()
+                  ? 'bg-green-600 hover:bg-green-700 text-white'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'"
+              >
+                {{ copiedToClipboard() ? '✓ Copied!' : '📋 Copy All Text' }}
+              </button>
+              <button
+                (click)="downloadText()"
+                class="w-full px-6 py-3 bg-purple-600 text-white font-semibold text-sm rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                ⬇️ Download
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+  </div>
+</div>

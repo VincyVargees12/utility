@@ -139,6 +139,21 @@ export const routes: Routes = [
     title: 'Reverse Text - DataUtil'
   },
   {
+    path: 'categories/text/sort-lines',
+    loadComponent: () => import('./pages/tools/text/sort-lines/sort-lines.component').then(m => m.SortLinesComponent),
+    title: 'Sort Lines - DataUtil'
+  },
+  {
+    path: 'categories/text/duplicate-remover',
+    loadComponent: () => import('./pages/tools/text/duplicate-remover/duplicate-remover.component').then(m => m.DuplicateRemoverComponent),
+    title: 'Remove Duplicates - DataUtil'
+  },
+  {
+    path: 'categories/text/find-replace',
+    loadComponent: () => import('./pages/tools/text/find-replace/find-replace.component').then(m => m.FindReplaceComponent),
+    title: 'Find and Replace - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
