@@ -30,11 +30,13 @@ export class AnalyticsService {
     this.setupGtag();
     this.loadTagScript(measurementId);
 
+    // Queue initialization commands — dataLayer buffers them until the script loads
     window.gtag?.('js', new Date());
-    // Disable automatic page views and track them on router navigation.
-    window.gtag?.('config', measurementId, { send_page_view: false });
+    window.gtag?.('config', measurementId, {
+      send_page_view: true   // let GA send the first page_view automatically
+    });
 
-    this.trackInitialPage();
+    // Also track all subsequent SPA route changes
     this.trackRouteChanges();
     this.initialized = true;
   }
@@ -63,18 +65,13 @@ export class AnalyticsService {
     this.document.head.appendChild(script);
   }
 
-  private trackInitialPage(): void {
-    window.gtag?.('config', this.measurementId, {
-      page_path: this.router.url
-    });
-  }
-
   private trackRouteChanges(): void {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
-        window.gtag?.('config', this.measurementId, {
-          page_path: event.urlAfterRedirects
+        window.gtag?.('event', 'page_view', {
+          page_path: event.urlAfterRedirects,
+          page_location: window.location.href
         });
       });
   }

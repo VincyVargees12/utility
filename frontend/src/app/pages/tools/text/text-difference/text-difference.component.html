@@ -1,0 +1,284 @@
+<div class="w-full">
+  <div class="max-w-none mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
+      <div class="flex-1 w-full pr-0 lg:pr-[380px]">
+
+        <!-- Title -->
+        <div class="mb-6">
+          <h1 class="text-4xl font-bold text-primary mb-3">Text Difference</h1>
+          <p class="text-lg text-secondary">
+            Compare two text files or snippets and highlight all additions, deletions and modifications.
+            Supports txt, json, xml, html, css, js, ts, sql, csv, log, md.
+          </p>
+        </div>
+
+        <!-- File header row: always two columns -->
+        <div class="grid grid-cols-2 gap-0">
+
+          <!-- Left / Original header -->
+          <div
+            class="file-header rounded-tl-lg border-2 border-b-0 border-gray-200 bg-gray-50 px-4 py-3 flex items-center justify-between transition-colors"
+            [ngClass]="{ 'drag-active': isDraggingLeft() }"
+            (dragover)="onDragOver($event, 'original')"
+            (dragleave)="onDragLeave('original')"
+            (drop)="onDrop($event, 'original')"
+          >
+            <div class="flex items-center gap-2 min-w-0 flex-1">
+              <span class="font-semibold text-sm text-primary truncate max-w-[120px]"
+                    [title]="originalFileName() || 'Original Text'">
+                {{ originalFileName() || 'Original Text' }}
+              </span>
+              <select
+                [value]="originalLanguage()"
+                (change)="onLanguageChange('original', $any($event.target).value)"
+                class="text-xs border border-gray-300 rounded px-1.5 py-0.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                @for (lang of availableLanguages; track lang) {
+                  <option [value]="lang">{{ lang }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="flex items-center gap-0.5 shrink-0">
+              <label class="cursor-pointer" title="Upload file">
+                <span class="action-btn">📁</span>
+                <input type="file" [attr.accept]="acceptExtensions"
+                  (change)="onFileSelected($event, 'original')" class="hidden">
+              </label>
+              <button (click)="clearLeft()" class="action-btn" title="Clear left">🗑️</button>
+              <button (click)="copyLeft()" class="action-btn" [title]="copiedLeft() ? 'Copied!' : 'Copy'"
+                [ngClass]="copiedLeft() ? 'text-green-600' : ''">
+                {{ copiedLeft() ? '✓' : '📋' }}
+              </button>
+              <button (click)="downloadLeft()" [disabled]="!originalText()"
+                class="action-btn disabled:opacity-40 disabled:cursor-not-allowed" title="Download">⬇️</button>
+            </div>
+          </div>
+
+          <!-- Right / Modified header -->
+          <div
+            class="file-header rounded-tr-lg border-2 border-b-0 border-l-0 border-gray-200 bg-gray-50 px-4 py-3 flex items-center justify-between transition-colors"
+            [ngClass]="{ 'drag-active': isDraggingRight() }"
+            (dragover)="onDragOver($event, 'modified')"
+            (dragleave)="onDragLeave('modified')"
+            (drop)="onDrop($event, 'modified')"
+          >
+            <div class="flex items-center gap-2 min-w-0 flex-1">
+              <span class="font-semibold text-sm text-primary truncate max-w-[120px]"
+                    [title]="modifiedFileName() || 'Modified Text'">
+                {{ modifiedFileName() || 'Modified Text' }}
+              </span>
+              <select
+                [value]="modifiedLanguage()"
+                (change)="onLanguageChange('modified', $any($event.target).value)"
+                class="text-xs border border-gray-300 rounded px-1.5 py-0.5 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+              >
+                @for (lang of availableLanguages; track lang) {
+                  <option [value]="lang">{{ lang }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="flex items-center gap-0.5 shrink-0">
+              <label class="cursor-pointer" title="Upload file">
+                <span class="action-btn">📁</span>
+                <input type="file" [attr.accept]="acceptExtensions"
+                  (change)="onFileSelected($event, 'modified')" class="hidden">
+              </label>
+              <button (click)="clearRight()" class="action-btn" title="Clear right">🗑️</button>
+              <button (click)="copyRight()" class="action-btn" [title]="copiedRight() ? 'Copied!' : 'Copy'"
+                [ngClass]="copiedRight() ? 'text-green-600' : ''">
+                {{ copiedRight() ? '✓' : '📋' }}
+              </button>
+              <button (click)="downloadRight()" [disabled]="!modifiedText()"
+                class="action-btn disabled:opacity-40 disabled:cursor-not-allowed" title="Download">⬇️</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monaco Diff Editor -->
+        <div
+          #diffEditorHost
+          class="diff-editor-host w-full rounded-bl-lg rounded-br-lg border-2 border-gray-200 overflow-hidden"
+          aria-label="Text comparison editor"
+        ></div>
+
+        <!-- Stats bar (shown after first compare) -->
+        @if (hasCompared()) {
+          <div class="mt-4 grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="rounded-lg border border-green-200 bg-green-50 p-4 text-center">
+              <p class="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Added Lines</p>
+              <p class="text-2xl font-bold text-green-700">{{ stats().added }}</p>
+            </div>
+            <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-center">
+              <p class="text-xs font-semibold text-red-600 uppercase tracking-wide mb-1">Removed Lines</p>
+              <p class="text-2xl font-bold text-red-700">{{ stats().removed }}</p>
+            </div>
+            <div class="rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-center">
+              <p class="text-xs font-semibold text-yellow-600 uppercase tracking-wide mb-1">Modified Lines</p>
+              <p class="text-2xl font-bold text-yellow-700">{{ stats().modified }}</p>
+            </div>
+            <div class="rounded-lg border border-blue-200 bg-blue-50 p-4 text-center">
+              <p class="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Total Diffs</p>
+              <p class="text-2xl font-bold text-blue-700">{{ stats().total }}</p>
+            </div>
+          </div>
+        }
+
+      </div>
+
+      <!-- ──────────── Right Sidebar ──────────── -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center sticky top-0 bg-white z-10">Options</h3>
+
+        <div class="px-4 pb-8 space-y-4 mt-4">
+
+          <!-- Navigation -->
+          @if (totalDiffSections() > 0) {
+            <div class="border-b border-gray-200 pb-4">
+              <h4 class="text-sm font-semibold text-gray-700 mb-3">Navigation</h4>
+              <div class="flex gap-2 mb-2">
+                <button (click)="previousDiff()"
+                  class="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors">
+                  ← Previous
+                </button>
+                <button (click)="nextDiff()"
+                  class="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors">
+                  Next →
+                </button>
+              </div>
+              <p class="text-xs text-gray-500 text-center">
+                {{ totalDiffSections() }} difference section{{ totalDiffSections() !== 1 ? 's' : '' }}
+              </p>
+            </div>
+          }
+
+          <!-- View Mode -->
+          <div class="border-b border-gray-200 pb-4">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3">View Mode</h4>
+            <div class="flex gap-2">
+              <button (click)="setViewMode('side')"
+                class="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                [ngClass]="renderSideBySide()
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'">
+                Side by Side
+              </button>
+              <button (click)="setViewMode('inline')"
+                class="flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                [ngClass]="!renderSideBySide()
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'">
+                Inline
+              </button>
+            </div>
+          </div>
+
+          <!-- Comparison Options -->
+          <div class="border-b border-gray-200 pb-4">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3">Comparison Options</h4>
+            <div class="space-y-3">
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" [checked]="ignoreWhitespace()"
+                  (change)="toggleIgnoreWhitespace()"
+                  class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                <span class="text-sm text-gray-700">Ignore Whitespace</span>
+              </label>
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" [checked]="ignoreCase()"
+                  (change)="toggleIgnoreCase()"
+                  class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mt-0.5">
+                <span class="text-sm text-gray-700">Ignore Case
+                  <span class="block text-[10px] text-gray-400 leading-tight">Applies on Compare click</span>
+                </span>
+              </label>
+              <label class="flex items-start gap-3 cursor-pointer">
+                <input type="checkbox" [checked]="ignoreEmptyLines()"
+                  (change)="toggleIgnoreEmptyLines()"
+                  class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mt-0.5">
+                <span class="text-sm text-gray-700">Ignore Empty Lines
+                  <span class="block text-[10px] text-gray-400 leading-tight">Applies on Compare click</span>
+                </span>
+              </label>
+              <label class="flex items-center gap-3 cursor-pointer">
+                <input type="checkbox" [checked]="hideUnchanged()"
+                  (change)="toggleHideUnchanged()"
+                  class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500">
+                <span class="text-sm text-gray-700">Collapse Unchanged Regions</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="border-b border-gray-200 pb-4">
+            <h4 class="text-sm font-semibold text-gray-700 mb-3">Actions</h4>
+            <div class="space-y-2">
+              <button (click)="compare()" [disabled]="!originalText() && !modifiedText()"
+                class="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold text-sm transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">
+                🔍 Compare  <span class="text-xs opacity-70">(Ctrl+Shift+C)</span>
+              </button>
+              <button (click)="swapTexts()" [disabled]="!originalText() && !modifiedText()"
+                class="w-full px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold text-sm transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">
+                🔄 Swap Texts
+              </button>
+              <div class="grid grid-cols-2 gap-2">
+                <button (click)="copyLeft()" [disabled]="!originalText()"
+                  class="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                  [ngClass]="!originalText()
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : (copiedLeft() ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200')">
+                  {{ copiedLeft() ? '✓' : '📋' }} Copy Left
+                </button>
+                <button (click)="copyRight()" [disabled]="!modifiedText()"
+                  class="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                  [ngClass]="!modifiedText()
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : (copiedRight() ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200')">
+                  {{ copiedRight() ? '✓' : '📋' }} Copy Right
+                </button>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <button (click)="downloadLeft()" [disabled]="!originalText()"
+                  class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed">
+                  ⬇️ Download Left
+                </button>
+                <button (click)="downloadRight()" [disabled]="!modifiedText()"
+                  class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed">
+                  ⬇️ Download Right
+                </button>
+              </div>
+              <button (click)="clearAll()"
+                class="w-full px-4 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 font-semibold text-sm transition-colors">
+                🗑️ Clear All
+              </button>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div>
+            <h4 class="text-sm font-semibold text-gray-700 mb-3">Legend</h4>
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center gap-2">
+                <div class="w-5 h-5 rounded bg-green-200 border border-green-400 shrink-0"></div>
+                <span class="text-gray-600">🟩 Added lines</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-5 h-5 rounded bg-red-200 border border-red-400 shrink-0"></div>
+                <span class="text-gray-600">🟥 Removed lines</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-5 h-5 rounded bg-yellow-200 border border-yellow-400 shrink-0"></div>
+                <span class="text-gray-600">🟨 Modified lines</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-5 h-5 rounded bg-white border border-gray-300 shrink-0"></div>
+                <span class="text-gray-600">Unchanged</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

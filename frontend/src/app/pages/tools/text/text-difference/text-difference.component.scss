@@ -1,0 +1,48 @@
+:host {
+  display: block;
+}
+
+// Monaco DiffEditor host fills available height
+.diff-editor-host {
+  height: 70vh;
+  min-height: 500px;
+  background: #fff;
+}
+
+// Action icon buttons in file headers
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  transition: background 0.15s;
+  border: none;
+  background: transparent;
+
+  &:hover:not(:disabled) {
+    background: #e5e7eb;
+  }
+}
+
+// File header drag-over state
+.file-header {
+  &.drag-active {
+    background-color: #eff6ff !important;
+    border-color: #3b82f6 !important;
+    outline: 2px dashed #3b82f6;
+    outline-offset: -2px;
+  }
+}
+
+// Responsive: on small screens show editors stacked
+@media (max-width: 768px) {
+  .diff-editor-host {
+    height: 60vh;
+    min-height: 400px;
+  }
+}

@@ -109,7 +109,10 @@ export class JsonFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
 
   validateJson(): void {
     try {
-      JSON.parse(this.inputText());
+      const parsed = JSON.parse(this.inputText());
+      const normalized = this.sortKeys() ? this.sortObjectKeys(parsed) : parsed;
+      const formatted = JSON.stringify(normalized, null, this.indentSize());
+      this.setOutputValue(formatted);
       this.isValid.set(true);
       this.errorMessage.set('Valid JSON');
     } catch (error) {

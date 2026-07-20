@@ -159,6 +159,21 @@ export const routes: Routes = [
     title: 'JSON Formatter - DataUtil'
   },
   {
+    path: 'categories/developer/json-validator',
+    redirectTo: 'categories/developer/json-formatter',
+    pathMatch: 'full'
+  },
+  {
+    path: 'categories/developer/xml-formatter',
+    loadComponent: () => import('./pages/tools/developer/xml-formatter/xml-formatter.component').then(m => m.XmlFormatterComponent),
+    title: 'XML Formatter - DataUtil'
+  },
+  {
+    path: 'categories/text/text-difference',
+    loadComponent: () => import('./pages/tools/text/text-difference/text-difference.component').then(m => m.TextDifferenceComponent),
+    title: 'Text Difference - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
