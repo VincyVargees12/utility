@@ -52,7 +52,37 @@ export class CategoryDashboardComponent implements OnInit {
           keywords: `${categoryId}, tools, online, free, ${category.name.toLowerCase()}`,
           ogTitle: `${category.name} - DataUtil`,
           ogDescription: category.description,
-          canonicalUrl: `https://datautility.com/categories/${categoryId}`
+          canonicalUrl: `https://www.data-util.com/categories/${categoryId}`
+        });
+
+        // Add structured data for the category page
+        this.seoService.addStructuredData({
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          'name': category.name,
+          'description': category.description,
+          'url': `https://www.data-util.com/categories/${categoryId}`,
+          'mainEntity': {
+            '@type': 'ItemList',
+            'numberOfItems': category.tools.length,
+            'itemListElement': category.tools.map((tool, index) => ({
+              '@type': 'ListItem',
+              'position': index + 1,
+              'item': {
+                '@type': 'SoftwareApplication',
+                'name': tool.name,
+                'description': tool.description,
+                'url': `https://www.data-util.com${tool.route}`,
+                'applicationCategory': 'UtilitiesApplication',
+                'operatingSystem': 'Any',
+                'offers': {
+                  '@type': 'Offer',
+                  'price': '0',
+                  'priceCurrency': 'USD'
+                }
+              }
+            }))
+          }
         });
       } else {
         this.router.navigate(['/']);

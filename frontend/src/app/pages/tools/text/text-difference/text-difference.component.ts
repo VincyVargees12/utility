@@ -106,7 +106,23 @@ export class TextDifferenceComponent implements OnInit, AfterViewInit, OnDestroy
       keywords: 'text diff, text compare, file compare, diff checker, code compare, json diff',
       ogTitle: 'Text Difference - Professional Text Comparison Tool',
       ogDescription: 'Compare two text files side by side with professional diff highlighting.',
-      canonicalUrl: 'https://datautility.com/categories/text/text-difference'
+      canonicalUrl: 'https://www.data-util.com/categories/text/text-difference'
+    });
+
+    // Add structured data for the tool
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Text Difference Checker',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Professional text comparison tool with side-by-side diff highlighting.',
+      'url': 'https://www.data-util.com/categories/text/text-difference',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
 
     this.contentChange$

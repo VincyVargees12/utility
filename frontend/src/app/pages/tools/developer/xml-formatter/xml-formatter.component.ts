@@ -49,7 +49,23 @@ export class XmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
       keywords: 'xml formatter, xml beautifier, xml validator, format xml, minify xml, xml pretty print',
       ogTitle: 'XML Formatter - Beautify and Validate XML',
       ogDescription: 'Format and validate XML instantly with custom indentation.',
-      canonicalUrl: 'https://datautility.com/categories/developer/xml-formatter'
+      canonicalUrl: 'https://www.data-util.com/categories/developer/xml-formatter'
+    });
+
+    // Add structured data for the tool
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'XML Formatter',
+      'applicationCategory': 'DeveloperApplication',
+      'description': 'Format, beautify, and validate XML documents with custom indentation.',
+      'url': 'https://www.data-util.com/categories/developer/xml-formatter',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

@@ -1,0 +1,13 @@
+# robots.txt for www.data-util.com
+
+User-agent: *
+Allow: /
+
+# Disallow private or dynamic API routes (if any)
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://www.data-util.com/sitemap.xml
+
+# Crawl-delay (optional - helps prevent server overload)
+Crawl-delay: 1

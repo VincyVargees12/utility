@@ -52,7 +52,23 @@ export class JsonFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
       keywords: 'json formatter, json beautifier, json validator, minify json, format json',
       ogTitle: 'JSON Formatter - Beautify and Validate JSON',
       ogDescription: 'Format and validate JSON instantly with custom indentation.',
-      canonicalUrl: 'https://datautility.com/categories/developer/json-formatter'
+      canonicalUrl: 'https://www.data-util.com/categories/developer/json-formatter'
+    });
+
+    // Add structured data for the tool
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'JSON Formatter',
+      'applicationCategory': 'DeveloperApplication',
+      'description': 'Format, validate, and minify JSON instantly with custom indentation.',
+      'url': 'https://www.data-util.com/categories/developer/json-formatter',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

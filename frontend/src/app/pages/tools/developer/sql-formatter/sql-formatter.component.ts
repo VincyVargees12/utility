@@ -69,7 +69,23 @@ export class SqlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
       keywords: 'sql formatter, sql beautifier, sql validator, format sql, mysql formatter, postgresql formatter, sql server formatter',
       ogTitle: 'SQL Formatter - Online SQL Beautifier & Validator',
       ogDescription: 'Format and beautify SQL queries instantly with support for multiple dialects.',
-      canonicalUrl: 'https://datautility.com/categories/developer/sql-formatter'
+      canonicalUrl: 'https://www.data-util.com/categories/developer/sql-formatter'
+    });
+
+    // Add structured data for the tool
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'SQL Formatter',
+      'applicationCategory': 'DeveloperApplication',
+      'description': 'Format and beautify SQL queries for MySQL, PostgreSQL, SQL Server, Oracle, and more.',
+      'url': 'https://www.data-util.com/categories/developer/sql-formatter',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

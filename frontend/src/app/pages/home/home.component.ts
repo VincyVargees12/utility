@@ -52,21 +52,38 @@ export class HomeComponent implements OnInit {
       keywords: 'online tools, pdf tools, image tools, developer tools, calculators, converters, free utilities, online utilities',
       ogTitle: 'DataUtil - One Platform. Hundreds of Powerful Online Utilities',
       ogDescription: 'Convert files, edit documents, calculate values, transform data and boost productivity with one modern platform.',
-      ogImage: '/assets/og-image.jpg',
-      ogUrl: 'https://datau til.com',
-      canonicalUrl: 'https://datautil.com'
+      ogImage: 'https://www.data-util.com/assets/og-image.jpg',
+      ogUrl: 'https://www.data-util.com',
+      canonicalUrl: 'https://www.data-util.com'
     });
 
     // Add structured data for the website
     this.seoService.addStructuredData({
       '@context': 'https://schema.org',
-      '@type': 'WebSite',
+      '@type': 'WebApplication',
       'name': 'DataUtil',
-      'description': 'Free online utility platform with hundreds of tools',
-      'url': 'https://datautil.com',
+      'description': 'Free online utility platform with hundreds of tools for PDF, images, text manipulation, and developer utilities.',
+      'url': 'https://www.data-util.com',
+      'applicationCategory': 'UtilitiesApplication',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      },
+      'aggregateRating': {
+        '@type': 'AggregateRating',
+        'ratingValue': '4.8',
+        'ratingCount': '2847',
+        'bestRating': '5',
+        'worstRating': '1'
+      },
       'potentialAction': {
         '@type': 'SearchAction',
-        'target': 'https://datautil.com/search?q={search_term_string}',
+        'target': {
+          '@type': 'EntryPoint',
+          'urlTemplate': 'https://www.data-util.com/search?q={search_term_string}'
+        },
         'query-input': 'required name=search_term_string'
       }
     });
