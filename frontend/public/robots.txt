@@ -9,5 +9,4 @@ Disallow: /api/
 # Sitemap location
 Sitemap: https://www.data-util.com/sitemap.xml
 
-# Crawl-delay (optional - helps prevent server overload)
-Crawl-delay: 1
+
