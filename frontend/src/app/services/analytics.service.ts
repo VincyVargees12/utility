@@ -27,16 +27,21 @@ export class AnalyticsService {
     }
 
     this.measurementId = measurementId;
-    this.setupGtag();
-    this.loadTagScript(measurementId);
 
-    // Queue initialization commands — dataLayer buffers them until the script loads
-    window.gtag?.('js', new Date());
-    window.gtag?.('config', measurementId, {
-      send_page_view: true   // let GA send the first page_view automatically
+    // We no longer need to manually load the script here because it's in index.html,
+    // but we'll ensure window.gtag exists just in case.
+    if (!window.gtag) {
+      window.gtag = (...args: unknown[]) => {
+        window.dataLayer.push(args);
+      };
+    }
+
+    // Explicitly send the first page view for the current path
+    window.gtag('event', 'page_view', {
+      page_path: this.router.url,
+      page_location: window.location.href
     });
 
-    // Also track all subsequent SPA route changes
     this.trackRouteChanges();
     this.initialized = true;
   }
@@ -69,10 +74,14 @@ export class AnalyticsService {
     this.router.events
       .pipe(filter((event): event is NavigationEnd => event instanceof NavigationEnd))
       .subscribe((event) => {
-        window.gtag?.('event', 'page_view', {
-          page_path: event.urlAfterRedirects,
-          page_location: window.location.href
-        });
+        if (window.gtag) {
+          window.gtag('event', 'page_view', {
+            page_path: event.urlAfterRedirects,
+            page_location: window.location.href,
+            page_title: this.document.title
+          });
+          console.debug('[Analytics] Page View:', event.urlAfterRedirects);
+        }
       });
   }
 }

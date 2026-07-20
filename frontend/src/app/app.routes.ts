@@ -169,6 +169,16 @@ export const routes: Routes = [
     title: 'XML Formatter - DataUtil'
   },
   {
+    path: 'categories/developer/sql-formatter',
+    loadComponent: () => import('./pages/tools/developer/sql-formatter/sql-formatter.component').then(m => m.SqlFormatterComponent),
+    title: 'SQL Formatter - DataUtil'
+  },
+  {
+    path: 'categories/developer/sql-validator',
+    redirectTo: 'categories/developer/sql-formatter',
+    pathMatch: 'full'
+  },
+  {
     path: 'categories/text/text-difference',
     loadComponent: () => import('./pages/tools/text/text-difference/text-difference.component').then(m => m.TextDifferenceComponent),
     title: 'Text Difference - DataUtil'
