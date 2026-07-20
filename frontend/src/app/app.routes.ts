@@ -154,6 +154,11 @@ export const routes: Routes = [
     title: 'Find and Replace - DataUtil'
   },
   {
+    path: 'categories/developer/json-formatter',
+    loadComponent: () => import('./pages/tools/developer/json-formatter/json-formatter.component').then(m => m.JsonFormatterComponent),
+    title: 'JSON Formatter - DataUtil'
+  },
+  {
     path: 'categories/:category/:toolId',
     loadComponent: () => import('./pages/tools/pdf/merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Tool - DataUtil'
