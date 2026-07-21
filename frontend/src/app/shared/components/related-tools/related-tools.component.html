@@ -1,0 +1,46 @@
+<section class="related-tools-section bg-gradient-to-b from-gray-50 to-white py-12 mt-16 border-t border-gray-200">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-primary mb-2">Related Tools</h2>
+      <p class="text-gray-600">Explore other tools that might help with your workflow</p>
+    </div>
+
+    @if (relatedTools().length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        @for (tool of relatedTools(); track tool.id) {
+          <a
+            [routerLink]="tool.route"
+            class="group relative bg-white rounded-xl border-2 border-gray-200 p-6 hover:border-blue-500 hover:shadow-lg transition-all duration-300 flex flex-col items-start"
+            [attr.aria-label]="tool.name + ' - ' + tool.description"
+          >
+            <!-- Icon Badge -->
+            <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
+              {{ tool.icon }}
+            </div>
+
+            <!-- Tool Name -->
+            <h3 class="text-lg font-bold text-primary mb-2 group-hover:text-blue-600 transition-colors">
+              {{ tool.name }}
+            </h3>
+
+            <!-- Tool Description -->
+            <p class="text-sm text-gray-600 line-clamp-2 flex-grow">
+              {{ tool.description }}
+            </p>
+
+            <!-- Arrow Icon -->
+            <div class="mt-4 flex items-center text-blue-600 text-sm font-medium group-hover:translate-x-1 transition-transform">
+              Try now
+              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+              </svg>
+            </div>
+
+            <!-- Hover Effect Gradient Overlay -->
+            <div class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/0 to-indigo-500/0 group-hover:from-blue-500/5 group-hover:to-indigo-500/5 transition-all duration-300 pointer-events-none"></div>
+          </a>
+        }
+      </div>
+    }
+  </div>
+</section>

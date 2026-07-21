@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { SeoService } from '../../../../services/seo.service';
 import loader from '@monaco-editor/loader';
 import type * as Monaco from 'monaco-editor';
@@ -19,7 +20,7 @@ import type * as Monaco from 'monaco-editor';
 @Component({
   selector: 'app-xml-formatter',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent],
   templateUrl: './xml-formatter.component.html',
   styleUrl: './xml-formatter.component.scss'
 })

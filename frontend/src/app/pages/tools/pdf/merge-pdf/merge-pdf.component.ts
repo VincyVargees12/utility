@@ -5,6 +5,7 @@ import { PDFDocument } from 'pdf-lib';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
+import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { SeoService } from '../../../../services/seo.service';
 
 interface PdfFile {
@@ -31,7 +32,8 @@ type ProcessingState = 'idle' | 'processing' | 'complete' | 'error';
     FormsModule,
     DragDropModule,
     ToolHeaderComponent,
-    FileUploaderComponent
+    FileUploaderComponent,
+    RelatedToolsComponent
   ],
   templateUrl: './merge-pdf.component.html',
   styleUrls: ['./merge-pdf.component.scss']
