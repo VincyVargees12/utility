@@ -1,0 +1,198 @@
+<div class="w-full">
+  <div class="max-w-none mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
+      <div class="flex-1 w-full pr-0 lg:pr-[380px]">
+        <div class="mb-8">
+          <h1 class="text-4xl font-bold text-primary mb-3">UUID / GUID Generator</h1>
+          <p class="text-lg text-secondary">Generate version 1, 4 UUIDs instantly. Supports bulk generation with customizable formatting options.</p>
+        </div>
+
+        <!-- Generated UUIDs Section -->
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+            <h2 class="text-lg font-bold text-primary">
+              Generated UUIDs
+              @if (generatedUuids().length > 0) {
+                <span class="text-sm font-normal text-gray-600">({{ generatedUuids().length }})</span>
+              }
+            </h2>
+            <div class="flex items-center gap-2">
+              @if (generatedUuids().length > 0) {
+                <button (click)="copyAll()"
+                  class="px-3 py-1 text-xs font-medium rounded-md transition-colors"
+                  [ngClass]="copied() ? 'bg-green-100 text-green-700' : 'bg-violet-100 text-violet-700 hover:bg-violet-200'">
+                  {{ copied() ? '✓ Copied' : '📋 Copy All' }}
+                </button>
+                <button (click)="downloadUuids()"
+                  class="px-3 py-1 bg-slate-600 text-white rounded-md hover:bg-slate-700 transition-colors text-xs font-medium">
+                  💾 Download
+                </button>
+                <button (click)="regenerate()"
+                  class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors text-xs font-medium">
+                  🔄 Regenerate
+                </button>
+                <button (click)="clear()"
+                  class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors text-xs font-medium">
+                  Clear
+                </button>
+              }
+            </div>
+          </div>
+          
+          <div class="p-6 overflow-y-auto" style="max-height: calc(100vh - 280px);">
+            @if (generatedUuids().length > 0) {
+              <div class="space-y-2">
+                @for (uuid of generatedUuids(); track $index) {
+                  <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
+                    <span class="flex-1 font-mono text-sm text-gray-700 break-all">{{ uuid }}</span>
+                    <button (click)="copyOne(uuid, $index)"
+                      class="px-3 py-1 text-xs font-medium rounded-md transition-colors flex-shrink-0"
+                      [ngClass]="copiedIndex() === $index ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
+                      {{ copiedIndex() === $index ? '✓' : '📋' }}
+                    </button>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="py-20 text-center">
+                <div class="text-6xl mb-4">🆔</div>
+                <p class="text-gray-500 mb-4">No UUIDs generated yet</p>
+                <p class="text-sm text-gray-400">Click "Generate UUIDs" to create unique identifiers</p>
+              </div>
+            }
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Sidebar -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Generator Options</h3>
+
+        <div class="px-4 pb-6 space-y-4 mt-4">
+
+          <!-- UUID Version -->
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-primary">UUID Version</label>
+            <select [(ngModel)]="uuidVersion"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+              <option value="v4">Version 4 (Random)</option>
+              <option value="v1">Version 1 (Timestamp)</option>
+            </select>
+            <div class="text-xs text-gray-500 mt-1">
+              @if (uuidVersion() === 'v4') {
+                <p>Completely random, most commonly used.</p>
+              } @else {
+                <p>Time-based, includes timestamp and node ID.</p>
+              }
+            </div>
+          </div>
+
+          <!-- Quantity -->
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-primary">Quantity</label>
+            <input 
+              type="number" 
+              [(ngModel)]="quantity"
+              min="1" 
+              max="1000"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+            <p class="text-xs text-gray-500">Generate 1-1000 UUIDs at once</p>
+          </div>
+
+          <!-- Case -->
+          <div class="space-y-2">
+            <label class="block text-sm font-semibold text-primary">Case</label>
+            <select [(ngModel)]="uuidCase"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+              <option value="lowercase">Lowercase</option>
+              <option value="uppercase">Uppercase</option>
+            </select>
+          </div>
+
+          <!-- Formatting Options -->
+          <div class="space-y-3">
+            <label class="block text-sm font-semibold text-primary">Formatting</label>
+            
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="withHyphens"
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-sm text-gray-700">Include hyphens (-)</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="withBraces"
+                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+              <span class="text-sm text-gray-700">Include braces ({{ '{' }}{{ '}' }})</span>
+            </label>
+          </div>
+
+          <!-- Generate Button -->
+          <div class="pt-2 border-t border-gray-200">
+            <button (click)="generateUuids()"
+              class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors font-semibold text-sm shadow-md">
+              🆔 Generate UUIDs
+            </button>
+          </div>
+
+          <!-- Format Examples -->
+          <div class="pt-2 border-t border-gray-200">
+            <h4 class="text-sm font-semibold text-gray-700 mb-2">Format Examples</h4>
+            <div class="text-xs text-gray-600 space-y-2 font-mono">
+              <div class="p-2 bg-gray-50 rounded border border-gray-200">
+                <p class="text-gray-500 mb-1">Standard:</p>
+                <p>550e8400-e29b-41d4-a716-446655440000</p>
+              </div>
+              <div class="p-2 bg-gray-50 rounded border border-gray-200">
+                <p class="text-gray-500 mb-1">No hyphens:</p>
+                <p>550e8400e29b41d4a716446655440000</p>
+              </div>
+              <div class="p-2 bg-gray-50 rounded border border-gray-200">
+                <p class="text-gray-500 mb-1">With braces:</p>
+                <p>{{ '{' }}550e8400-e29b-41d4-a716-446655440000{{ '}' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Info -->
+          <div class="pt-2 border-t border-gray-200">
+            <h4 class="text-sm font-semibold text-gray-700 mb-2">What is UUID?</h4>
+            <p class="text-xs text-gray-600 leading-relaxed">
+              UUID (Universally Unique Identifier) or GUID (Globally Unique Identifier) is a 128-bit number 
+              used to uniquely identify information. UUIDs are used in databases, distributed systems, and APIs.
+            </p>
+          </div>
+
+          <!-- Version Info -->
+          <div class="pt-2 border-t border-gray-200">
+            <h4 class="text-sm font-semibold text-gray-700 mb-2">UUID Versions</h4>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li><strong>v1:</strong> Time-based with MAC address</li>
+              <li><strong>v4:</strong> Random (most common)</li>
+            </ul>
+          </div>
+
+          <!-- Use Cases -->
+          <div class="pt-2 border-t border-gray-200">
+            <h4 class="text-sm font-semibold text-gray-700 mb-2">Common Use Cases</h4>
+            <ul class="text-xs text-gray-600 space-y-1">
+              <li>• Database primary keys</li>
+              <li>• Session identifiers</li>
+              <li>• File naming</li>
+              <li>• API request tracking</li>
+              <li>• Distributed system IDs</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Related Tools Section -->
+<app-related-tools [currentRoute]="'/categories/developer/uuid'" [maxTools]="6"></app-related-tools>

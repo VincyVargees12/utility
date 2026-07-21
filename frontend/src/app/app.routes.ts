@@ -169,6 +169,11 @@ export const routes: Routes = [
     title: 'XML Formatter - DataUtil'
   },
   {
+    path: 'categories/developer/html-formatter',
+    loadComponent: () => import('./pages/tools/developer/html-formatter/html-formatter.component').then(m => m.HtmlFormatterComponent),
+    title: 'HTML Formatter - DataUtil'
+  },
+  {
     path: 'categories/developer/sql-formatter',
     loadComponent: () => import('./pages/tools/developer/sql-formatter/sql-formatter.component').then(m => m.SqlFormatterComponent),
     title: 'SQL Formatter - DataUtil'
@@ -177,6 +182,31 @@ export const routes: Routes = [
     path: 'categories/developer/sql-validator',
     redirectTo: 'categories/developer/sql-formatter',
     pathMatch: 'full'
+  },
+  {
+    path: 'categories/developer/base64',
+    loadComponent: () => import('./pages/tools/developer/base64/base64.component').then(m => m.Base64Component),
+    title: 'Base64 Encode/Decode - DataUtil'
+  },
+  {
+    path: 'categories/developer/url-encode',
+    loadComponent: () => import('./pages/tools/developer/url-encode/url-encode.component').then(m => m.UrlEncodeComponent),
+    title: 'URL Encode/Decode - DataUtil'
+  },
+  {
+    path: 'categories/developer/hash',
+    loadComponent: () => import('./pages/tools/developer/hash-generator/hash-generator.component').then(m => m.HashGeneratorComponent),
+    title: 'Hash Generator - DataUtil'
+  },
+  {
+    path: 'categories/developer/uuid',
+    loadComponent: () => import('./pages/tools/developer/uuid-generator/uuid-generator.component').then(m => m.UuidGeneratorComponent),
+    title: 'UUID/GUID Generator - DataUtil'
+  },
+  {
+    path: 'categories/developer/jwt',
+    loadComponent: () => import('./pages/tools/developer/jwt-decoder/jwt-decoder.component').then(m => m.JwtDecoderComponent),
+    title: 'JWT Decoder - DataUtil'
   },
   {
     path: 'categories/text/text-difference',

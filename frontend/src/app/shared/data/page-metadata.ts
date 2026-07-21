@@ -212,6 +212,12 @@ export const PAGE_METADATA: Record<string, PageMetadata> = {
     priority: 0.8,
     isPopular: true
   },
+  '/categories/developer/html-formatter': {
+    route: '/categories/developer/html-formatter',
+    lastModified: '2026-07-21',
+    priority: 0.8,
+    isPopular: true
+  },
   '/categories/developer/sql-formatter': {
     route: '/categories/developer/sql-formatter',
     lastModified: '2026-07-21',
@@ -222,7 +228,37 @@ export const PAGE_METADATA: Record<string, PageMetadata> = {
     route: '/categories/developer/sql-validator',
     lastModified: '2026-07-21',
     priority: 0.7
-  }
+  },
+    '/categories/developer/base64': {
+    route: '/categories/developer/base64',
+    lastModified: '2026-07-21',
+    priority: 0.8,
+    isPopular: true
+  },
+  '/categories/developer/url-encode': {
+    route: '/categories/developer/url-encode',
+    lastModified: '2026-07-21',
+    priority: 0.8,
+    isPopular: true
+  },
+  '/categories/developer/hash': {
+    route: '/categories/developer/hash',
+    lastModified: '2026-07-21',
+    priority: 0.8,
+    isPopular: true
+  },
+  '/categories/developer/uuid': {
+    route: '/categories/developer/uuid',
+    lastModified: '2026-07-21',
+    priority: 0.8,
+    isPopular: true
+  },
+  '/categories/developer/jwt': {
+    route: '/categories/developer/jwt',
+    lastModified: '2026-07-21',
+    priority: 0.8,
+    isPopular: true
+  },
 };
 
 /**
