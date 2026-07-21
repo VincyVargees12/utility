@@ -229,8 +229,20 @@ export const PAGE_METADATA: Record<string, PageMetadata> = {
     lastModified: '2026-07-21',
     priority: 0.7
   },
-    '/categories/developer/base64': {
+  '/categories/developer/base64': {
     route: '/categories/developer/base64',
+    lastModified: '2026-07-21',
+    priority: 0.8,
+    isPopular: true
+  },
+  '/categories/developer/aes-encrypt': {
+    route: '/categories/developer/aes-encrypt',
+    lastModified: '2026-07-21',
+    priority: 0.8,
+    isPopular: true
+  },
+  '/categories/developer/des-encrypt': {
+    route: '/categories/developer/des-encrypt',
     lastModified: '2026-07-21',
     priority: 0.8,
     isPopular: true

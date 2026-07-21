@@ -189,6 +189,16 @@ export const routes: Routes = [
     title: 'Base64 Encode/Decode - DataUtil'
   },
   {
+    path: 'categories/developer/aes-encrypt',
+    loadComponent: () => import('./pages/tools/developer/aes-encrypt/aes-encrypt.component').then(m => m.AesEncryptComponent),
+    title: 'AES Encrypt/Decrypt - DataUtil'
+  },
+  {
+    path: 'categories/developer/des-encrypt',
+    loadComponent: () => import('./pages/tools/developer/des-encrypt/des-encrypt.component').then(m => m.DesEncryptComponent),
+    title: 'DES Encrypt/Decrypt - DataUtil'
+  },
+  {
     path: 'categories/developer/url-encode',
     loadComponent: () => import('./pages/tools/developer/url-encode/url-encode.component').then(m => m.UrlEncodeComponent),
     title: 'URL Encode/Decode - DataUtil'

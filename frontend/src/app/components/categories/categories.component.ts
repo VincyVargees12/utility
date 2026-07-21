@@ -39,7 +39,7 @@ export class CategoriesComponent {
       name: 'Developer Tools',
       icon: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
       description: 'JSON, XML, Base64 and more dev utilities',
-      toolCount: 25,
+      toolCount: 27,
       color: '#3B82F6',
       route: '/categories/developer'
     },

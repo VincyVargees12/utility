@@ -86,6 +86,8 @@ export const TOOLS_REGISTRY: Record<string, ToolCategory> = {
       { id: 'sql-formatter', name: 'SQL Formatter', description: 'Format SQL queries with proper indentation and syntax highlighting.', icon: '🗄️', route: '/categories/developer/sql-formatter', category: 'format' },
       { id: 'html-formatter', name: 'HTML Formatter', description: 'Format and beautify HTML code with proper indentation.', icon: '🌐', route: '/categories/developer/html-formatter', category: 'format' },
       { id: 'base64-encode', name: 'Base64 Encode/Decode', description: 'Encode string to Base64 or decode Base64 to text.', icon: '🔒', route: '/categories/developer/base64', category: 'encode' },
+      { id: 'aes-encrypt', name: 'AES Encrypt/Decrypt', description: 'Encrypt and decrypt text with AES-GCM and PBKDF2 key derivation.', icon: '🛡️', route: '/categories/developer/aes-encrypt', category: 'security' },
+      { id: 'des-encrypt', name: 'DES Encrypt/Decrypt', description: 'Encrypt and decrypt text with DES-CBC and PBKDF2 key derivation.', icon: '🧷', route: '/categories/developer/des-encrypt', category: 'security' },
       { id: 'url-encode', name: 'URL Encode/Decode', description: 'Encode URL parameters or decode URL-encoded strings.', icon: '🔗', route: '/categories/developer/url-encode', category: 'encode' },
       { id: 'hash-generator', name: 'Hash Generator', description: 'Generate MD5, SHA-1, SHA-256, and other cryptographic hashes.', icon: '🔐', route: '/categories/developer/hash', category: 'security' },
       { id: 'uuid-generator', name: 'UUID/GUID Generator', description: 'Generate version 1, 3, 4, and 5 UUIDs instantly.', icon: '🆔', route: '/categories/developer/uuid', category: 'generate' },
