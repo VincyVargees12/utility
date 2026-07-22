@@ -12,9 +12,23 @@ import { environment } from '../environments/environment';
   template: `
     <app-navbar />
     <router-outlet />
-    <app-footer />
+    @defer (on viewport; prefetch on idle) {
+      <app-footer />
+    } @placeholder {
+      <div class="footer-placeholder" aria-hidden="true"></div>
+    }
   `,
-  styles: []
+  styles: [`
+    .footer-placeholder {
+      min-height: 18rem;
+    }
+
+    @media (max-width: 767px) {
+      .footer-placeholder {
+        min-height: 14rem;
+      }
+    }
+  `]
 })
 export class App implements OnInit {
   private analyticsService = inject(AnalyticsService);
