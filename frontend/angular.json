@@ -35,7 +35,11 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              {
+                "input": "src/styles.scss",
+                "inject": false,
+                "bundleName": "styles"
+              }
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
@@ -52,7 +56,7 @@
                 "scripts": true,
                 "styles": {
                   "minify": true,
-                  "inlineCritical": true,
+                  "inlineCritical": false,
                   "removeSpecialComments": true
                 },
                 "fonts": false
