@@ -34,7 +34,7 @@
             </button>
             <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg h-72">
               @if (pdfThumbnail()) {
-                <img [src]="pdfThumbnail()" class="max-h-full object-contain shadow-sm bg-white" alt="Preview" />
+                <img [ngSrc]="pdfThumbnail()!" fill sizes="224px" class="object-contain shadow-sm bg-white" alt="Preview" />
               } @else {
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-gray-600"></div>
               }

@@ -42,7 +42,7 @@
 
         @if (getActiveImage()) {
           <div class="overflow-hidden rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <img #cropperImage [src]="getActiveImage()!.previewUrl" alt="Crop preview" class="max-w-full max-h-[70vh] mx-auto rounded-lg bg-white shadow-inner" />
+            <img #cropperImage [ngSrc]="getActiveImage()!.previewUrl" [width]="getActiveImage()!.originalWidth" [height]="getActiveImage()!.originalHeight" sizes="(max-width: 1024px) 100vw, 70vw" alt="Crop preview" class="max-w-full max-h-[70vh] mx-auto rounded-lg bg-white shadow-inner" />
           </div>
         }
       </div>

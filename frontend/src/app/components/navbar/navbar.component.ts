@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
@@ -8,17 +8,25 @@ interface NavItem {
   label: string;
   route?: string;
   categoryRoute?: string;
-  dropdown?: { label: string; route: string; icon: string }[];
+  dropdownKey?: keyof typeof TOOLS_REGISTRY | 'all';
+}
+
+interface DropdownItem {
+  label: string;
+  route: string;
+  icon: string;
 }
 
 @Component({
   selector: 'app-navbar',
   imports: [CommonModule, RouterLink],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.scss'
+  styleUrl: './navbar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent {
   private readonly themeService = inject(ThemeService);
+  private readonly dropdownCache = new Map<NavItem['dropdownKey'], DropdownItem[]>();
   
   protected readonly isDarkMode = this.themeService.isDarkMode;
   protected readonly mobileMenuOpen = signal(false);
@@ -28,34 +36,57 @@ export class NavbarComponent {
     {
       label: 'PDF TOOLS',
       categoryRoute: '/categories/pdf',
-      dropdown: TOOLS_REGISTRY['pdf'].tools.map(t => ({ label: t.name, route: t.route, icon: t.icon }))
+      dropdownKey: 'pdf'
     },
     {
       label: 'IMAGE TOOLS',
       categoryRoute: '/categories/images',
-      dropdown: TOOLS_REGISTRY['images'].tools.map(t => ({ label: t.name, route: t.route, icon: t.icon }))
+      dropdownKey: 'images'
     },
     {
       label: 'TEXT TOOLS',
       categoryRoute: '/categories/text',
-      dropdown: TOOLS_REGISTRY['text'].tools.map(t => ({ label: t.name, route: t.route, icon: t.icon }))
+      dropdownKey: 'text'
     },
     {
       label: 'DEVELOPER',
       categoryRoute: '/categories/developer',
-      dropdown: TOOLS_REGISTRY['developer'].tools.map(t => ({ label: t.name, route: t.route, icon: t.icon }))
+      dropdownKey: 'developer'
     },
     {
       label: 'ALL TOOLS',
       categoryRoute: '/categories',
-      dropdown: [
-        ...TOOLS_REGISTRY['pdf'].tools.map(t => ({ label: t.name, route: t.route, icon: t.icon })),
-        ...TOOLS_REGISTRY['images'].tools.map(t => ({ label: t.name, route: t.route, icon: t.icon })),
-        ...TOOLS_REGISTRY['text'].tools.map(t => ({ label: t.name, route: t.route, icon: t.icon })),
-        ...TOOLS_REGISTRY['developer'].tools.map(t => ({ label: t.name, route: t.route, icon: t.icon }))
-      ]
-    },
+      dropdownKey: 'all'
+    }
   ];
+
+  protected getDropdownItems(item: NavItem): DropdownItem[] {
+    if (!item.dropdownKey) {
+      return [];
+    }
+
+    const cachedItems = this.dropdownCache.get(item.dropdownKey);
+    if (cachedItems) {
+      return cachedItems;
+    }
+
+    const dropdownItems = item.dropdownKey === 'all'
+      ? (Object.values(TOOLS_REGISTRY) as Array<(typeof TOOLS_REGISTRY)[keyof typeof TOOLS_REGISTRY]>).flatMap(category =>
+          category.tools.map(tool => ({
+            label: tool.name,
+            route: tool.route,
+            icon: tool.icon
+          }))
+        )
+      : TOOLS_REGISTRY[item.dropdownKey].tools.map(tool => ({
+          label: tool.name,
+          route: tool.route,
+          icon: tool.icon
+        }));
+
+    this.dropdownCache.set(item.dropdownKey, dropdownItems);
+    return dropdownItems;
+  }
 
   protected toggleTheme(): void {
     this.themeService.toggleTheme();

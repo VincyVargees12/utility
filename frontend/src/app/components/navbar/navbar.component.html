@@ -11,7 +11,7 @@
     <!-- Desktop Navigation -->
     <div class="desktop-nav">
       @for (item of navItems; track item.label) {
-        @if (item.dropdown) {
+        @if (item.dropdownKey) {
           <div class="nav-item-wrapper" 
                (mouseenter)="toggleDropdown(item.label)" 
                (mouseleave)="closeDropdown()">
@@ -27,7 +27,7 @@
                 class="dropdown-menu"
                 [class.mega-menu]="item.label === 'ALL TOOLS'">
                 <div class="dropdown-content">
-                  @for (dropItem of item.dropdown; track dropItem.route) {
+                  @for (dropItem of getDropdownItems(item); track dropItem.route) {
                     <a [routerLink]="dropItem.route" class="dropdown-item" (click)="closeDropdown()">
                       <span class="dropdown-icon">{{ dropItem.icon }}</span>
                       <span class="dropdown-label">{{ dropItem.label }}</span>
@@ -84,10 +84,10 @@
   @if (mobileMenuOpen()) {
     <div class="mobile-menu">
       @for (item of navItems; track item.label) {
-        @if (item.dropdown) {
+        @if (item.dropdownKey) {
           <div class="mobile-category">
             <div class="mobile-category-title">{{ item.label }}</div>
-            @for (dropItem of item.dropdown; track dropItem.route) {
+            @for (dropItem of getDropdownItems(item); track dropItem.route) {
               <a [routerLink]="dropItem.route" class="mobile-link" (click)="closeMobileMenu()">
                 <span class="mobile-icon">{{ dropItem.icon }}</span>
                 {{ dropItem.label }}

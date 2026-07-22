@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PDFDocument, degrees } from 'pdf-lib';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
@@ -23,7 +23,7 @@ interface PdfFile {
 @Component({
   selector: 'app-rotate-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, NgOptimizedImage, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
   templateUrl: './rotate-pdf.component.html',
   styleUrl: './rotate-pdf.component.scss'
 })

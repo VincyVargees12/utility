@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -24,7 +24,8 @@ import { CommonModule } from '@angular/common';
       </div>
     </section>
   `,
-  styleUrl: './why-choose.component.scss'
+  styleUrl: './why-choose.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WhyChooseComponent {
   protected readonly features = [

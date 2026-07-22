@@ -43,8 +43,8 @@
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             @for (img of images(); track img.id) {
               <div class="relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden hover:border-blue-400 transition-colors group">
-                <div class="aspect-square bg-gray-50 flex items-center justify-center">
-                  <img [src]="img.previewUrl" [alt]="img.name" class="max-w-full max-h-full object-contain">
+                <div class="aspect-square bg-gray-50 flex items-center justify-center relative">
+                  <img [ngSrc]="img.previewUrl" [width]="img.width" [height]="img.height" sizes="(max-width: 768px) 50vw, 33vw" [alt]="img.name" class="max-w-full max-h-full object-contain">
                 </div>
                 <div class="p-3">
                   <p class="text-sm font-medium text-gray-900 truncate">{{ img.name }}</p>

@@ -53,9 +53,9 @@
               </div>
 
               <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
-                <div class="transition-transform duration-300 transform" [style.transform]="'rotate(' + file.rotation + 'deg)'">
+                <div class="relative h-full w-full transition-transform duration-300 transform" [style.transform]="'rotate(' + file.rotation + 'deg)'">
                   @if (file.thumbnail) {
-                    <img [src]="file.thumbnail" class="max-h-40 object-contain shadow-sm bg-white" alt="Preview" />
+                    <img [ngSrc]="file.thumbnail" fill sizes="192px" class="object-contain shadow-sm bg-white" alt="Preview" />
                   } @else {
                     <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-gray-600"></div>
                   }

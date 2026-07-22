@@ -1,5 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
 import { HeroComponent } from '../../components/hero/hero.component';
 import { CategoriesComponent } from '../../components/categories/categories.component';
 import { TrendingToolsComponent } from '../../components/trending-tools/trending-tools.component';
@@ -7,7 +6,6 @@ import { WhyChooseComponent } from '../../components/why-choose/why-choose.compo
 import { StatisticsComponent } from '../../components/statistics/statistics.component';
 import { FaqComponent } from '../../components/faq/faq.component';
 import { NewsletterComponent } from '../../components/newsletter/newsletter.component';
-import { FooterComponent } from '../../components/footer/footer.component';
 import { SeoService } from '../../services/seo.service';
 
 @Component({
@@ -25,11 +23,36 @@ import { SeoService } from '../../services/seo.service';
     <main>
       <app-hero />
       <app-categories />
-      <app-trending-tools />
-      <app-why-choose />
-      <app-statistics />
-      <app-faq />
-      <app-newsletter />
+
+      @defer (on viewport; prefetch on idle) {
+        <app-trending-tools />
+      } @placeholder {
+        <section class="deferred-section-shell" aria-hidden="true"></section>
+      }
+
+      @defer (on viewport; prefetch on idle) {
+        <app-why-choose />
+      } @placeholder {
+        <section class="deferred-section-shell" aria-hidden="true"></section>
+      }
+
+      @defer (on viewport; prefetch on idle) {
+        <app-statistics />
+      } @placeholder {
+        <section class="deferred-section-shell deferred-section-shell--compact" aria-hidden="true"></section>
+      }
+
+      @defer (on viewport; prefetch on idle) {
+        <app-faq />
+      } @placeholder {
+        <section class="deferred-section-shell deferred-section-shell--tall" aria-hidden="true"></section>
+      }
+
+      @defer (on viewport; prefetch on idle) {
+        <app-newsletter />
+      } @placeholder {
+        <section class="deferred-section-shell deferred-section-shell--compact" aria-hidden="true"></section>
+      }
     </main>
   `,
   styles: [`
@@ -40,7 +63,35 @@ import { SeoService } from '../../services/seo.service';
     main {
       min-height: 100vh;
     }
+
+    .deferred-section-shell {
+      min-height: 32rem;
+    }
+
+    .deferred-section-shell--compact {
+      min-height: 18rem;
+    }
+
+    .deferred-section-shell--tall {
+      min-height: 40rem;
+    }
+
+    @media (max-width: 767px) {
+      .deferred-section-shell {
+        min-height: 24rem;
+      }
+
+      .deferred-section-shell--compact {
+        min-height: 14rem;
+      }
+
+      .deferred-section-shell--tall {
+        min-height: 30rem;
+      }
+    }
   `]
+  ,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent implements OnInit {
   private readonly seoService = inject(SeoService);

@@ -12,6 +12,7 @@ declare global {
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
+  private static readonly scriptId = 'ga4-gtag-script';
   private initialized = false;
   private measurementId = '';
 
@@ -28,16 +29,15 @@ export class AnalyticsService {
 
     this.measurementId = measurementId;
 
-    // We no longer need to manually load the script here because it's in index.html,
-    // but we'll ensure window.gtag exists just in case.
-    if (!window.gtag) {
-      window.gtag = (...args: unknown[]) => {
-        window.dataLayer.push(args);
-      };
-    }
+    this.setupGtag();
+    this.loadTagScript(measurementId);
+    window.gtag?.('js', new Date());
+    window.gtag?.('config', measurementId, {
+      send_page_view: false
+    });
 
     // Explicitly send the first page view for the current path
-    window.gtag('event', 'page_view', {
+    window.gtag?.('event', 'page_view', {
       page_path: this.router.url,
       page_location: window.location.href
     });
@@ -57,14 +57,12 @@ export class AnalyticsService {
   }
 
   private loadTagScript(measurementId: string): void {
-    const scriptId = 'ga4-gtag-script';
-
-    if (this.document.getElementById(scriptId)) {
+    if (this.document.getElementById(AnalyticsService.scriptId)) {
       return;
     }
 
     const script = this.document.createElement('script');
-    script.id = scriptId;
+    script.id = AnalyticsService.scriptId;
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
     this.document.head.appendChild(script);

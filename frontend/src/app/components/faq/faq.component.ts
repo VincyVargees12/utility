@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -30,7 +30,8 @@ import { CommonModule } from '@angular/common';
       </div>
     </section>
   `,
-  styleUrl: './faq.component.scss'
+  styleUrl: './faq.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FaqComponent {
   protected readonly activeIndex = signal<number | null>(null);

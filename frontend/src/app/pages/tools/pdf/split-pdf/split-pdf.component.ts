@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PDFDocument } from 'pdf-lib';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
@@ -27,7 +27,7 @@ interface PageRange {
 @Component({
   selector: 'app-split-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, NgOptimizedImage, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
   templateUrl: './split-pdf.component.html',
   styleUrl: './split-pdf.component.scss'
 })

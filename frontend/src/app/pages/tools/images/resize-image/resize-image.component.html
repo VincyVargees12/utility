@@ -44,7 +44,7 @@
               </button>
               
               <div class="flex-1 p-2 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg">
-                <img [src]="img.previewUrl" class="max-h-full max-w-full object-contain shadow-sm bg-white" [alt]="img.name" />
+                <img [ngSrc]="img.previewUrl" fill sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw" class="object-contain shadow-sm bg-white" [alt]="img.name" />
               </div>
               
               <!-- Dimensions display like screenshot -->

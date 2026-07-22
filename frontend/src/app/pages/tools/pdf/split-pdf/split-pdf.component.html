@@ -37,10 +37,12 @@
                     @for (page of pages(); track page.pageNumber) {
                       @if (page.pageNumber === range.fromPage) {
                         <div class="relative">
-                          <div class="w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                          <div class="relative w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
                             @if (page.thumbnail) {
                               <img
-                                [src]="page.thumbnail"
+                                [ngSrc]="page.thumbnail"
+                                fill
+                                sizes="128px"
                                 [alt]="'Preview page ' + page.pageNumber"
                                 class="w-full h-full object-contain bg-gray-50">
                             } @else {
@@ -65,10 +67,12 @@
                       @for (page of pages(); track page.pageNumber) {
                         @if (page.pageNumber === range.toPage) {
                           <div class="relative">
-                            <div class="w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                            <div class="relative w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
                               @if (page.thumbnail) {
                                 <img
-                                  [src]="page.thumbnail"
+                                  [ngSrc]="page.thumbnail"
+                                  fill
+                                  sizes="128px"
                                   [alt]="'Preview page ' + page.pageNumber"
                                   class="w-full h-full object-contain bg-gray-50">
                               } @else {
@@ -102,10 +106,12 @@
                         @for (page of pages(); track page.pageNumber) {
                           @if (page.pageNumber >= startPage && page.pageNumber <= endPage) {
                             <div class="relative">
-                              <div class="w-24 h-32 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                              <div class="relative w-24 h-32 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
                                 @if (page.thumbnail) {
                                   <img
-                                    [src]="page.thumbnail"
+                                    [ngSrc]="page.thumbnail"
+                                    fill
+                                    sizes="96px"
                                     [alt]="'Preview page ' + page.pageNumber"
                                     class="w-full h-full object-contain bg-gray-50">
                                 } @else {
@@ -139,10 +145,12 @@
                   @for (page of pages(); track page.pageNumber) {
                     @if (page.pageNumber >= startPage && page.pageNumber <= endPage) {
                       <div class="relative">
-                        <div class="w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
+                        <div class="relative w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
                           @if (page.thumbnail) {
                             <img
-                              [src]="page.thumbnail"
+                              [ngSrc]="page.thumbnail"
+                              fill
+                              sizes="128px"
                               [alt]="'Preview page ' + page.pageNumber"
                               class="w-full h-full object-contain bg-gray-50">
                           } @else {
@@ -179,7 +187,9 @@
                     }
                     @if (page.thumbnail) {
                       <img
-                        [src]="page.thumbnail"
+                        [ngSrc]="page.thumbnail"
+                        fill
+                        sizes="128px"
                         [alt]="'Preview page ' + page.pageNumber"
                         class="w-full h-full object-contain bg-gray-50">
                     } @else {

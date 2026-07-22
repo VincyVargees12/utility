@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -19,7 +19,8 @@ import { CommonModule } from '@angular/common';
       </div>
     </section>
   `,
-  styleUrl: './statistics.component.scss'
+  styleUrl: './statistics.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StatisticsComponent implements OnInit {
   protected readonly stats = [

@@ -53,8 +53,8 @@
               </div>
 
               <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
-                <div class="transition-transform duration-300 transform" [style.transform]="'rotate(' + img.rotation + 'deg)'">
-                  <img [src]="img.previewUrl" class="max-h-40 object-contain shadow-sm bg-white" [alt]="img.name" />
+                <div class="relative h-full w-full transition-transform duration-300 transform" [style.transform]="'rotate(' + img.rotation + 'deg)'">
+                  <img [ngSrc]="img.previewUrl" fill sizes="192px" class="object-contain shadow-sm bg-white" [alt]="img.name" />
                 </div>
               </div>
               <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg">

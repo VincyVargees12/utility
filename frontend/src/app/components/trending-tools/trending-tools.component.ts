@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
@@ -15,7 +15,8 @@ interface TrendingTool {
   selector: 'app-trending-tools',
   imports: [CommonModule, RouterLink],
   templateUrl: './trending-tools.component.html',
-  styleUrl: './trending-tools.component.scss'
+  styleUrl: './trending-tools.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrendingToolsComponent {
   protected readonly tools: TrendingTool[] = [

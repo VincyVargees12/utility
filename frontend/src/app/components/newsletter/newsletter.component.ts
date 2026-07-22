@@ -1,10 +1,9 @@
-import { Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-newsletter',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule],
   template: `
     <section class="section newsletter">
       <div class="container">
@@ -21,8 +20,8 @@ import { FormsModule } from '@angular/forms';
               type="email"
               placeholder="Enter your email"
               class="newsletter-input"
-              [(ngModel)]="email"
-              name="email"
+              [value]="email()"
+              (input)="updateEmail($event)"
               required
             />
             <button type="submit" class="newsletter-btn">
@@ -42,17 +41,25 @@ import { FormsModule } from '@angular/forms';
       </div>
     </section>
   `,
-  styleUrl: './newsletter.component.scss'
+  styleUrl: './newsletter.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewsletterComponent {
-  protected email = '';
+  protected readonly email = signal('');
   protected readonly subscribed = signal(false);
 
+  protected updateEmail(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.email.set(target.value);
+  }
+
   protected subscribe(): void {
-    if (this.email) {
-      console.log('Subscribing:', this.email);
+    const email = this.email().trim();
+
+    if (email) {
+      console.log('Subscribing:', email);
       this.subscribed.set(true);
-      this.email = '';
+      this.email.set('');
       setTimeout(() => this.subscribed.set(false), 5000);
     }
   }
