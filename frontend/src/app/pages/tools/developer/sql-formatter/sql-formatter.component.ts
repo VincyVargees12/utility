@@ -17,7 +17,6 @@ import { RelatedToolsComponent } from '../../../../shared/components/related-too
 import { SeoService } from '../../../../services/seo.service';
 import loader from '@monaco-editor/loader';
 import type * as Monaco from 'monaco-editor';
-import { format } from 'sql-formatter';
 
 @Component({
   selector: 'app-sql-formatter',
@@ -37,6 +36,7 @@ export class SqlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
   private outputEditor?: Monaco.editor.IStandaloneCodeEditor;
   private isSettingInputEditor = false;
   private isSettingOutputEditor = false;
+  private formatSqlFn?: (sql: string, options: object) => string;
 
   inputText = signal<string>('');
   outputText = signal<string>('');
@@ -162,12 +162,22 @@ export class SqlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
     this.isSettingOutputEditor = false;
   }
 
-  formatSql(): void {
+  private async loadSqlFormatter(): Promise<(sql: string, options: object) => string> {
+    if (this.formatSqlFn) {
+      return this.formatSqlFn;
+    }
+    const module = await import('sql-formatter');
+    this.formatSqlFn = module.format;
+    return this.formatSqlFn;
+  }
+
+  async formatSql(): Promise<void> {
     const sql = this.inputText().trim();
     if (!sql) return;
 
     try {
-      const formatted = format(sql, {
+      const formatFn = await this.loadSqlFormatter();
+      const formatted = formatFn(sql, {
         language: this.dialect() as any,
         tabWidth: this.indentSize(),
         keywordCase: this.uppercase() ? 'upper' : 'lower',

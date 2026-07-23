@@ -16,7 +16,6 @@ import { RelatedToolsComponent } from '../../../../shared/components/related-too
 import { SeoService } from '../../../../services/seo.service';
 import loader from '@monaco-editor/loader';
 import type * as Monaco from 'monaco-editor';
-import { html as beautifyHtml } from 'js-beautify';
 
 @Component({
   selector: 'app-html-formatter',
@@ -36,6 +35,7 @@ export class HtmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
   private outputEditor?: Monaco.editor.IStandaloneCodeEditor;
   private isSettingInput = false;
   private isSettingOutput = false;
+  private beautifyHtml?: (html: string, options: object) => string;
 
   inputText = signal<string>('');
   outputText = signal<string>('');
@@ -82,6 +82,15 @@ export class HtmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   // ── Editor setup ──────────────────────────────────────────────
+
+  private async loadBeautifyHtml(): Promise<(html: string, options: object) => string> {
+    if (this.beautifyHtml) {
+      return this.beautifyHtml;
+    }
+    const module = await import('js-beautify');
+    this.beautifyHtml = module.html;
+    return this.beautifyHtml;
+  }
 
   private createEditors(): void {
     loader.init().then((monaco) => {
@@ -142,12 +151,13 @@ export class HtmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
 
   // ── Actions ──────────────────────────────────────────────
 
-  formatHtml(): void {
+  async formatHtml(): Promise<void> {
     const input = this.inputText().trim();
     if (!input) return;
 
     try {
-      const formatted = beautifyHtml(input, {
+      const beautifyFn = await this.loadBeautifyHtml();
+      const formatted = beautifyFn(input, {
         indent_size: this.indentSize(),
         indent_char: ' ',
         max_preserve_newlines: 2,
@@ -211,21 +221,28 @@ export class HtmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
         this.errorMessage.set(errorMsg);
       } else {
         // HTML is valid, format it
-        const formatted = beautifyHtml(input, {
-          indent_size: this.indentSize(),
-          indent_char: ' ',
-          max_preserve_newlines: 2,
-          preserve_newlines: true,
-          end_with_newline: true,
-          wrap_line_length: 0,
-          indent_inner_html: true,
-          unformatted: ['pre', 'code', 'textarea'],
-          content_unformatted: ['pre', 'textarea']
-        });
+        this.loadBeautifyHtml().then((beautifyFn) => {
+          const formatted = beautifyFn(input, {
+            indent_size: this.indentSize(),
+            indent_char: ' ',
+            max_preserve_newlines: 2,
+            preserve_newlines: true,
+            end_with_newline: true,
+            wrap_line_length: 0,
+            indent_inner_html: true,
+            unformatted: ['pre', 'code', 'textarea'],
+            content_unformatted: ['pre', 'textarea']
+          });
 
-        this.setOutputValue(formatted);
-        this.isValid.set(true);
-        this.errorMessage.set('HTML is valid and formatted');
+          this.setOutputValue(formatted);
+          this.isValid.set(true);
+          this.errorMessage.set('HTML is valid and formatted');
+        }).catch((error) => {
+          const errorMsg = error instanceof Error ? error.message : 'Error formatting HTML';
+          this.setOutputValue(input);
+          this.isValid.set(false);
+          this.errorMessage.set(errorMsg);
+        });
       }
     } catch (error) {
       const errorMsg = error instanceof Error ? error.message : 'Error validating HTML';

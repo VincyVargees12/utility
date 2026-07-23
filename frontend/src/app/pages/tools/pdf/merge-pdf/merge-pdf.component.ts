@@ -1,7 +1,6 @@
 import { Component, signal, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PDFDocument } from 'pdf-lib';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
@@ -40,6 +39,7 @@ type ProcessingState = 'idle' | 'processing' | 'complete' | 'error';
 })
 export class MergePdfComponent implements OnInit {
   private readonly seoService = inject(SeoService);
+  private PDFDocument?: any;
 
   files = signal<PdfFile[]>([]);
   state = signal<ProcessingState>('idle');
@@ -61,6 +61,15 @@ export class MergePdfComponent implements OnInit {
     });
   }
 
+  private async loadPdfLib(): Promise<any> {
+    if (this.PDFDocument) {
+      return this.PDFDocument;
+    }
+    const module = await import('pdf-lib');
+    this.PDFDocument = module.PDFDocument;
+    return this.PDFDocument;
+  }
+
   onFileSelected(files: FileList): void {
     if (files) {
       this.handleFiles(Array.from(files));
@@ -72,6 +81,7 @@ export class MergePdfComponent implements OnInit {
     const nextOrder = currentFiles.length;
     
     const pdfFiles: PdfFile[] = [];
+    const PDFDocClass = await this.loadPdfLib();
     
     for (let i = 0; i < newFiles.length; i++) {
       const file = newFiles[i];
@@ -88,7 +98,7 @@ export class MergePdfComponent implements OnInit {
       // Check if file is password protected
       try {
         const arrayBuffer = await file.arrayBuffer();
-        await PDFDocument.load(arrayBuffer, { ignoreEncryption: false });
+        await PDFDocClass.load(arrayBuffer, { ignoreEncryption: false });
         // File is not encrypted or can be loaded
         pdfFile.passwordRequired = false;
       } catch (error: any) {
@@ -140,15 +150,18 @@ export class MergePdfComponent implements OnInit {
   }
 
   sortFiles(): void {
-    const files = [...this.files()];
-    const order = this.sortOrder();
-    
-    files.sort((a, b) => {
-      const comparison = a.name.localeCompare(b.name);
-      return order === 'asc' ? comparison : -comparison;
+    // Batch DOM update to avoid layout thrashing
+    requestAnimationFrame(() => {
+      const files = [...this.files()];
+      const order = this.sortOrder();
+      
+      files.sort((a, b) => {
+        const comparison = a.name.localeCompare(b.name);
+        return order === 'asc' ? comparison : -comparison;
+      });
+      
+      this.files.set(files);
     });
-    
-    this.files.set(files);
   }
 
   get canMerge(): boolean {
@@ -169,7 +182,8 @@ export class MergePdfComponent implements OnInit {
     this.errorMessage.set('');
 
     try {
-      const mergedPdf = await PDFDocument.create();
+      const PDFDocClass = await this.loadPdfLib();
+      const mergedPdf = await PDFDocClass.create();
       const selectedFiles = this.files().filter(f => f.selected);
       const totalFiles = selectedFiles.length;
 
@@ -181,7 +195,7 @@ export class MergePdfComponent implements OnInit {
           const arrayBuffer = await fileItem.file.arrayBuffer();
           
           // Try loading the PDF
-          const pdf = await PDFDocument.load(arrayBuffer);
+          const pdf = await PDFDocClass.load(arrayBuffer);
           
           const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
           
@@ -282,9 +296,10 @@ export class MergePdfComponent implements OnInit {
 
     try {
       const arrayBuffer = await fileItem.file.arrayBuffer();
+      const PDFDocClass = await this.loadPdfLib();
       
       // Try to load with password
-      await PDFDocument.load(arrayBuffer, { 
+      await PDFDocClass.load(arrayBuffer, { 
         ignoreEncryption: false
       });
 

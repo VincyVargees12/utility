@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PDFDocument } from 'pdf-lib';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
@@ -19,6 +18,7 @@ type CompressionLevel = 'low' | 'medium' | 'high';
 })
 export class CompressPdfComponent implements OnInit {
   private seoService = inject(SeoService);
+  private PDFDocument?: any;
 
   state = signal<AppState>('upload');
   compressionLevel = signal<CompressionLevel>('medium');
@@ -40,6 +40,15 @@ export class CompressPdfComponent implements OnInit {
     });
   }
 
+  private async loadPdfLib(): Promise<any> {
+    if (this.PDFDocument) {
+      return this.PDFDocument;
+    }
+    const module = await import('pdf-lib');
+    this.PDFDocument = module.PDFDocument;
+    return this.PDFDocument;
+  }
+
   onFileSelected(files: FileList): void {
     if (files && files[0]) {
       this.loadPdfFile(files[0]);
@@ -54,7 +63,8 @@ export class CompressPdfComponent implements OnInit {
 
       // Validate PDF
       const arrayBuffer = await file.arrayBuffer();
-      await PDFDocument.load(arrayBuffer);
+      const PDFDocClass = await this.loadPdfLib();
+      await PDFDocClass.load(arrayBuffer);
 
       this.state.set('configure');
     } catch (error: any) {
@@ -73,6 +83,7 @@ export class CompressPdfComponent implements OnInit {
       const file = this.pdfFile()!;
       const arrayBuffer = await file.arrayBuffer();
       const level = this.compressionLevel();
+      const PDFDocClass = await this.loadPdfLib();
 
       // Configure pdf.js for rendering
       const pdfjs = await import('pdfjs-dist');
@@ -85,7 +96,7 @@ export class CompressPdfComponent implements OnInit {
       const pdf = await loadingTask.promise;
       const numPages = pdf.numPages;
 
-      const newPdfDoc = await PDFDocument.create();
+      const newPdfDoc = await PDFDocClass.create();
 
       // Compression settings based on level
       let scale = 1.0;
@@ -150,7 +161,7 @@ export class CompressPdfComponent implements OnInit {
       if (blob.size >= file.size) {
         // Read the file again since the previous arrayBuffer may have been transferred/detached by pdf.js worker
         const freshArrayBuffer = await file.arrayBuffer();
-        const fallbackDoc = await PDFDocument.load(freshArrayBuffer);
+        const fallbackDoc = await PDFDocClass.load(freshArrayBuffer);
         fallbackDoc.setTitle('');
         fallbackDoc.setAuthor('');
         fallbackDoc.setCreator('');

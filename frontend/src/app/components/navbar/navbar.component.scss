@@ -451,18 +451,6 @@
   }
 }
 
-.mobile-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #e2e8f0;
-}
-
-:host-context(.dark) .mobile-actions {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
 
 .btn-text-mobile {
   padding: 0.875rem;

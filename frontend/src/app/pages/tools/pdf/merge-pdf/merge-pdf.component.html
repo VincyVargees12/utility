@@ -47,6 +47,7 @@
 
           <div class="files-list" 
                cdkDropList
+               [cdkDropListEnablePointerEvents]="false"
                (cdkDropListDropped)="onDrop($event)">
             @for (file of files(); track file.id) {
               <div class="file-item" cdkDrag [class.has-password-field]="file.showPasswordInput">

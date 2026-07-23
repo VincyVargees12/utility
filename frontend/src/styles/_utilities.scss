@@ -136,48 +136,6 @@
   }
 }
 
-.btn-outline {
-  @include btn-base;
-  background-color: transparent;
-  color: $secondary-blue;
-  padding: $btn-padding-md;
-  border: 2px solid $secondary-blue;
-  
-  &:hover:not(:disabled) {
-    background-color: $secondary-blue;
-    color: white;
-  }
-  
-  @include dark-mode {
-    color: $secondary-blue-light;
-    border-color: $secondary-blue-light;
-    
-    &:hover:not(:disabled) {
-      background-color: $secondary-blue-light;
-      color: $gray-900;
-    }
-  }
-}
-
-.btn-ghost {
-  @include btn-base;
-  background-color: transparent;
-  color: $gray-700;
-  padding: $btn-padding-md;
-  
-  &:hover:not(:disabled) {
-    background-color: $gray-100;
-  }
-  
-  @include dark-mode {
-    color: $gray-300;
-    
-    &:hover:not(:disabled) {
-      background-color: $gray-800;
-    }
-  }
-}
-
 .btn-sm {
   padding: $btn-padding-sm !important;
   font-size: $font-size-sm;
@@ -192,98 +150,19 @@
 // Card Utilities
 // -----------------------------------------------------
 
-.card {
-  @include card;
-}
 
-.card-flat {
-  @include card;
-  box-shadow: none;
-  border: 1px solid $border-light;
-  
-  @include dark-mode {
-    border-color: $border-dark;
-  }
-  
-  &:hover {
-    box-shadow: none;
-  }
-}
 
-.card-interactive {
-  @include card;
-  cursor: pointer;
-  
-  &:hover {
-    transform: translateY(-2px);
-  }
-  
-  &:active {
-    transform: translateY(0);
-  }
-}
 
 // -----------------------------------------------------
 // Container Utilities
 // -----------------------------------------------------
 
-.container-custom {
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: $spacing-lg;
-  padding-right: $spacing-lg;
-  
-  @media (min-width: $breakpoint-sm) {
-    max-width: $container-sm;
-  }
-  
-  @media (min-width: $breakpoint-md) {
-    max-width: $container-md;
-  }
-  
-  @media (min-width: $breakpoint-lg) {
-    max-width: $container-lg;
-    padding-left: $spacing-xl;
-    padding-right: $spacing-xl;
-  }
-  
-  @media (min-width: $breakpoint-xl) {
-    max-width: $container-xl;
-  }
-  
-  @media (min-width: $breakpoint-2xl) {
-    max-width: $container-2xl;
-  }
-}
 
 // -----------------------------------------------------
 // Link Utilities
 // -----------------------------------------------------
 
-.link-primary {
-  color: $link-light;
-  text-decoration: none;
-  transition: color $transition-base $ease-in-out;
-  
-  &:hover {
-    color: $link-light-hover;
-  }
-  
-  @include dark-mode {
-    color: $link-dark;
-    
-    &:hover {
-      color: $link-dark-hover;
-    }
-  }
-}
 
-.link-underline {
-  @extend .link-primary;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
 
 // -----------------------------------------------------
 // Badge Utilities
@@ -438,23 +317,8 @@
   animation: spin 0.8s linear infinite;
 }
 
-.spinner-sm {
-  @extend .spinner;
-  width: 16px;
-  height: 16px;
-}
 
-.spinner-md {
-  @extend .spinner;
-  width: 24px;
-  height: 24px;
-}
 
-.spinner-lg {
-  @extend .spinner;
-  width: 32px;
-  height: 32px;
-}
 
 @keyframes spin {
   to {
@@ -462,9 +326,6 @@
   }
 }
 
-.pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
 
 @keyframes pulse {
   0%, 100% {
@@ -479,27 +340,6 @@
 // Skeleton Loader
 // -----------------------------------------------------
 
-.skeleton {
-  background: linear-gradient(
-    90deg,
-    $gray-200 0%,
-    $gray-300 50%,
-    $gray-200 100%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: $radius-md;
-  
-  @include dark-mode {
-    background: linear-gradient(
-      90deg,
-      $gray-800 0%,
-      $gray-700 50%,
-      $gray-800 100%
-    );
-    background-size: 200% 100%;
-  }
-}
 
 @keyframes shimmer {
   0% {
@@ -514,28 +354,7 @@
 // Visibility Utilities
 // -----------------------------------------------------
 
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
 
-.not-sr-only {
-  position: static;
-  width: auto;
-  height: auto;
-  padding: 0;
-  margin: 0;
-  overflow: visible;
-  clip: auto;
-  white-space: normal;
-}
 
 // -----------------------------------------------------
 // Text Utilities
@@ -545,95 +364,26 @@
   @include truncate;
 }
 
-.line-clamp-1 {
-  @include line-clamp(1);
-}
 
 .line-clamp-2 {
   @include line-clamp(2);
 }
 
-.line-clamp-3 {
-  @include line-clamp(3);
-}
 
 // -----------------------------------------------------
 // Scroll Utilities
 // -----------------------------------------------------
 
-.scroll-smooth {
-  scroll-behavior: smooth;
-}
 
-.scrollbar-hide {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
-}
 
-.scrollbar-thin {
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: $gray-100;
-    border-radius: $radius-full;
-    
-    @include dark-mode {
-      background: $gray-800;
-    }
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: $gray-400;
-    border-radius: $radius-full;
-    
-    &:hover {
-      background: $gray-500;
-    }
-    
-    @include dark-mode {
-      background: $gray-600;
-      
-      &:hover {
-        background: $gray-500;
-      }
-    }
-  }
-}
 
 // -----------------------------------------------------
 // Layout Utilities
 // -----------------------------------------------------
 
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 
-.flex-start {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
 
-.flex-end {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
 
 // -----------------------------------------------------
 // Aspect Ratio Utilities
@@ -655,27 +405,11 @@
 // Glassmorphism Effect
 // -----------------------------------------------------
 
-.glass {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  
-  @include dark-mode {
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-}
 
 // -----------------------------------------------------
 // Focus Visible Utilities
 // -----------------------------------------------------
 
-.focus-ring {
-  &:focus-visible {
-    @include focus-ring;
-  }
-}
 
 // -----------------------------------------------------
 // Transition Utilities

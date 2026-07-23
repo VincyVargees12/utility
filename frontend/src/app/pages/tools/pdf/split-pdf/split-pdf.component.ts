@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PDFDocument } from 'pdf-lib';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
@@ -33,6 +32,7 @@ interface PageRange {
 })
 export class SplitPdfComponent implements OnInit {
   private seoService = inject(SeoService);
+  private PDFDocument?: any;
 
   // Expose utilities for template
   readonly Array = Array;
@@ -64,6 +64,15 @@ export class SplitPdfComponent implements OnInit {
     });
   }
 
+  private async loadPdfLib(): Promise<any> {
+    if (this.PDFDocument) {
+      return this.PDFDocument;
+    }
+    const module = await import('pdf-lib');
+    this.PDFDocument = module.PDFDocument;
+    return this.PDFDocument;
+  }
+
   onFileSelected(files: FileList): void {
     if (files && files[0]) {
       this.loadPdfFile(files[0]);
@@ -77,7 +86,8 @@ export class SplitPdfComponent implements OnInit {
       
       // Load PDF to get page count and generate thumbnails
       const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const PDFDocClass = await this.loadPdfLib();
+      const pdfDoc = await PDFDocClass.load(arrayBuffer);
       const pageCount = pdfDoc.getPageCount();
       
       // Initialize pages
@@ -358,7 +368,8 @@ export class SplitPdfComponent implements OnInit {
       
       const file = this.pdfFile()!;
       const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const PDFDocClass = await this.loadPdfLib();
+      const pdfDoc = await PDFDocClass.load(arrayBuffer);
       
       const mode = this.splitMode();
       const results: Blob[] = [];
@@ -371,13 +382,13 @@ export class SplitPdfComponent implements OnInit {
           
           for (let start = 0; start < pageCount; start += pagesPerFile) {
             const end = Math.min(start + pagesPerFile, pageCount);
-            const newDoc = await PDFDocument.create();
+            const newDoc = await PDFDocClass.create();
             const pageIndices = [];
             for (let i = start; i < end; i++) {
               pageIndices.push(i);
             }
             const pages = await newDoc.copyPages(pdfDoc, pageIndices);
-            pages.forEach(page => newDoc.addPage(page));
+            pages.forEach((page: any) => newDoc.addPage(page));
             
             const pdfBytes = await newDoc.save();
             results.push(new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }));
@@ -386,7 +397,7 @@ export class SplitPdfComponent implements OnInit {
           // Split by custom ranges
           if (this.mergeRanges()) {
             // Merge all ranges into a single PDF
-            const mergedDoc = await PDFDocument.create();
+            const mergedDoc = await PDFDocClass.create();
             const allPageIndices: number[] = [];
             
             for (const range of this.ranges()) {
@@ -403,7 +414,7 @@ export class SplitPdfComponent implements OnInit {
           } else {
             // Create separate PDFs for each range
             for (const range of this.ranges()) {
-              const newDoc = await PDFDocument.create();
+              const newDoc = await PDFDocClass.create();
               const pageIndices = [];
               for (let i = range.fromPage; i <= range.toPage; i++) {
                 pageIndices.push(i - 1); // Convert to 0-based index
@@ -423,7 +434,7 @@ export class SplitPdfComponent implements OnInit {
         
         for (let start = 0; start < pageCount; start += pagesPerFile) {
           const end = Math.min(start + pagesPerFile, pageCount);
-          const newDoc = await PDFDocument.create();
+          const newDoc = await PDFDocClass.create();
           const pageIndices = [];
           for (let i = start; i < end; i++) {
             pageIndices.push(i);
@@ -439,7 +450,7 @@ export class SplitPdfComponent implements OnInit {
         const selectedPages = this.pages().filter(p => p.selected);
         
         for (const page of selectedPages) {
-          const newDoc = await PDFDocument.create();
+          const newDoc = await PDFDocClass.create();
           const [copiedPage] = await newDoc.copyPages(pdfDoc, [page.pageNumber - 1]);
           newDoc.addPage(copiedPage);
           

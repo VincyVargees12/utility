@@ -1,7 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PDFDocument, degrees } from 'pdf-lib';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
@@ -29,6 +28,7 @@ interface PdfFile {
 })
 export class RotatePdfComponent implements OnInit {
   private seoService = inject(SeoService);
+  private pdfLib?: any;
 
   state = signal<AppState>('upload');
   
@@ -48,6 +48,14 @@ export class RotatePdfComponent implements OnInit {
       ogDescription: 'Rotate your PDFs the way you need them. You can even rotate multiple PDFs at once!',
       canonicalUrl: 'https://datautility.com/categories/pdf/rotate-pdf'
     });
+  }
+
+  private async loadPdfLib(): Promise<any> {
+    if (this.pdfLib) {
+      return this.pdfLib;
+    }
+    this.pdfLib = await import('pdf-lib');
+    return this.pdfLib;
   }
 
   onFileSelected(files: FileList): void {
@@ -177,6 +185,9 @@ export class RotatePdfComponent implements OnInit {
       this.state.set('processing');
       this.errorMessage.set('');
 
+      const pdfLibModule = await this.loadPdfLib();
+      const { PDFDocument, degrees } = pdfLibModule;
+
       // Create a master PDF document
       const mergedPdf = await PDFDocument.create();
 
@@ -186,14 +197,14 @@ export class RotatePdfComponent implements OnInit {
         const pages = pdfDoc.getPages();
         const angle = pdfFile.rotation;
 
-        pages.forEach(page => {
+        pages.forEach((page: any) => {
           const currentRotation = page.getRotation().angle;
           page.setRotation(degrees(currentRotation + angle));
         });
 
         // Copy pages to merged document
         const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
-        copiedPages.forEach(page => mergedPdf.addPage(page));
+        copiedPages.forEach((page: any) => mergedPdf.addPage(page));
       }
 
       const pdfBytes = await mergedPdf.save();
