@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 export const PDF_TOOL_ROUTES: Routes = [
   {
+    path: '',
+    loadComponent: () => import('../../category-dashboard/category-dashboard.component').then(m => m.CategoryDashboardComponent),
+    title: 'PDF Tools - DataUtil'
+  },
+  {
     path: 'merge-pdf',
     loadComponent: () => import('./merge-pdf/merge-pdf.component').then(m => m.MergePdfComponent),
     title: 'Merge PDF - DataUtil'

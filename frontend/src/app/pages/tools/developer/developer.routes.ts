@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 export const DEVELOPER_TOOL_ROUTES: Routes = [
   {
+    path: '',
+    loadComponent: () => import('../../category-dashboard/category-dashboard.component').then(m => m.CategoryDashboardComponent),
+    title: 'Developer Tools - DataUtil'
+  },
+  {
     path: 'json-formatter',
     loadComponent: () => import('./json-formatter/json-formatter.component').then(m => m.JsonFormatterComponent),
     title: 'JSON Formatter - DataUtil'

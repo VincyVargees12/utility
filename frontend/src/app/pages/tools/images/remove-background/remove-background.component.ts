@@ -68,6 +68,12 @@ export class RemoveBackgroundComponent implements OnInit {
     }
   }
 
+  testVincy(){
+   let a = this.images();
+   console.log(a);
+    
+  }
+
   async loadImages(files: File[]): Promise<void> {
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
     

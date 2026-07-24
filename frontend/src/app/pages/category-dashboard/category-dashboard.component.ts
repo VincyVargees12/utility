@@ -41,23 +41,35 @@ export class CategoryDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const categoryId = params['category'];
-      const category = this.categories[categoryId];
+      // Try to get category from route params first
+      let categoryId = params['category'];
       
-      if (category) {
-        this.category.set(category);
-        this.seoService.setPageMeta({
-          title: `${category.name} - DataUtil`,
-          description: category.description,
-          keywords: `${categoryId}, tools, online, free, ${category.name.toLowerCase()}`,
-          ogTitle: `${category.name} - DataUtil`,
-          ogDescription: category.description,
-          canonicalUrl: `https://www.data-util.com/categories/${categoryId}`
-        });
+      // If no params, extract from parent route URL (for child routes)
+      if (!categoryId && this.route.parent) {
+        const parentUrlSegments = this.route.parent.snapshot.url.map(s => s.path);
+        // Parent URL will be like ['categories', 'pdf'] so we take the last segment
+        if (parentUrlSegments.length >= 2) {
+          categoryId = parentUrlSegments[parentUrlSegments.length - 1] || null;
+        }
+      }
 
-        // Add structured data for the category page
-        this.seoService.addStructuredData({
-          '@context': 'https://schema.org',
+      if (categoryId) {
+        const category = this.categories[categoryId];
+        
+        if (category) {
+          this.category.set(category);
+          this.seoService.setPageMeta({
+            title: `${category.name} - DataUtil`,
+            description: category.description,
+            keywords: `${categoryId}, tools, online, free, ${category.name.toLowerCase()}`,
+            ogTitle: `${category.name} - DataUtil`,
+            ogDescription: category.description,
+            canonicalUrl: `https://www.data-util.com/categories/${categoryId}`
+          });
+
+          // Add structured data for the category page
+          this.seoService.addStructuredData({
+            '@context': 'https://schema.org',
           '@type': 'CollectionPage',
           'name': category.name,
           'description': category.description,
@@ -84,6 +96,9 @@ export class CategoryDashboardComponent implements OnInit {
             }))
           }
         });
+        } else {
+          this.router.navigate(['/']);
+        }
       } else {
         this.router.navigate(['/']);
       }

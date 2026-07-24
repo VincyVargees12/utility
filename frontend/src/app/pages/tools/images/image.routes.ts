@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 export const IMAGE_TOOL_ROUTES: Routes = [
   {
+    path: '',
+    loadComponent: () => import('../../category-dashboard/category-dashboard.component').then(m => m.CategoryDashboardComponent),
+    title: 'Image Tools - DataUtil'
+  },
+  {
     path: 'resize-image',
     loadComponent: () => import('./resize-image/resize-image.component').then(m => m.ResizeImageComponent),
     title: 'Resize Image - DataUtil'

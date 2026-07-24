@@ -221,6 +221,27 @@ export class CompressImageComponent implements OnInit {
     this.processCompression();
   }
 
+  onFileInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.loadImages(Array.from(input.files));
+    }
+  }
+
+  onFileDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      this.loadImages(Array.from(event.dataTransfer.files));
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   reset(): void {
     this.images().forEach(img => window.URL.revokeObjectURL(img.previewUrl));
     this.images.set([]);

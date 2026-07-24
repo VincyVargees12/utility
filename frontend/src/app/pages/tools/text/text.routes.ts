@@ -2,6 +2,11 @@ import { Routes } from '@angular/router';
 
 export const TEXT_TOOL_ROUTES: Routes = [
   {
+    path: '',
+    loadComponent: () => import('../../category-dashboard/category-dashboard.component').then(m => m.CategoryDashboardComponent),
+    title: 'Text Tools - DataUtil'
+  },
+  {
     path: 'word-counter',
     loadComponent: () => import('./word-counter/word-counter.component').then(m => m.WordCounterComponent),
     title: 'Word Counter - DataUtil'

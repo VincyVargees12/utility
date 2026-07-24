@@ -70,7 +70,7 @@ export class MergePdfComponent implements OnInit {
     return this.PDFDocument;
   }
 
-  onFileSelected(files: FileList): void {
+  public onFileSelected(files: FileList): void {
     if (files) {
       this.handleFiles(Array.from(files));
     }
@@ -117,18 +117,18 @@ export class MergePdfComponent implements OnInit {
     this.resetState();
   }
 
-  removeFile(id: string): void {
+  public removeFile(id: string): void {
     this.files.update(files => files.filter(f => f.id !== id));
     this.resetState();
   }
 
-  onDrop(event: CdkDragDrop<PdfFile[]>): void {
+  public onDrop(event: CdkDragDrop<PdfFile[]>): void {
     const files = [...this.files()];
     moveItemInArray(files, event.previousIndex, event.currentIndex);
     this.files.set(files);
   }
 
-  toggleSelectAll(): void {
+  public toggleSelectAll(): void {
     const allSelected = this.files().every(f => f.selected);
     this.files.update(files => 
       files.map(f => ({ ...f, selected: !allSelected }))
@@ -143,13 +143,13 @@ export class MergePdfComponent implements OnInit {
     return this.files().length > 0 && this.files().every(f => f.selected);
   }
 
-  toggleSortOrder(): void {
+  public toggleSortOrder(): void {
     const current = this.sortOrder();
     this.sortOrder.set(current === 'asc' ? 'desc' : 'asc');
     this.sortFiles();
   }
 
-  sortFiles(): void {
+  public sortFiles(): void {
     // Batch DOM update to avoid layout thrashing
     requestAnimationFrame(() => {
       const files = [...this.files()];
