@@ -4,7 +4,7 @@
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">SQL Formatter</h1>
-          <p class="text-lg text-secondary">Beautify and standardize your SQL queries for better readability across various database dialects.</p>
+          <p class="text-lg text-secondary dark:text-white">Beautify and standardize your SQL queries for better readability across various database dialects.</p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
@@ -100,8 +100,9 @@
 
         <div class="px-4 pb-6 space-y-4 mt-4">
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">SQL Dialect</label>
+            <label for="sqlDialect" class="block text-sm font-semibold text-primary">SQL Dialect</label>
             <select
+              id="sqlDialect"
               [value]="dialect()"
               (change)="dialect.set($any($event.target).value)"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
@@ -113,8 +114,9 @@
           </div>
 
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Indentation</label>
+            <label for="sqlIndentSize" class="block text-sm font-semibold text-primary">Indentation</label>
             <select
+              id="sqlIndentSize"
               [value]="indentSize()"
               (change)="indentSize.set(+$any($event.target).value)"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"

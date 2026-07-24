@@ -118,7 +118,8 @@ export class SqlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
         scrollBeyondLastLine: false,
         padding: { top: 16, bottom: 16 },
         tabSize: this.indentSize(),
-        wordWrap: 'on'
+        wordWrap: 'on',
+        links: false
       });
 
       this.inputEditor.onDidChangeModelContent(() => {
@@ -143,7 +144,8 @@ export class SqlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
         scrollBeyondLastLine: false,
         padding: { top: 16, bottom: 16 },
         tabSize: this.indentSize(),
-        wordWrap: 'on'
+        wordWrap: 'on',
+        links: false
       });
     }
   }

@@ -20,7 +20,7 @@ $secondary-blue-light: #60A5FA;    // Blue 400 - Light variant
 $secondary-blue-dark: #2563EB;     // Blue 600 - Dark variant
 
 // Accent Colors
-$accent-green: #10b981;           // Emerald 500 - Success
+$accent-green: #2b3b36;           // Emerald 500 - Success
 $accent-red: #ef4444;             // Red 500 - Error/Danger
 $accent-yellow: #f59e0b;          // Amber 500 - Warning
 $accent-orange: #f97316;          // Orange 500
@@ -53,7 +53,7 @@ $text-tertiary-light: $gray-500;
 // as it breaks the blue theme consistency. Use blue tones instead.
 // Reserve light grays only for body text and non-interactive content.
 $text-primary-dark: $gray-100;
-$text-secondary-dark: $gray-300;
+$text-secondary-dark: #ffffff;
 $text-tertiary-dark: $gray-400;
 
 // Border Colors

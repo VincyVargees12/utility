@@ -4,7 +4,7 @@
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">Base64 Encode / Decode</h1>
-          <p class="text-lg text-secondary">Encode string to Base64 or decode Base64 to text. Supports UTF-8, ASCII, standard and URL-safe Base64 formats.</p>
+          <p class="text-lg text-secondary dark:text-white">Encode string to Base64 or decode Base64 to text. Supports UTF-8, ASCII, standard and URL-safe Base64 formats.</p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
@@ -108,8 +108,8 @@
 
           <!-- Encoding Type -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Character Encoding</label>
-            <select [(ngModel)]="encodingType"
+            <label for="encodingType" class="block text-sm font-semibold text-primary">Character Encoding</label>
+            <select id="encodingType" [(ngModel)]="encodingType"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="utf-8">UTF-8 (Recommended)</option>
               <option value="ascii">ASCII</option>
@@ -119,8 +119,8 @@
 
           <!-- Output Format (for encoding) -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Output Format</label>
-            <select [(ngModel)]="outputFormat"
+            <label for="outputFormat" class="block text-sm font-semibold text-primary">Output Format</label>
+            <select id="outputFormat" [(ngModel)]="outputFormat"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="standard">Standard Base64</option>
               <option value="url-safe">URL-Safe Base64</option>

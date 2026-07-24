@@ -1,10 +1,10 @@
-<div class="w-full">
+<main class="w-full">
   <div class="max-w-none mx-auto px-4 py-8">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">JSON Formatter</h1>
-          <p class="text-lg text-secondary">Beautify, validate, sort, and minify JSON quickly for cleaner development workflows.</p>
+          <p class="text-lg ">Beautify, validate, sort, and minify JSON quickly for cleaner development workflows.</p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
@@ -99,8 +99,9 @@
 
         <div class="px-4 pb-6 space-y-4 mt-4">
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Indentation</label>
+            <label for="jsonIndentSize" class="block text-sm font-semibold text-primary">Indentation</label>
             <select
+              id="jsonIndentSize"
               [value]="indentSize()"
               (change)="indentSize.set(+$any($event.target).value)"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
@@ -114,12 +115,13 @@
           <div class="space-y-2 pt-2 border-t border-gray-200">
             <div class="flex items-center gap-2">
               <input
+                id="sortKeys"
                 type="checkbox"
                 [checked]="sortKeys()"
                 (change)="sortKeys.set(!sortKeys())"
                 class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
               >
-              <label class="text-sm text-gray-700 cursor-pointer">Sort object keys</label>
+              <label for="sortKeys" class="text-sm text-gray-700 cursor-pointer">Sort object keys</label>
             </div>
           </div>
 
@@ -171,7 +173,7 @@
       </div>
     </div>
   </div>
-</div>
+</main>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/developer/json-formatter'" [maxTools]="6"></app-related-tools>

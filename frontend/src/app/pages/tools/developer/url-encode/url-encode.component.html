@@ -4,7 +4,7 @@
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">URL Encode / Decode</h1>
-          <p class="text-lg text-secondary">Encode URL parameters or decode URL-encoded strings. Supports URI component, full URI, and form data encoding with percent encoding.</p>
+          <p class="text-lg text-secondary dark:text-white">Encode URL parameters or decode URL-encoded strings. Supports URI component, full URI, and form data encoding with percent encoding.</p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
@@ -108,8 +108,8 @@
 
           <!-- Encoding Mode -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Encoding Mode</label>
-            <select [(ngModel)]="encodingMode"
+            <label for="encodingMode" class="block text-sm font-semibold text-primary">Encoding Mode</label>
+            <select id="encodingMode" [(ngModel)]="encodingMode"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="component">URI Component (Default)</option>
               <option value="uri">Full URI</option>

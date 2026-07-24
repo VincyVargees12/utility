@@ -4,7 +4,7 @@
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">HTML Formatter</h1>
-          <p class="text-lg text-secondary">Beautify, validate, and minify HTML with proper indentation. Instant syntax highlighting and error detection.</p>
+          <p class="text-lg text-secondary dark:text-white">Beautify, validate, and minify HTML with proper indentation. Instant syntax highlighting and error detection.</p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
@@ -89,8 +89,8 @@
 
           <!-- Indentation -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Indentation</label>
-            <select [value]="indentSize()"
+            <label for="indentSize" class="block text-sm font-semibold text-primary">Indentation</label>
+            <select id="indentSize" [value]="indentSize()"
               (change)="indentSize.set(+$any($event.target).value)"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="2">2 spaces</option>

@@ -4,7 +4,7 @@
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">UUID / GUID Generator</h1>
-          <p class="text-lg text-secondary">Generate version 1, 4 UUIDs instantly. Supports bulk generation with customizable formatting options.</p>
+          <p class="text-lg text-secondary dark:text-white">Generate version 1, 4 UUIDs instantly. Supports bulk generation with customizable formatting options.</p>
         </div>
 
         <!-- Generated UUIDs Section -->
@@ -73,8 +73,8 @@
 
           <!-- UUID Version -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">UUID Version</label>
-            <select [(ngModel)]="uuidVersion"
+            <label for="uuidVersion" class="block text-sm font-semibold text-primary">UUID Version</label>
+            <select id="uuidVersion" [(ngModel)]="uuidVersion"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="v4">Version 4 (Random)</option>
               <option value="v1">Version 1 (Timestamp)</option>
@@ -90,8 +90,9 @@
 
           <!-- Quantity -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Quantity</label>
+            <label for="quantity" class="block text-sm font-semibold text-primary">Quantity</label>
             <input 
+              id="quantity"
               type="number" 
               [(ngModel)]="quantity"
               min="1" 
@@ -102,8 +103,8 @@
 
           <!-- Case -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Case</label>
-            <select [(ngModel)]="uuidCase"
+            <label for="uuidCase" class="block text-sm font-semibold text-primary">Case</label>
+            <select id="uuidCase" [(ngModel)]="uuidCase"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="lowercase">Lowercase</option>
               <option value="uppercase">Uppercase</option>

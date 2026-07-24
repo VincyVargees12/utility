@@ -104,7 +104,8 @@ export class HtmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
         folding: true,
         scrollBeyondLastLine: false,
         fontSize: 14,
-        fontFamily: 'Consolas, "Courier New", monospace'
+        fontFamily: 'Consolas, "Courier New", monospace',
+        links: false
       });
 
       this.outputEditor = monaco.editor.create(this.outputEditorHost!.nativeElement, {
@@ -118,7 +119,8 @@ export class HtmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
         scrollBeyondLastLine: false,
         fontSize: 14,
         fontFamily: 'Consolas, "Courier New", monospace',
-        readOnly: true
+        readOnly: true,
+        links: false
       });
 
       this.inputEditor?.onDidChangeModelContent(() => {

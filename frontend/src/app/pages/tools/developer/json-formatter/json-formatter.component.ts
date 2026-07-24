@@ -332,7 +332,8 @@ export class JsonFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
         scrollBeyondLastLine: false,
         tabSize: this.indentSize(),
         fontSize: 14,
-        fontFamily: 'Consolas, "Courier New", monospace'
+        fontFamily: 'Consolas, "Courier New", monospace',
+        links: false
       });
 
       this.outputEditor = monaco.editor.create(this.outputEditorHost!.nativeElement, {
@@ -347,7 +348,8 @@ export class JsonFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
         scrollBeyondLastLine: false,
         tabSize: this.indentSize(),
         fontSize: 14,
-        fontFamily: 'Consolas, "Courier New", monospace'
+        fontFamily: 'Consolas, "Courier New", monospace',
+        links: false
       });
 
       this.inputEditor.onDidChangeModelContent(() => {
