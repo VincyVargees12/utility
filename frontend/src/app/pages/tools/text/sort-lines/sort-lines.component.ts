@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { SeoService } from '../../../../services/seo.service';
 
@@ -22,7 +23,7 @@ interface SortStats {
 @Component({
   selector: 'app-sort-lines',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
   templateUrl: './sort-lines.component.html',
   styleUrl: './sort-lines.component.scss'
 })

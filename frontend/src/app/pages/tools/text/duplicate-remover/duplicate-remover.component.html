@@ -1,5 +1,5 @@
-<div class="w-full">
-  <div class="max-w-6xl mx-auto px-4 py-8">
+<main class="w-full">
+  <div class="max-w-6xl mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
@@ -111,9 +111,10 @@
                 </button>
                 <button
                   (click)="copyToClipboard('case-sensitive')"
-                  class="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
+                  class="p-2 text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                  [title]="copiedMode() === 'case-sensitive' ? 'Copied!' : 'Copy'"
                 >
-                  {{ copiedMode() === 'case-sensitive' ? '✓ Copied' : '📋 Copy' }}
+                  <mat-icon>content_copy</mat-icon>
                 </button>
               </div>
             </div>
@@ -134,9 +135,10 @@
                 </button>
                 <button
                   (click)="copyToClipboard('case-insensitive')"
-                  class="px-2 py-1 text-xs bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
+                  class="p-2 text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                  [title]="copiedMode() === 'case-insensitive' ? 'Copied!' : 'Copy'"
                 >
-                  {{ copiedMode() === 'case-insensitive' ? '✓ Copied' : '📋 Copy' }}
+                  <mat-icon>content_copy</mat-icon>
                 </button>
               </div>
             </div>
@@ -161,7 +163,7 @@
             <h2 class="text-xl font-bold text-primary">{{ getPreviewTitle() }}</h2>
             <button
               (click)="closePreview()"
-              class="text-gray-500 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center"
+              class="text-gray-700 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center"
             >
               ✕
             </button>
@@ -186,13 +188,14 @@
               (click)="copyToClipboard(previewMode() || ''); closePreview()"
               class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
             >
-              📋 Copy & Close
+              <mat-icon class="text-lg">content_copy</mat-icon>
+              Copy & Close
             </button>
           </div>
         </div>
       </div>
     }
   </div>
-</div>
+</main>
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/text/duplicate-remover'" [maxTools]="6"></app-related-tools>

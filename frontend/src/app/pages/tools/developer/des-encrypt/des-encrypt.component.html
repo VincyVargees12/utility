@@ -1,5 +1,5 @@
-<div class="w-full">
-  <div class="max-w-none mx-auto px-4 py-8">
+<main class="w-full">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
@@ -34,7 +34,7 @@
                 <button
                   (click)="copyInput()"
                   [disabled]="!inputText().trim()"
-                  class="text-lg leading-none text-gray-500 hover:text-blue-600 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
+                  class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
                   title="Copy input"
                 >
                   📋
@@ -42,7 +42,9 @@
               </div>
             </div>
             <div class="p-6">
+              <label for="inputPlaintext" class="block text-sm font-semibold text-primary mb-2">Input</label>
               <textarea
+                id="inputPlaintext"
                 [(ngModel)]="inputText"
                 (ngModelChange)="updateInputLength()"
                 placeholder="Enter plaintext for encryption or encrypted JSON payload for decryption..."
@@ -71,7 +73,7 @@
                 <button
                   (click)="swap()"
                   [disabled]="!inputText() || !outputText()"
-                  class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors text-xs font-medium disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed"
+                  class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors text-xs font-medium disabled:bg-gray-100 disabled:text-gray-600 disabled:cursor-not-allowed"
                   title="Swap input and output"
                 >
                   Swap
@@ -79,7 +81,7 @@
                 <button
                   (click)="copyOutput()"
                   [disabled]="!outputText().trim()"
-                  class="text-lg leading-none text-gray-500 hover:text-blue-600 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
+                  class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
                   title="Copy output"
                 >
                   📋
@@ -87,7 +89,9 @@
               </div>
             </div>
             <div class="p-6">
+              <label for="outputPlaintext" class="block text-sm font-semibold text-primary mb-2">Output</label>
               <textarea
+                id="outputPlaintext"
                 [value]="outputText()"
                 readonly
                 placeholder="Output will appear here..."
@@ -105,7 +109,7 @@
                     {{ mode() === 'encrypt' ? 'Encrypted' : 'Decrypted' }} successfully ({{ outputLength() }} characters)
                   </p>
                 } @else {
-                  <span class="text-sm text-gray-400">No output yet</span>
+                  <span class="text-sm text-gray-600">No output yet</span>
                 }
               </div>
             </div>
@@ -120,20 +124,22 @@
         <div class="px-4 pb-6 space-y-4 mt-4">
 
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">Passphrase</label>
+            <label for="passphrase" class="block text-sm font-semibold text-primary">Passphrase</label>
             <input
               type="password"
+              id="passphrase"
               [(ngModel)]="passphrase"
               placeholder="Enter passphrase"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
             >
-            <p class="text-xs text-gray-500">Use at least 8 characters.</p>
+            <p class="text-xs text-gray-700">Use at least 8 characters.</p>
           </div>
 
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-primary">PBKDF2 Iterations</label>
+            <label for="pbkIterations" class="block text-sm font-semibold text-primary">PBKDF2 Iterations</label>
             <input
               type="number"
+              id="pbkIterations"
               min="10000"
               max="1000000"
               step="1000"
@@ -178,8 +184,8 @@
           </div>
 
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">Security Notes</h4>
-            <ul class="text-xs text-gray-600 space-y-1">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">Security Notes</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
               <li>All encryption runs in-browser only.</li>
               <li>Uses DES-CBC with random IV and salt per encryption.</li>
               <li>Passphrase is transformed with PBKDF2 (SHA-256).</li>
@@ -191,6 +197,6 @@
       </div>
     </div>
   </div>
-</div>
+</main>
 
 <app-related-tools [currentRoute]="'/categories/developer/des-encrypt'" [maxTools]="6"></app-related-tools>

@@ -1,12 +1,12 @@
-<div class="w-full">
-  <div class="max-w-6xl mx-auto px-4 py-8">
+<main class="w-full">
+  <div class="max-w-6xl mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <!-- Title and Subtitle -->
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">Case Converter & Text Formatter</h1>
-          <p class="text-lg text-secondary">Convert your text to uppercase, lowercase, title case, camelCase, snake_case, kebab-case, and more formats instantly.</p>
+          <p class="text-lg text-secondary dark:text-white">Convert your text to uppercase, lowercase, title case, camelCase, snake_case, kebab-case, and more formats instantly.</p>
         </div>
 
         <!-- Text Input Area -->
@@ -50,135 +50,6 @@
             </div>
           </div>
         </div>
-
-        <!-- Case Conversion Results -->
-        <div class="mt-8 space-y-4">
-          <!-- UPPERCASE -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">UPPERCASE</h3>
-              <button
-                (click)="copyToClipboard('uppercase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'uppercase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().uppercase || 'Your text will appear here...' }}</p>
-          </div>
-
-          <!-- lowercase -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">lowercase</h3>
-              <button
-                (click)="copyToClipboard('lowercase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'lowercase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().lowercase || 'Your text will appear here...' }}</p>
-          </div>
-
-          <!-- Title Case -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">Title Case</h3>
-              <button
-                (click)="copyToClipboard('titlecase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'titlecase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().titlecase || 'Your text will appear here...' }}</p>
-          </div>
-
-          <!-- Sentence case -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">Sentence case</h3>
-              <button
-                (click)="copyToClipboard('sentencecase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'sentencecase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().sentencecase || 'Your text will appear here...' }}</p>
-          </div>
-
-          <!-- camelCase -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">camelCase</h3>
-              <button
-                (click)="copyToClipboard('camelcase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'camelcase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().camelcase || 'Your text will appear here...' }}</p>
-          </div>
-
-          <!-- PascalCase -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">PascalCase</h3>
-              <button
-                (click)="copyToClipboard('pascalcase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'pascalcase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().pascalcase || 'Your text will appear here...' }}</p>
-          </div>
-
-          <!-- snake_case -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">snake_case</h3>
-              <button
-                (click)="copyToClipboard('snakecase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'snakecase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().snakecase || 'Your text will appear here...' }}</p>
-          </div>
-
-          <!-- kebab-case -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">kebab-case</h3>
-              <button
-                (click)="copyToClipboard('kebabcase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'kebabcase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().kebabcase || 'Your text will appear here...' }}</p>
-          </div>
-
-          <!-- dot.case -->
-          <div class="bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">dot.case</h3>
-              <button
-                (click)="copyToClipboard('dotcase')"
-                class="px-3 py-1 text-sm bg-blue-100 text-blue-600 rounded hover:bg-blue-200 transition-colors font-medium"
-              >
-                {{ copiedCase() === 'dotcase' ? '✓ Copied' : '📋 Copy' }}
-              </button>
-            </div>
-            <p class="bg-gray-50 p-3 rounded text-sm font-mono text-gray-700 break-words min-h-[50px]">{{ results().dotcase || 'Your text will appear here...' }}</p>
-          </div>
-        </div>
       </div>
 
       <!-- Fixed Right Sidebar -->
@@ -191,9 +62,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'uppercase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">UPPERCASE</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().uppercase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'uppercase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">UPPERCASE</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'uppercase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().uppercase || 'Your text will appear here' }}</p>
           </button>
 
           <button
@@ -201,9 +74,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'lowercase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">lowercase</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().lowercase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'lowercase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">lowercase</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'lowercase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().lowercase || 'Your text will appear here' }}</p>
           </button>
 
           <button
@@ -211,9 +86,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'titlecase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">Title Case</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().titlecase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'titlecase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">Title Case</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'titlecase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().titlecase || 'Your text will appear here' }}</p>
           </button>
 
           <button
@@ -221,9 +98,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'sentencecase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">Sentence case</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().sentencecase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'sentencecase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">Sentence case</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'sentencecase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().sentencecase || 'Your text will appear here' }}</p>
           </button>
 
           <button
@@ -231,9 +110,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'camelcase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">camelCase</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().camelcase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'camelcase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">camelCase</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'camelcase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().camelcase || 'Your text will appear here' }}</p>
           </button>
 
           <button
@@ -241,9 +122,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'pascalcase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">PascalCase</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().pascalcase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'pascalcase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">PascalCase</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'pascalcase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().pascalcase || 'Your text will appear here' }}</p>
           </button>
 
           <button
@@ -251,9 +134,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'snakecase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">snake_case</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().snakecase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'snakecase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">snake_case</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'snakecase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().snakecase || 'Your text will appear here' }}</p>
           </button>
 
           <button
@@ -261,9 +146,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'kebabcase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">kebab-case</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().kebabcase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'kebabcase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">kebab-case</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'kebabcase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().kebabcase || 'Your text will appear here' }}</p>
           </button>
 
           <button
@@ -271,9 +158,11 @@
             class="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm"
             [class.bg-blue-50]="copiedCase() === 'dotcase'"
           >
-            <p class="font-semibold text-gray-700 mb-1">dot.case</p>
-            <p class="text-xs text-gray-500 truncate">{{ results().dotcase || 'Your text will appear here' }}</p>
-            <p class="text-xs text-blue-600 font-medium mt-1">{{ copiedCase() === 'dotcase' ? '✓ Copied' : '📋 Copy' }}</p>
+            <div class="flex items-center justify-between">
+              <p class="font-semibold text-gray-700">dot.case</p>
+              <mat-icon class="text-blue-600" [title]="copiedCase() === 'dotcase' ? 'Copied!' : 'Copy'">content_copy</mat-icon>
+            </div>
+            <p class="text-xs text-gray-700 truncate mt-1">{{ results().dotcase || 'Your text will appear here' }}</p>
           </button>
         </div>
 
@@ -286,7 +175,8 @@
       </div>
     </div>
   </div>
-</div>
+</main>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/text/case-converter'" [maxTools]="6"></app-related-tools>
+

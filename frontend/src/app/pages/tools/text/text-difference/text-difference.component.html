@@ -1,5 +1,5 @@
-<div class="w-full">
-  <div class="max-w-none mx-auto px-4 py-8">
+<main class="w-full">
+  <div class="max-w-6xl mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
 
@@ -147,7 +147,7 @@
                   Next →
                 </button>
               </div>
-              <p class="text-xs text-gray-500 text-center">
+              <p class="text-xs text-gray-700 text-center">
                 {{ totalDiffSections() }} difference section{{ totalDiffSections() !== 1 ? 's' : '' }}
               </p>
             </div>
@@ -260,19 +260,19 @@
             <div class="space-y-2 text-sm">
               <div class="flex items-center gap-2">
                 <div class="w-5 h-5 rounded bg-green-200 border border-green-400 shrink-0"></div>
-                <span class="text-gray-600">🟩 Added lines</span>
+                <span class="text-gray-700">🟩 Added lines</span>
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-5 h-5 rounded bg-red-200 border border-red-400 shrink-0"></div>
-                <span class="text-gray-600">🟥 Removed lines</span>
+                <span class="text-gray-700">🟥 Removed lines</span>
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-5 h-5 rounded bg-yellow-200 border border-yellow-400 shrink-0"></div>
-                <span class="text-gray-600">🟨 Modified lines</span>
+                <span class="text-gray-700">🟨 Modified lines</span>
               </div>
               <div class="flex items-center gap-2">
                 <div class="w-5 h-5 rounded bg-white border border-gray-300 shrink-0"></div>
-                <span class="text-gray-600">Unchanged</span>
+                <span class="text-gray-700">Unchanged</span>
               </div>
             </div>
           </div>
@@ -281,7 +281,8 @@
       </div>
     </div>
   </div>
-</div>
+</main>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/text/text-difference'" [maxTools]="6"></app-related-tools>
+

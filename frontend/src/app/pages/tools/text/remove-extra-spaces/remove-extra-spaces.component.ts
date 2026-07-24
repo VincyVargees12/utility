@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { SeoService } from '../../../../services/seo.service';
 
@@ -16,7 +17,7 @@ interface SpaceStats {
 @Component({
   selector: 'app-remove-extra-spaces',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
   templateUrl: './remove-extra-spaces.component.html',
   styleUrl: './remove-extra-spaces.component.scss'
 })

@@ -1,5 +1,5 @@
-<div class="w-full">
-  <div class="max-w-none mx-auto px-4 py-8">
+<main class="w-full">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
@@ -56,8 +56,8 @@
             } @else {
               <div class="py-20 text-center">
                 <div class="text-6xl mb-4">🆔</div>
-                <p class="text-gray-500 mb-4">No UUIDs generated yet</p>
-                <p class="text-sm text-gray-400">Click "Generate UUIDs" to create unique identifiers</p>
+                <p class="text-gray-600 mb-4">No UUIDs generated yet</p>
+                <p class="text-sm text-gray-600">Click "Generate UUIDs" to create unique identifiers</p>
               </div>
             }
           </div>
@@ -79,7 +79,7 @@
               <option value="v4">Version 4 (Random)</option>
               <option value="v1">Version 1 (Timestamp)</option>
             </select>
-            <div class="text-xs text-gray-500 mt-1">
+            <div class="text-xs text-gray-700 mt-1">
               @if (uuidVersion() === 'v4') {
                 <p>Completely random, most commonly used.</p>
               } @else {
@@ -98,7 +98,7 @@
               min="1" 
               max="1000"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-            <p class="text-xs text-gray-500">Generate 1-1000 UUIDs at once</p>
+            <p class="text-xs text-gray-700">Generate 1-1000 UUIDs at once</p>
           </div>
 
           <!-- Case -->
@@ -142,18 +142,18 @@
 
           <!-- Format Examples -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">Format Examples</h4>
-            <div class="text-xs text-gray-600 space-y-2 font-mono">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">Format Examples</h4>
+            <div class="text-xs text-gray-700 space-y-2 font-mono">
               <div class="p-2 bg-gray-50 rounded border border-gray-200">
-                <p class="text-gray-500 mb-1">Standard:</p>
+                <p class="text-gray-600 mb-1">Standard:</p>
                 <p>550e8400-e29b-41d4-a716-446655440000</p>
               </div>
               <div class="p-2 bg-gray-50 rounded border border-gray-200">
-                <p class="text-gray-500 mb-1">No hyphens:</p>
+                <p class="text-gray-600 mb-1">No hyphens:</p>
                 <p>550e8400e29b41d4a716446655440000</p>
               </div>
               <div class="p-2 bg-gray-50 rounded border border-gray-200">
-                <p class="text-gray-500 mb-1">With braces:</p>
+                <p class="text-gray-600 mb-1">With braces:</p>
                 <p>{{ '{' }}550e8400-e29b-41d4-a716-446655440000{{ '}' }}</p>
               </div>
             </div>
@@ -161,8 +161,8 @@
 
           <!-- Info -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">What is UUID?</h4>
-            <p class="text-xs text-gray-600 leading-relaxed">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">What is UUID?</h4>
+            <p class="text-xs text-gray-700 leading-relaxed">
               UUID (Universally Unique Identifier) or GUID (Globally Unique Identifier) is a 128-bit number 
               used to uniquely identify information. UUIDs are used in databases, distributed systems, and APIs.
             </p>
@@ -170,8 +170,8 @@
 
           <!-- Version Info -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">UUID Versions</h4>
-            <ul class="text-xs text-gray-600 space-y-1">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">UUID Versions</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
               <li><strong>v1:</strong> Time-based with MAC address</li>
               <li><strong>v4:</strong> Random (most common)</li>
             </ul>
@@ -179,8 +179,8 @@
 
           <!-- Use Cases -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">Common Use Cases</h4>
-            <ul class="text-xs text-gray-600 space-y-1">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">Common Use Cases</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
               <li>• Database primary keys</li>
               <li>• Session identifiers</li>
               <li>• File naming</li>
@@ -193,7 +193,7 @@
       </div>
     </div>
   </div>
-</div>
+</main>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/developer/uuid'" [maxTools]="6"></app-related-tools>

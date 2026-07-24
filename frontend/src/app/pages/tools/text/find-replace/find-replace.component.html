@@ -1,5 +1,5 @@
-<div class="w-full">
-  <div class="max-w-6xl mx-auto px-4 py-8">
+<main class="w-full">
+  <div class="max-w-6xl mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
@@ -62,7 +62,7 @@
                       ? 'bg-green-600 hover:bg-green-700'
                       : 'bg-blue-600 hover:bg-blue-700'"
                   >
-                    {{ copiedToClipboard() ? '✓ Copied' : '📋 Copy' }}
+                    <mat-icon class="text-sm">content_copy</mat-icon>
                   </button>
                 }
               </div>
@@ -181,7 +181,8 @@
                   ? 'bg-green-600 hover:bg-green-700 text-white'
                   : 'bg-blue-600 hover:bg-blue-700 text-white'"
               >
-                {{ copiedToClipboard() ? '✓ Copied!' : '📋 Copy All Text' }}
+                <mat-icon class="text-lg">content_copy</mat-icon>
+                Copy All Text
               </button>
               <button
                 (click)="downloadText()"
@@ -193,8 +194,10 @@
           }
         </div>
       </div>
+    </div>
   </div>
-</div>
+</main>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/text/find-replace'" [maxTools]="6"></app-related-tools>
+

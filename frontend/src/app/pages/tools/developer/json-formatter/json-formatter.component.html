@@ -1,10 +1,10 @@
 <main class="w-full">
-  <div class="max-w-none mx-auto px-4 py-8">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">JSON Formatter</h1>
-          <p class="text-lg ">Beautify, validate, sort, and minify JSON quickly for cleaner development workflows.</p>
+          <p class="text-lg text-secondary dark:text-white">Beautify, validate, sort, and minify JSON quickly for cleaner development workflows.</p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
@@ -27,7 +27,7 @@
                 <button
                   (click)="copyInput()"
                   [disabled]="!inputText().trim()"
-                  class="text-lg leading-none text-gray-500 hover:text-blue-600 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
+                  class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
                   title="Copy input JSON"
                   aria-label="Copy input JSON"
                 >
@@ -67,7 +67,7 @@
                 <button
                   (click)="copyOutput()"
                   [disabled]="!outputText().trim()"
-                  class="text-lg leading-none text-gray-500 hover:text-blue-600 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
+                  class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
                   title="Copy output JSON"
                   aria-label="Copy output JSON"
                 >

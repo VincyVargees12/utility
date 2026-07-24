@@ -1,6 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { SeoService } from '../../../../services/seo.service';
 
@@ -13,7 +14,7 @@ interface ReverseResult {
 @Component({
   selector: 'app-reverse-text',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
   templateUrl: './reverse-text.component.html',
   styleUrl: './reverse-text.component.scss'
 })

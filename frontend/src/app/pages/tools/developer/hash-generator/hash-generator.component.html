@@ -1,5 +1,5 @@
-<div class="w-full">
-  <div class="max-w-none mx-auto px-4 py-8">
+<main class="w-full">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
@@ -25,7 +25,9 @@
               </div>
             </div>
             <div class="p-6">
+              <label for="inputHash" class="block text-sm font-semibold text-primary mb-2">Input</label>
               <textarea
+                id="inputHash"
                 [(ngModel)]="inputText"
                 (ngModelChange)="updateInputLength()"
                 placeholder="Enter text to generate hash..."
@@ -80,7 +82,7 @@
                       <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center gap-2">
                           <span class="text-sm font-bold text-primary">{{ result.algorithm }}</span>
-                          <span class="text-xs text-gray-500">({{ result.length }} chars)</span>
+                          <span class="text-xs text-gray-700">({{ result.length }} chars)</span>
                         </div>
                         <button (click)="copyHash(result.hash, result.algorithm)"
                           class="px-3 py-1 text-xs font-medium rounded-md transition-colors"
@@ -97,7 +99,7 @@
               } @else {
                 <div class="p-12 text-center">
                   <div class="text-6xl mb-4">🔐</div>
-                  <p class="text-gray-500">Enter text and click a button to generate hashes</p>
+                  <p class="text-gray-600">Enter text and click a button to generate hashes</p>
                 </div>
               }
             </div>
@@ -150,8 +152,8 @@
 
           <!-- Features -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">Supported Algorithms</h4>
-            <ul class="text-xs text-gray-600 space-y-1">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">Supported Algorithms</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
               <li>✓ MD5 (128-bit, not secure)</li>
               <li>✓ SHA-1 (160-bit, weak)</li>
               <li>✓ SHA-256 (256-bit, secure)</li>
@@ -162,8 +164,8 @@
 
           <!-- Info -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">What are Hashes?</h4>
-            <p class="text-xs text-gray-600 leading-relaxed">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">What are Hashes?</h4>
+            <p class="text-xs text-gray-700 leading-relaxed">
               Cryptographic hash functions generate fixed-size outputs (hashes) from variable-length input data.
               They're one-way functions used for data integrity verification, password storage, and digital signatures.
             </p>
@@ -172,7 +174,7 @@
           <!-- Security Note -->
           <div class="pt-2 border-t border-gray-200">
             <h4 class="text-sm font-semibold text-orange-600 mb-2">⚠️ Security Note</h4>
-            <p class="text-xs text-gray-600 leading-relaxed">
+            <p class="text-xs text-gray-700 leading-relaxed">
               MD5 and SHA-1 are cryptographically broken and should not be used for security purposes.
               Use SHA-256 or higher for secure applications.
             </p>
@@ -180,8 +182,8 @@
 
           <!-- Use Cases -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">Common Use Cases</h4>
-            <ul class="text-xs text-gray-600 space-y-1">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">Common Use Cases</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
               <li>• File integrity verification</li>
               <li>• Password hashing</li>
               <li>• Digital signatures</li>
@@ -194,7 +196,7 @@
       </div>
     </div>
   </div>
-</div>
+</main>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/developer/hash'" [maxTools]="6"></app-related-tools>

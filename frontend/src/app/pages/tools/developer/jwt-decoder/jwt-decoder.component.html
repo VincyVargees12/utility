@@ -1,5 +1,5 @@
-<div class="w-full">
-  <div class="max-w-none mx-auto px-4 py-8">
+<main class="w-full">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <div class="flex-1 w-full pr-0 lg:pr-[380px]">
         <div class="mb-8">
@@ -23,14 +23,16 @@
                   Clear
                 </button>
                 <button (click)="copyToken()" [disabled]="!jwtToken().trim()"
-                  class="text-lg leading-none text-gray-500 hover:text-blue-600 transition-colors disabled:text-gray-300 disabled:cursor-not-allowed"
+                  class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
                   title="Copy token">
                   📋
                 </button>
               </div>
             </div>
             <div class="p-6">
+              <label for="inputJWT" class="block text-sm font-semibold text-primary mb-2">JWT Token</label>
               <textarea
+                id="inputJWT"
                 [(ngModel)]="jwtToken"
                 (ngModelChange)="decodeJwt()"
                 placeholder="Paste your JWT token here..."
@@ -100,9 +102,9 @@
                       <!-- Common Claims Info -->
                       @if (decodedJwt()!.payload.exp || decodedJwt()!.payload.iat || decodedJwt()!.payload.nbf) {
                         <div class="mt-4 pt-4 border-t border-gray-200 space-y-2">
-                          <h4 class="text-xs font-semibold text-gray-700 mb-2">Timestamps:</h4>
+                          <h4 class="text-xs font-semibold text-gray-900 mb-2">Timestamps:</h4>
                           @if (decodedJwt()!.payload.iat) {
-                            <div class="text-xs text-gray-600">
+                            <div class="text-xs text-gray-700">
                               <span class="font-semibold">Issued At (iat):</span>
                               <span class="ml-2">{{ formatTimestamp(decodedJwt()!.payload.iat) }}</span>
                             </div>
@@ -117,7 +119,7 @@
                             </div>
                           }
                           @if (decodedJwt()!.payload.nbf) {
-                            <div class="text-xs text-gray-600">
+                            <div class="text-xs text-gray-700">
                               <span class="font-semibold">Not Before (nbf):</span>
                               <span class="ml-2">{{ formatTimestamp(decodedJwt()!.payload.nbf) }}</span>
                             </div>
@@ -139,14 +141,14 @@
                     </div>
                     <div class="p-4 bg-white">
                       <pre class="text-xs font-mono text-gray-700 break-all">{{ decodedJwt()!.signature }}</pre>
-                      <p class="text-xs text-gray-500 mt-2">⚠️ Signature verification requires the secret key</p>
+                      <p class="text-xs text-gray-700 mt-2">⚠️ Signature verification requires the secret key</p>
                     </div>
                   </div>
                 </div>
               } @else {
                 <div class="p-12 text-center">
                   <div class="text-6xl mb-4">🎫</div>
-                  <p class="text-gray-500">Paste a JWT token to decode</p>
+                  <p class="text-gray-600">Paste a JWT token to decode</p>
                 </div>
               }
             </div>
@@ -173,8 +175,8 @@
 
           <!-- JWT Structure Info -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">JWT Structure</h4>
-            <div class="space-y-2 text-xs text-gray-600">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">JWT Structure</h4>
+            <div class="space-y-2 text-xs text-gray-700">
               <div class="p-2 bg-blue-50 rounded border border-blue-200">
                 <p class="font-semibold text-blue-900 mb-1">Header</p>
                 <p>Contains token type and signing algorithm</p>
@@ -192,8 +194,8 @@
 
           <!-- Common Claims -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">Common Claims</h4>
-            <ul class="text-xs text-gray-600 space-y-1">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">Common Claims</h4>
+            <ul class="text-xs text-gray-700 space-y-1">
               <li><strong>iss:</strong> Issuer</li>
               <li><strong>sub:</strong> Subject (user ID)</li>
               <li><strong>aud:</strong> Audience</li>
@@ -206,15 +208,15 @@
           <!-- Security Note -->
           <div class="pt-2 border-t border-gray-200">
             <h4 class="text-sm font-semibold text-orange-600 mb-2">⚠️ Security Note</h4>
-            <p class="text-xs text-gray-600 leading-relaxed">
+            <p class="text-xs text-gray-700 leading-relaxed">
               This tool only decodes JWTs. It does not validate signatures. Never share your JWT tokens or secret keys publicly.
             </p>
           </div>
 
           <!-- What is JWT? -->
           <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-700 mb-2">What is JWT?</h4>
-            <p class="text-xs text-gray-600 leading-relaxed">
+            <h4 class="text-sm font-semibold text-gray-900 mb-2">What is JWT?</h4>
+            <p class="text-xs text-gray-700 leading-relaxed">
               JSON Web Token (JWT) is an open standard (RFC 7519) for securely transmitting information between parties as a JSON object.
               JWTs are commonly used for authentication and information exchange.
             </p>
@@ -224,7 +226,7 @@
       </div>
     </div>
   </div>
-</div>
+</main>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/developer/jwt'" [maxTools]="6"></app-related-tools>
