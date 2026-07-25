@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { SeoService } from '../../../../services/seo.service';
 
@@ -10,7 +11,7 @@ type UUIDCase = 'lowercase' | 'uppercase';
 @Component({
   selector: 'app-uuid-generator',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
   templateUrl: './uuid-generator.component.html',
   styleUrl: './uuid-generator.component.scss'
 })

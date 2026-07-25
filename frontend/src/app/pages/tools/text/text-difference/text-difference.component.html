@@ -51,7 +51,7 @@
                 {{ copiedLeft() ? '✓' : '📋' }}
               </button>
               <button (click)="downloadLeft()" [disabled]="!originalText()"
-                class="action-btn disabled:opacity-40 disabled:cursor-not-allowed" title="Download">⬇️</button>
+                class="action-btn disabled:opacity-40 disabled:cursor-not-allowed" title="Download"><mat-icon class="text-lg">download</mat-icon></button>
             </div>
           </div>
 
@@ -91,7 +91,7 @@
                 {{ copiedRight() ? '✓' : '📋' }}
               </button>
               <button (click)="downloadRight()" [disabled]="!modifiedText()"
-                class="action-btn disabled:opacity-40 disabled:cursor-not-allowed" title="Download">⬇️</button>
+                class="action-btn disabled:opacity-40 disabled:cursor-not-allowed" title="Download"><mat-icon class="text-lg">download</mat-icon></button>
             </div>
           </div>
         </div>
@@ -240,11 +240,11 @@
               <div class="grid grid-cols-2 gap-2">
                 <button (click)="downloadLeft()" [disabled]="!originalText()"
                   class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed">
-                  ⬇️ Download Left
+                  <mat-icon class="text-lg">download</mat-icon> Download Left
                 </button>
                 <button (click)="downloadRight()" [disabled]="!modifiedText()"
                   class="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm font-medium transition-colors disabled:text-gray-400 disabled:cursor-not-allowed">
-                  ⬇️ Download Right
+                  <mat-icon class="text-lg">download</mat-icon> Download Right
                 </button>
               </div>
               <button (click)="clearAll()"

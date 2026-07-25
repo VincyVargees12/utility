@@ -60,7 +60,7 @@
                     class="px-6 py-3 text-white font-medium text-sm rounded-lg transition-colors"
                     [ngClass]="copiedToClipboard()
                       ? 'bg-green-600 hover:bg-green-700'
-                      : 'bg-blue-600 hover:bg-blue-700'"
+                      : 'bg-purple-700 hover:bg-purple-800'"
                   >
                     <mat-icon class="text-sm">content_copy</mat-icon>
                   </button>
@@ -165,7 +165,7 @@
             <button
               (click)="performReplace()"
               [disabled]="!text() || !findText()"
-              class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
+              class="w-full px-6 py-3 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
             >
               🔄 Replace All
             </button>
@@ -179,16 +179,16 @@
                 class="w-full px-6 py-3 font-semibold text-sm rounded-lg transition-colors"
                 [ngClass]="copiedToClipboard()
                   ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'"
+                  : 'bg-purple-700 hover:bg-purple-800 text-white'"
               >
                 <mat-icon class="text-lg">content_copy</mat-icon>
                 Copy All Text
               </button>
               <button
                 (click)="downloadText()"
-                class="w-full px-6 py-3 bg-purple-600 text-white font-semibold text-sm rounded-lg hover:bg-purple-700 transition-colors"
+                class="w-full px-6 py-3 bg-purple-100 text-black font-semibold text-sm rounded-lg hover:bg-purple-200 transition-colors"
               >
-                ⬇️ Download
+                <mat-icon class="text-lg">download</mat-icon> Download
               </button>
             </div>
           }

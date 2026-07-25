@@ -14,6 +14,7 @@ import {
 import { isPlatformBrowser } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { SeoService } from '../../../../services/seo.service';
 import loader from '@monaco-editor/loader';
@@ -45,7 +46,7 @@ const LANGUAGE_MAP: Record<string, string> = {
 @Component({
   selector: 'app-text-difference',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
   templateUrl: './text-difference.component.html',
   styleUrl: './text-difference.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
