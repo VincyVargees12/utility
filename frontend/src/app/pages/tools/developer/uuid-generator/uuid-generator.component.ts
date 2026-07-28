@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { UUID_GENERATOR_RESOURCE_CONTENT } from './uuid-generator.resource-content';
 
 type UUIDVersion = 'v1' | 'v4';
 type UUIDCase = 'lowercase' | 'uppercase';
@@ -11,12 +13,14 @@ type UUIDCase = 'lowercase' | 'uppercase';
 @Component({
   selector: 'app-uuid-generator',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './uuid-generator.component.html',
   styleUrl: './uuid-generator.component.scss'
 })
 export class UuidGeneratorComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = UUID_GENERATOR_RESOURCE_CONTENT;
 
   generatedUuids = signal<string[]>([]);
   uuidVersion = signal<UUIDVersion>('v4');

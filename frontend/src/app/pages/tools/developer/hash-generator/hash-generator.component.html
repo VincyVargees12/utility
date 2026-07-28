@@ -1,7 +1,7 @@
 <main class="w-full">
   <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
-      <div class="flex-1 w-full pr-0 lg:pr-[380px]">
+      <div class="flex-1 w-full min-w-0">
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">Hash Generator</h1>
           <p class="text-lg text-secondary dark:text-white">Generate MD5, SHA-1, SHA-256, SHA-384, and SHA-512 cryptographic hashes. Instant hash calculation with multiple algorithms.</p>
@@ -110,7 +110,7 @@
       </div>
 
       <!-- Right Sidebar -->
-      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 max-h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Actions</h3>
 
         <div class="px-4 pb-6 space-y-4 mt-4">
@@ -197,6 +197,9 @@
     </div>
   </div>
 </main>
+
+<!-- SEO / Educational Resource Content -->
+<app-tool-resource-content [data]="resourceContent"></app-tool-resource-content>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/developer/hash'" [maxTools]="6"></app-related-tools>

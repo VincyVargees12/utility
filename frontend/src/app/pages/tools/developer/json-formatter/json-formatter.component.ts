@@ -14,14 +14,16 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
 import loader from '@monaco-editor/loader';
 import type * as Monaco from 'monaco-editor';
+import { JSON_FORMATTER_RESOURCE_CONTENT } from './json-formatter.resource-content';
 
 @Component({
   selector: 'app-json-formatter',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './json-formatter.component.html',
   styleUrl: './json-formatter.component.scss'
 })
@@ -46,6 +48,8 @@ export class JsonFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
   indentSize = signal<number>(2);
   sortKeys = signal<boolean>(false);
 
+  resourceContent = JSON_FORMATTER_RESOURCE_CONTENT;
+
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'JSON Formatter - Beautify and Validate JSON | DataUtil',
@@ -56,20 +60,35 @@ export class JsonFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
       canonicalUrl: 'https://www.data-util.com/categories/developer/json-formatter'
     });
 
-    // Add structured data for the tool
+    // Add structured data for the tool + FAQ content
     this.seoService.addStructuredData({
       '@context': 'https://schema.org',
-      '@type': 'SoftwareApplication',
-      'name': 'JSON Formatter',
-      'applicationCategory': 'DeveloperApplication',
-      'description': 'Format, validate, and minify JSON instantly with custom indentation.',
-      'url': 'https://www.data-util.com/categories/developer/json-formatter',
-      'operatingSystem': 'Any',
-      'offers': {
-        '@type': 'Offer',
-        'price': '0',
-        'priceCurrency': 'USD'
-      }
+      '@graph': [
+        {
+          '@type': 'SoftwareApplication',
+          'name': 'JSON Formatter',
+          'applicationCategory': 'DeveloperApplication',
+          'description': 'Format, validate, and minify JSON instantly with custom indentation.',
+          'url': 'https://www.data-util.com/categories/developer/json-formatter',
+          'operatingSystem': 'Any',
+          'offers': {
+            '@type': 'Offer',
+            'price': '0',
+            'priceCurrency': 'USD'
+          }
+        },
+        {
+          '@type': 'FAQPage',
+          'mainEntity': JSON_FORMATTER_RESOURCE_CONTENT.faq.map(item => ({
+            '@type': 'Question',
+            'name': item.question,
+            'acceptedAnswer': {
+              '@type': 'Answer',
+              'text': item.answer
+            }
+          }))
+        }
+      ]
     });
   }
 

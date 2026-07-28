@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { JWT_DECODER_RESOURCE_CONTENT } from './jwt-decoder.resource-content';
 
 interface DecodedJWT {
   header: any;
@@ -16,7 +18,7 @@ interface DecodedJWT {
 @Component({
   selector: 'app-jwt-decoder',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './jwt-decoder.component.html',
   styleUrl: './jwt-decoder.component.scss'
 })
@@ -28,6 +30,8 @@ export class JwtDecoderComponent implements OnInit {
   errorMessage = signal<string>('');
   isValid = signal<boolean>(false);
   copied = signal<string>(''); // 'header', 'payload', 'signature', or ''
+
+  resourceContent = JWT_DECODER_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

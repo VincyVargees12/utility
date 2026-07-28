@@ -2,7 +2,9 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { BASE64_RESOURCE_CONTENT } from './base64.resource-content';
 
 type EncodingType = 'utf-8' | 'ascii' | 'latin1';
 type OutputFormat = 'standard' | 'url-safe' | 'mime';
@@ -10,12 +12,14 @@ type OutputFormat = 'standard' | 'url-safe' | 'mime';
 @Component({
   selector: 'app-base64',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './base64.component.html',
   styleUrl: './base64.component.scss'
 })
 export class Base64Component implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = BASE64_RESOURCE_CONTENT;
 
   inputText = signal<string>('');
   outputText = signal<string>('');

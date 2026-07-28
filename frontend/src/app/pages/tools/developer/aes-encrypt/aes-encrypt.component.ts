@@ -2,7 +2,9 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { AES_ENCRYPT_RESOURCE_CONTENT } from './aes-encrypt.resource-content';
 
 type AesKeySize = 128 | 192 | 256;
 
@@ -19,7 +21,7 @@ interface EncryptedPayload {
 @Component({
   selector: 'app-aes-encrypt',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './aes-encrypt.component.html',
   styleUrl: './aes-encrypt.component.scss'
 })
@@ -37,6 +39,8 @@ export class AesEncryptComponent implements OnInit {
   inputLength = signal<number>(0);
   outputLength = signal<number>(0);
   isWorking = signal<boolean>(false);
+
+  resourceContent = AES_ENCRYPT_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

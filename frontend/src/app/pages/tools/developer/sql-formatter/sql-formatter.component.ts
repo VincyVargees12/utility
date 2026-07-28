@@ -14,14 +14,16 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
 import loader from '@monaco-editor/loader';
 import type * as Monaco from 'monaco-editor';
+import { SQL_FORMATTER_RESOURCE_CONTENT } from './sql-formatter.resource-content';
 
 @Component({
   selector: 'app-sql-formatter',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './sql-formatter.component.html',
   styleUrl: './sql-formatter.component.scss'
 })
@@ -62,6 +64,8 @@ export class SqlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
     { value: 'snowflake', label: 'Snowflake' },
     { value: 'spark', label: 'Spark SQL' }
   ];
+
+  resourceContent = SQL_FORMATTER_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

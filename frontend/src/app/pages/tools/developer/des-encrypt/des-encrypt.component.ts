@@ -2,8 +2,10 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
 import CryptoJS from 'crypto-js';
+import { DES_ENCRYPT_RESOURCE_CONTENT } from './des-encrypt.resource-content';
 
 interface DesEncryptedPayload {
   v: 1;
@@ -17,7 +19,7 @@ interface DesEncryptedPayload {
 @Component({
   selector: 'app-des-encrypt',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './des-encrypt.component.html',
   styleUrl: './des-encrypt.component.scss'
 })
@@ -34,6 +36,8 @@ export class DesEncryptComponent implements OnInit {
   inputLength = signal<number>(0);
   outputLength = signal<number>(0);
   isWorking = signal<boolean>(false);
+
+  resourceContent = DES_ENCRYPT_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

@@ -13,14 +13,16 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
 import loader from '@monaco-editor/loader';
 import type * as Monaco from 'monaco-editor';
+import { HTML_FORMATTER_RESOURCE_CONTENT } from './html-formatter.resource-content';
 
 @Component({
   selector: 'app-html-formatter',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './html-formatter.component.html',
   styleUrl: './html-formatter.component.scss'
 })
@@ -43,6 +45,8 @@ export class HtmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
   errorMessage = signal<string>('');
   copied = signal<boolean>(false);
   indentSize = signal<number>(2);
+
+  resourceContent = HTML_FORMATTER_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

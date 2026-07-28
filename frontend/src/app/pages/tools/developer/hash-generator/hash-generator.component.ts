@@ -3,7 +3,9 @@ import { Component, OnInit, PLATFORM_ID, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { HASH_GENERATOR_RESOURCE_CONTENT } from './hash-generator.resource-content';
 
 type HashAlgorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512';
 
@@ -16,7 +18,7 @@ interface HashResult {
 @Component({
   selector: 'app-hash-generator',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './hash-generator.component.html',
   styleUrl: './hash-generator.component.scss'
 })
@@ -34,6 +36,8 @@ export class HashGeneratorComponent implements OnInit {
   outputFormat = signal<'hex' | 'base64'>('hex');
 
   readonly algorithms: HashAlgorithm[] = ['MD5', 'SHA-1', 'SHA-256', 'SHA-384', 'SHA-512'];
+
+  resourceContent = HASH_GENERATOR_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

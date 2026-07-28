@@ -2,19 +2,23 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { URL_ENCODE_RESOURCE_CONTENT } from './url-encode.resource-content';
 
 type EncodingMode = 'component' | 'uri' | 'form';
 
 @Component({
   selector: 'app-url-encode',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './url-encode.component.html',
   styleUrl: './url-encode.component.scss'
 })
 export class UrlEncodeComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = URL_ENCODE_RESOURCE_CONTENT;
 
   inputText = signal<string>('');
   outputText = signal<string>('');
