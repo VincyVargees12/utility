@@ -116,6 +116,7 @@ export class XmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
         links: false
       });
 
+      
       this.inputEditor.onDidChangeModelContent(() => {
         if (this.isSettingInput) return;
         this.inputText.set(this.inputEditor?.getValue() ?? '');
