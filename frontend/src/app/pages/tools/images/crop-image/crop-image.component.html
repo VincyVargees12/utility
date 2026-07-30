@@ -1,6 +1,6 @@
 <app-tool-header
-  [title]="'Crop IMAGE'"
-  [subtitle]="'Crop your images online by defining the bounds you want to keep.'"
+  [title]="state() === 'upload' ? 'Crop IMAGE' : ''"
+  [subtitle]="state() === 'upload' ? 'Crop your images online by defining the bounds you want to keep.' : ''"
   [breadcrumbs]="[
     { label: 'Home', route: '/' },
     { label: 'Image Tools', route: '/categories/images' },
@@ -23,9 +23,9 @@
 
 <!-- Configure State -->
 @if (state() === 'configure') {
-  <div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="max-w-none mx-auto px-4 pb-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
-      <div class="flex-1 w-full bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+      <div class="flex-1 w-full bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-6">
         <div class="flex flex-wrap gap-2 mb-4">
           @for (img of images(); track img.id) {
             <button
@@ -42,12 +42,13 @@
 
         @if (getActiveImage()) {
           <div class="overflow-hidden rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <img #cropperImage [ngSrc]="getActiveImage()!.previewUrl" [width]="getActiveImage()!.originalWidth" [height]="getActiveImage()!.originalHeight" sizes="(max-width: 1024px) 100vw, 70vw" alt="Crop preview" class="max-w-full max-h-[70vh] mx-auto rounded-lg bg-white shadow-inner" />
+            <img #cropperImage [src]="getActiveImage()!.previewUrl" alt="Crop preview" class="max-w-full max-h-[70vh] mx-auto rounded-lg bg-white shadow-inner" />
           </div>
         }
       </div>
 
-      <div class="w-full lg:w-[340px] bg-white border border-gray-200 rounded-2xl shadow-sm p-5">
+      <app-tool-sidebar [width]="340">
+        <div class="p-5">
         <h3 class="text-lg font-bold text-primary mb-5">Crop settings</h3>
 
         <div class="space-y-4">
@@ -74,7 +75,8 @@
             Crop images
           </button>
         </div>
-      </div>
+        </div>
+      </app-tool-sidebar>
     </div>
   </div>
 }

@@ -1,9 +1,10 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
 import { SeoService } from '../../../../services/seo.service';
 
 // Type for heic2any
@@ -26,7 +27,7 @@ interface ImageItem {
 @Component({
   selector: 'app-convert-image',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
   templateUrl: './convert-image.component.html',
   styleUrl: './convert-image.component.scss'
 })

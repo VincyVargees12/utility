@@ -22,10 +22,10 @@
 
 <!-- Configure State -->
 @if (state() === 'configure') {
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+  <div class="max-w-none mx-auto px-4 pb-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
-      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+      <div class="flex-1 w-full bg-transparent pt-6">
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           @for (img of images(); track img.id) {
             <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col">
@@ -37,7 +37,7 @@
               </button>
 
               <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
-                <img [ngSrc]="img.previewUrl" fill sizes="192px" class="object-contain shadow-sm bg-white" [alt]="img.name" />
+                <img [src]="img.previewUrl" class="absolute inset-0 w-full h-full object-contain bg-white" [alt]="img.name" />
               </div>
               <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg">
                 {{ img.name }}
@@ -64,7 +64,7 @@
       </div>
 
       <!-- Sidebar -->
-      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+      <app-tool-sidebar [width]="380">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">PNG to JPG</h3>
         
         <div class="px-6 pb-6 mt-4">
@@ -151,7 +151,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </button>
         </div>
-      </div>
+      </app-tool-sidebar>
     </div>
   </div>
 }

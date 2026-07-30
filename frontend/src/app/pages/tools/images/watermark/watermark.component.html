@@ -22,10 +22,10 @@
 
 <!-- Configure State -->
 @if (state() === 'configure') {
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+  <div class="max-w-none mx-auto px-4 pb-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
-      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+      <div class="flex-1 w-full bg-transparent pt-6">
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           @for (img of images(); track img.id) {
             <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col cursor-pointer"
@@ -38,7 +38,7 @@
               </button>
 
               <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
-                <img [ngSrc]="img.previewUrl" fill sizes="192px" class="object-contain shadow-sm" [alt]="img.name" />
+                <img [src]="img.previewUrl" class="absolute inset-0 w-full h-full object-contain" [alt]="img.name" />
                 <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <span class="text-white font-semibold text-sm bg-blue-600 px-4 py-2 rounded-lg">Preview Watermark</span>
                 </div>
@@ -68,7 +68,7 @@
       </div>
 
       <!-- Sidebar -->
-      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+      <app-tool-sidebar [width]="380">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Watermark Settings</h3>
         
         <div class="px-6 pb-6 mt-4">
@@ -219,7 +219,7 @@
                 @if (watermarkImagePreview()) {
                   <div class="mb-3 p-2 bg-gray-50 rounded-lg flex items-center justify-between">
                     <div class="relative h-12 w-20 flex-shrink-0">
-                      <img [ngSrc]="watermarkImagePreview()" fill sizes="80px" class="object-contain" alt="Watermark preview">
+                      <img [src]="watermarkImagePreview()" class="absolute inset-0 w-full h-full object-contain" alt="Watermark preview">
                     </div>
                     <button 
                       class="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
@@ -323,7 +323,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </button>
         </div>
-      </div>
+      </app-tool-sidebar>
     </div>
   </div>
 }
@@ -382,7 +382,7 @@
               <p class="text-secondary">Generating preview...</p>
             </div>
           } @else if (previewCanvasUrl()) {
-            <img [ngSrc]="previewCanvasUrl()" [width]="previewImage()!.width" [height]="previewImage()!.height" sizes="(max-width: 1024px) 100vw, 70vw" class="max-w-full max-h-[60vh] object-contain shadow-lg" [alt]="previewImage()?.name || 'Watermark preview'">
+            <img [src]="previewCanvasUrl()" class="max-w-full max-h-[60vh] object-contain shadow-lg" [alt]="previewImage()?.name || 'Watermark preview'">
           }
         </div>
 
@@ -507,7 +507,7 @@
                 @if (watermarkImagePreview()) {
                   <div class="mb-2 p-2 bg-gray-50 rounded flex items-center justify-between">
                     <div class="relative h-8 w-14 flex-shrink-0">
-                      <img [ngSrc]="watermarkImagePreview()" fill sizes="56px" class="object-contain" alt="Watermark preview">
+                      <img [src]="watermarkImagePreview()" class="absolute inset-0 w-full h-full object-contain" alt="Watermark preview">
                     </div>
                     <button 
                       class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded"

@@ -8,43 +8,48 @@
   ]"
 ></app-tool-header>
 
-<div class="container mx-auto px-4 py-8 max-w-7xl">
-  @if (errorMessage()) {
+@if (errorMessage()) {
+  <div class="max-w-7xl mx-auto px-4 pt-8">
     <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
       {{ errorMessage() }}
     </div>
-  }
+  </div>
+}
 
-  <!-- Upload State -->
-  @if (state() === 'upload') {
+<!-- Upload State -->
+@if (state() === 'upload') {
+  <div class="max-w-7xl mx-auto px-4 py-8">
     <app-file-uploader
       [buttonText]="'Select Images (JPG, PNG, GIF, BMP, etc.)'"
       accept="image/*"
       [multiple]="true"
       (fileSelected)="onFileSelected($event)">
     </app-file-uploader>
-  }
+  </div>
+}
 
-  <!-- Processing State -->
-  @if (state() === 'processing') {
+<!-- Processing State -->
+@if (state() === 'processing') {
+  <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="text-center py-20">
       <div class="inline-block animate-spin text-4xl mb-4">⏳</div>
       <p class="text-secondary">Converting images to WebP...</p>
     </div>
-  }
+  </div>
+}
 
-  <!-- Configure State -->
-  @if (state() === 'configure') {
-    <div class="max-w-6xl mx-auto px-4 py-8">
-      <div class="flex flex-col lg:flex-row gap-6 items-start relative">
-        <!-- Main Content Area -->
-        <div class="flex-1 w-full pr-0 lg:pr-[380px]">
+<!-- Configure State -->
+@if (state() === 'configure') {
+  <div class="max-w-none mx-auto px-4 pb-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full pt-6">
           <!-- Images Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             @for (img of images(); track img.id) {
               <div class="relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden hover:border-blue-400 transition-colors group">
                 <div class="aspect-square bg-gray-50 flex items-center justify-center relative">
-                  <img [ngSrc]="img.previewUrl" [width]="img.width" [height]="img.height" sizes="(max-width: 768px) 50vw, 33vw" [alt]="img.name" class="max-w-full max-h-full object-contain">
+                  <img [src]="img.previewUrl" [alt]="img.name" class="max-w-full max-h-full object-contain">
                 </div>
                 <div class="p-3">
                   <p class="text-sm font-medium text-gray-900 truncate">{{ img.name }}</p>
@@ -79,7 +84,7 @@
         </div>
 
         <!-- Fixed Sidebar -->
-        <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <app-tool-sidebar [width]="380">
           <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Conversion Settings</h3>
           
           <div class="p-6 flex-1 overflow-y-auto">
@@ -147,24 +152,25 @@
               </div>
             </div>
           </div>
-        </div>
+        </app-tool-sidebar>
       </div>
     </div>
   }
 
   <!-- Complete State -->
   @if (state() === 'complete') {
-    <div class="text-center py-20">
-      <div class="text-6xl mb-4">✅</div>
-      <h2 class="text-2xl font-bold text-primary mb-2">Success!</h2>
-      <p class="text-secondary mb-8">Your images have been converted to WebP and downloaded.</p>
-      
-      <button class="btn btn-primary px-8 py-3" (click)="reset()">
-        Convert More Images
-      </button>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="text-center py-20">
+        <div class="text-6xl mb-4">✅</div>
+        <h2 class="text-2xl font-bold text-primary mb-2">Success!</h2>
+        <p class="text-secondary mb-8">Your images have been converted to WebP and downloaded.</p>
+
+        <button class="btn btn-primary px-8 py-3" (click)="reset()">
+          Convert More Images
+        </button>
+      </div>
     </div>
   }
-</div>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/images/to-webp'" [maxTools]="6"></app-related-tools>

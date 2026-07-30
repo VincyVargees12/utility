@@ -8,15 +8,17 @@
   ]"
 ></app-tool-header>
 
-<div class="container mx-auto px-4 py-8 max-w-7xl">
-  @if (errorMessage()) {
+@if (errorMessage()) {
+  <div class="max-w-7xl mx-auto px-4 pt-8">
     <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
       {{ errorMessage() }}
     </div>
-  }
+  </div>
+}
 <!-- //TODO: provide eraser and restore tool for background removal using an eraser. -->
-  <!-- Upload State -->
-  @if (state() === 'upload') {
+<!-- Upload State -->
+@if (state() === 'upload') {
+  <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="max-w-2xl mx-auto">
       <app-file-uploader
         [buttonText]="'Select images'"
@@ -38,28 +40,31 @@
         </ul>
       </div>
     </div>
-  }
+  </div>
+}
 
-  <!-- Processing State -->
-  @if (state() === 'processing') {
+<!-- Processing State -->
+@if (state() === 'processing') {
+  <div class="max-w-7xl mx-auto px-4 py-8">
     <div class="text-center py-20">
       <div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mb-4"></div>
       <h2 class="text-2xl font-bold text-primary mb-2">{{ processingProgress() }}</h2>
       <p class="text-secondary">This may take a moment...</p>
     </div>
-  }
+  </div>
+}
 
-  <!-- Configure State -->
-  @if (state() === 'configure') {
-    <div class="max-w-6xl mx-auto px-4 py-8">
-      <div class="flex flex-col lg:flex-row gap-6 items-start relative">
-        <!-- Main Content Area -->
-        <div class="flex-1 w-full pr-0 lg:pr-[400px]">
+<!-- Configure State -->
+@if (state() === 'configure') {
+  <div class="max-w-none mx-auto px-4 pb-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full pt-6">
           <!-- Large Image Preview -->
           <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden mb-6">
             <div class="bg-gray-50 flex items-center justify-center checkerboard-bg min-h-[500px] relative">
               @if (images().length > 0) {
-                <img [ngSrc]="images()[0].processedUrl" [width]="images()[0].width" [height]="images()[0].height" sizes="(max-width: 1024px) 100vw, 70vw" [alt]="images()[0].name" class="max-w-full max-h-full object-contain">
+                <img [src]="images()[0].processedUrl" [alt]="images()[0].name" class="max-w-full max-h-full object-contain">
               }
             </div>
           </div>
@@ -70,7 +75,7 @@
               @for (img of images(); track img.id; let idx = $index) {
                 <div class="bg-white rounded border-2 border-gray-200 overflow-hidden hover:border-blue-400 transition-colors cursor-pointer">
                   <div class="aspect-square bg-gray-50 flex items-center justify-center checkerboard-bg relative">
-                    <img [ngSrc]="img.processedUrl" [width]="img.width" [height]="img.height" sizes="96px" [alt]="img.name" class="max-w-full max-h-full object-contain">
+                    <img [src]="img.processedUrl" [alt]="img.name" class="max-w-full max-h-full object-contain">
                   </div>
                 </div>
               }
@@ -79,7 +84,7 @@
         </div>
 
         <!-- Fixed Sidebar -->
-        <div class="hidden lg:flex fixed right-0 top-[70px] w-[400px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <app-tool-sidebar [width]="400">
           <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Background Options</h3>
           <div class="p-6">
 
@@ -124,7 +129,7 @@
                   @if (backgroundImagePreview()) {
                     <div class="mb-3 p-3 bg-gray-50 rounded border border-gray-200">
                       <div class="relative w-full h-24 mb-2">
-                        <img [ngSrc]="backgroundImagePreview()" fill sizes="352px" class="object-cover rounded" alt="Background preview">
+                        <img [src]="backgroundImagePreview()" class="absolute inset-0 w-full h-full object-cover rounded" alt="Background preview">
                       </div>
                       <button 
                         class="w-full px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200"
@@ -215,7 +220,7 @@
                     <label class="block text-sm font-semibold text-primary mb-2">Background Image</label>
                     <div class="mb-3 p-2 bg-gray-50 rounded border border-gray-200">
                       <div class="relative w-full h-24">
-                        <img [ngSrc]="backgroundImagePreview()" fill sizes="352px" class="object-cover rounded" alt="Background preview">
+                        <img [src]="backgroundImagePreview()" class="absolute inset-0 w-full h-full object-cover rounded" alt="Background preview">
                       </div>
                     </div>
                     <button 
@@ -307,24 +312,25 @@
               </div>
             </div>
           </div>
-        </div>
+        </app-tool-sidebar>
       </div>
     </div>
   }
 
   <!-- Complete State -->
   @if (state() === 'complete') {
-    <div class="text-center py-20">
-      <div class="text-6xl mb-4">✅</div>
-      <h2 class="text-2xl font-bold text-primary mb-2">Success!</h2>
-      <p class="text-secondary mb-8">Your images have been processed and downloaded.</p>
-      
-      <button class="btn btn-primary px-8 py-3" (click)="reset()">
-        Remove More Backgrounds
-      </button>
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      <div class="text-center py-20">
+        <div class="text-6xl mb-4">✅</div>
+        <h2 class="text-2xl font-bold text-primary mb-2">Success!</h2>
+        <p class="text-secondary mb-8">Your images have been processed and downloaded.</p>
+
+        <button class="btn btn-primary px-8 py-3" (click)="reset()">
+          Remove More Backgrounds
+        </button>
+      </div>
     </div>
   }
-</div>
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/images/remove-bg'" [maxTools]="6"></app-related-tools>
