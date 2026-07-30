@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { DUPLICATE_REMOVER_RESOURCE_CONTENT } from './duplicate-remover.resource-content';
 
 interface DuplicateStats {
   originalLines: number;
@@ -20,7 +22,7 @@ interface RemovalResults {
 @Component({
   selector: 'app-duplicate-remover',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './duplicate-remover.component.html',
   styleUrl: './duplicate-remover.component.scss'
 })
@@ -42,6 +44,8 @@ export class DuplicateRemoverComponent implements OnInit {
   previewOpen = signal<boolean>(false);
   previewMode = signal<string | null>(null);
   removeEmpty = signal<boolean>(false);
+
+  resourceContent = DUPLICATE_REMOVER_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

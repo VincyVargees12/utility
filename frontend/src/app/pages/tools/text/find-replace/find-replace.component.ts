@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { FIND_REPLACE_RESOURCE_CONTENT } from './find-replace.resource-content';
 
 interface ReplaceStats {
   matchesFound: number;
@@ -15,7 +17,7 @@ interface ReplaceStats {
 @Component({
   selector: 'app-find-replace',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './find-replace.component.html',
   styleUrl: './find-replace.component.scss'
 })
@@ -37,6 +39,8 @@ export class FindReplaceComponent implements OnInit {
   useRegex = signal<boolean>(false);
   removeEmpty = signal<boolean>(false);
   copiedToClipboard = signal<boolean>(false);
+
+  resourceContent = FIND_REPLACE_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { CHARACTER_COUNTER_RESOURCE_CONTENT } from './character-counter.resource-content';
 
 interface TextStats {
   words: number;
@@ -17,7 +19,7 @@ interface TextStats {
 @Component({
   selector: 'app-character-counter',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './character-counter.component.html',
   styleUrl: './character-counter.component.scss'
 })
@@ -33,6 +35,8 @@ export class CharacterCounterComponent implements OnInit {
     charactersWithoutSpaces: 0,
     readingTime: '0 m 0 s'
   });
+
+  resourceContent = CHARACTER_COUNTER_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

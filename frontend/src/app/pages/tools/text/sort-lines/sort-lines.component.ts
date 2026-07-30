@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { SORT_LINES_RESOURCE_CONTENT } from './sort-lines.resource-content';
 
 interface SortResults {
   asc: string;
@@ -23,7 +25,7 @@ interface SortStats {
 @Component({
   selector: 'app-sort-lines',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './sort-lines.component.html',
   styleUrl: './sort-lines.component.scss'
 })
@@ -48,6 +50,8 @@ export class SortLinesComponent implements OnInit {
   removeEmpty = signal<boolean>(true);
   previewOpen = signal<boolean>(false);
   previewMode = signal<string | null>(null);
+
+  resourceContent = SORT_LINES_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

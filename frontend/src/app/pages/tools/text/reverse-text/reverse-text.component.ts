@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { REVERSE_TEXT_RESOURCE_CONTENT } from './reverse-text.resource-content';
 
 interface ReverseResult {
   text: string;
@@ -14,7 +16,7 @@ interface ReverseResult {
 @Component({
   selector: 'app-reverse-text',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './reverse-text.component.html',
   styleUrl: './reverse-text.component.scss'
 })
@@ -29,6 +31,8 @@ export class ReverseTextComponent implements OnInit {
   });
   copiedMode = signal<string | null>(null);
   reverseMode = signal<'text' | 'words' | 'paragraphs'>('text');
+
+  resourceContent = REVERSE_TEXT_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

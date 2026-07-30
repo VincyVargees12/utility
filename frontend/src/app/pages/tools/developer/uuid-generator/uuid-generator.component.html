@@ -67,7 +67,7 @@
       </div>
 
       <!-- Right Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 max-h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto">
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Generator Options</h3>
 
         <div class="px-4 pb-6 space-y-4 mt-4">
@@ -196,8 +196,8 @@
   </div>
 </main>
 
-<!-- Full resource content: What is UUID, features, how-to, errors, examples, FAQ -->
-<app-tool-resource-content [data]="resourceContent"></app-tool-resource-content>
-
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/developer/uuid'" [maxTools]="6"></app-related-tools>
+
+<!-- Full resource content: What is UUID, features, how-to, errors, examples, FAQ -->
+<app-tool-resource-content [data]="resourceContent"></app-tool-resource-content>

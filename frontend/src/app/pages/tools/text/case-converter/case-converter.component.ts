@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { CASE_CONVERTER_RESOURCE_CONTENT } from './case-converter.resource-content';
 
 interface CaseResult {
   uppercase: string;
@@ -20,7 +22,7 @@ interface CaseResult {
 @Component({
   selector: 'app-case-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './case-converter.component.html',
   styleUrl: './case-converter.component.scss'
 })
@@ -40,6 +42,8 @@ export class CaseConverterComponent implements OnInit {
     dotcase: ''
   });
   copiedCase = signal<string | null>(null);
+
+  resourceContent = CASE_CONVERTER_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

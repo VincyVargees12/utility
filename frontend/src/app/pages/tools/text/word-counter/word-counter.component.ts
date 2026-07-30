@@ -3,7 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { WORD_COUNTER_RESOURCE_CONTENT } from './word-counter.resource-content';
 
 interface TextStats {
   words: number;
@@ -17,7 +19,7 @@ interface TextStats {
 @Component({
   selector: 'app-word-counter',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './word-counter.component.html',
   styleUrl: './word-counter.component.scss'
 })
@@ -33,6 +35,8 @@ export class WordCounterComponent implements OnInit {
     charactersWithoutSpaces: 0,
     readingTime: '0 m 0 s'
   });
+
+  resourceContent = WORD_COUNTER_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({

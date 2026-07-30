@@ -16,11 +16,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
 import loader from '@monaco-editor/loader';
 import type * as Monaco from 'monaco-editor';
 import { Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
+import { TEXT_DIFFERENCE_RESOURCE_CONTENT } from './text-difference.resource-content';
 
 export interface DiffStats {
   added: number;
@@ -46,7 +48,7 @@ const LANGUAGE_MAP: Record<string, string> = {
 @Component({
   selector: 'app-text-difference',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './text-difference.component.html',
   styleUrl: './text-difference.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -100,6 +102,8 @@ export class TextDifferenceComponent implements OnInit, AfterViewInit, OnDestroy
   ];
 
   readonly acceptExtensions = '.' + Object.keys(LANGUAGE_MAP).join(',.');
+
+  resourceContent = TEXT_DIFFERENCE_RESOURCE_CONTENT;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
