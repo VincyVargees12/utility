@@ -10,6 +10,7 @@ import { UUID_GENERATOR_RESOURCE_CONTENT } from './uuid-generator.resource-conte
 type UUIDVersion = 'v1' | 'v4';
 type UUIDCase = 'lowercase' | 'uppercase';
 
+
 @Component({
   selector: 'app-uuid-generator',
   standalone: true,
