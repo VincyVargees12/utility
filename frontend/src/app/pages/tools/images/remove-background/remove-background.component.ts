@@ -38,11 +38,12 @@ export class RemoveBackgroundComponent implements OnInit {
   processingProgress = signal<string>('');
 
   images = signal<ImageItem[]>([]);
+  activeImageId = signal<string | null>(null);
   backgroundType = signal<BackgroundType>('transparent');
 
   // Color background settings
   backgroundColor = signal<string>('#ffffff');
-  presetColors = ['transparent', '#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', 
+  presetColors = ['#ffffff', '#000000', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff',
                   '#ffa500', '#800080', '#008080', '#ffc0cb', '#a52a2a', '#808080'];
 
   // Blur background settings
@@ -69,10 +70,36 @@ export class RemoveBackgroundComponent implements OnInit {
     }
   }
 
-  testVincy(){
-   let a = this.images();
-   console.log(a);
-    
+  getActiveImage(): ImageItem | undefined {
+    const id = this.activeImageId();
+    return this.images().find(img => img.id === id) ?? this.images()[0];
+  }
+
+  setActiveImage(id: string): void {
+    this.activeImageId.set(id);
+  }
+
+  removeImage(id: string, event: Event): void {
+    event.stopPropagation();
+    const img = this.images().find(i => i.id === id);
+    if (!img) return;
+
+    URL.revokeObjectURL(img.originalUrl);
+    URL.revokeObjectURL(img.removedBgUrl);
+    if (img.processedUrl !== img.removedBgUrl) {
+      URL.revokeObjectURL(img.processedUrl);
+    }
+
+    const remaining = this.images().filter(i => i.id !== id);
+    this.images.set(remaining);
+
+    if (this.activeImageId() === id) {
+      this.activeImageId.set(remaining[0]?.id ?? null);
+    }
+
+    if (remaining.length === 0) {
+      this.state.set('upload');
+    }
   }
 
   async loadImages(files: File[]): Promise<void> {
@@ -118,6 +145,7 @@ export class RemoveBackgroundComponent implements OnInit {
       }
 
       this.images.set(loadedImages);
+      this.activeImageId.set(loadedImages[0]?.id ?? null);
       this.state.set('configure');
     } catch (error) {
       console.error('Error processing images:', error);
@@ -239,11 +267,7 @@ export class RemoveBackgroundComponent implements OnInit {
   }
 
   selectPresetColor(color: string): void {
-    if (color === 'transparent') {
-      this.backgroundType.set('transparent');
-    } else {
-      this.backgroundColor.set(color);
-    }
+    this.backgroundColor.set(color);
     this.applyBackgroundChanges();
   }
 
@@ -305,6 +329,7 @@ export class RemoveBackgroundComponent implements OnInit {
     }
 
     this.images.set([]);
+    this.activeImageId.set(null);
     this.state.set('upload');
     this.errorMessage.set('');
     this.backgroundType.set('transparent');

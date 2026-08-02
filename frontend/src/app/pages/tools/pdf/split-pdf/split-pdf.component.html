@@ -20,7 +20,8 @@
 
 <!-- Configure State -->
 @if (state() === 'configure') {
-  <div class="pr-0 lg:pr-[380px]">
+  <div class="flex flex-col lg:flex-row items-start">
+    <div class="flex-1 w-full min-w-0">
     <div class="px-6 py-2">
       <div class="max-w-4xl mx-auto">
         <!-- Left: Page Preview -->
@@ -40,11 +41,9 @@
                           <div class="relative w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
                             @if (page.thumbnail) {
                               <img
-                                [ngSrc]="page.thumbnail"
-                                fill
-                                sizes="128px"
+                                [src]="page.thumbnail"
                                 [alt]="'Preview page ' + page.pageNumber"
-                                class="w-full h-full object-contain bg-gray-50">
+                                class="absolute inset-0 w-full h-full object-contain bg-gray-50">
                             } @else {
                               <div class="w-full h-full flex items-center justify-center bg-gray-50">
                                 <span class="text-gray-500 text-xs font-medium">Loading...</span>
@@ -70,11 +69,9 @@
                             <div class="relative w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
                               @if (page.thumbnail) {
                                 <img
-                                  [ngSrc]="page.thumbnail"
-                                  fill
-                                  sizes="128px"
+                                  [src]="page.thumbnail"
                                   [alt]="'Preview page ' + page.pageNumber"
-                                  class="w-full h-full object-contain bg-gray-50">
+                                  class="absolute inset-0 w-full h-full object-contain bg-gray-50">
                               } @else {
                                 <div class="w-full h-full flex items-center justify-center bg-gray-50">
                                   <span class="text-gray-500 text-xs font-medium">Loading...</span>
@@ -109,11 +106,9 @@
                               <div class="relative w-24 h-32 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
                                 @if (page.thumbnail) {
                                   <img
-                                    [ngSrc]="page.thumbnail"
-                                    fill
-                                    sizes="96px"
+                                    [src]="page.thumbnail"
                                     [alt]="'Preview page ' + page.pageNumber"
-                                    class="w-full h-full object-contain bg-gray-50">
+                                    class="absolute inset-0 w-full h-full object-contain bg-gray-50">
                                 } @else {
                                   <div class="w-full h-full flex items-center justify-center bg-gray-50">
                                     <span class="text-gray-500 text-xs font-medium">Loading...</span>
@@ -148,11 +143,9 @@
                         <div class="relative w-32 h-44 border border-gray-200 rounded-lg bg-white shadow-sm flex items-center justify-center overflow-hidden">
                           @if (page.thumbnail) {
                             <img
-                              [ngSrc]="page.thumbnail"
-                              fill
-                              sizes="128px"
+                              [src]="page.thumbnail"
                               [alt]="'Preview page ' + page.pageNumber"
-                              class="w-full h-full object-contain bg-gray-50">
+                              class="absolute inset-0 w-full h-full object-contain bg-gray-50">
                           } @else {
                             <div class="w-full h-full flex items-center justify-center bg-gray-50">
                               <span class="text-gray-500 text-xs font-medium">Loading...</span>
@@ -173,31 +166,28 @@
           <div class="mb-6">
             <div class="flex gap-3 flex-wrap justify-center">
               @for (page of pages(); track page.pageNumber) {
-                <div class="relative">
-                  <div 
-                    class="w-32 h-44 border-2 rounded-lg bg-white shadow-sm flex items-center justify-center cursor-pointer transition-all hover:shadow-md overflow-hidden"
+                <div class="relative cursor-pointer" (click)="extractMode() === 'select' && togglePageSelection(page.pageNumber)">
+                  <div
+                    class="w-32 h-44 border-2 rounded-lg bg-white shadow-sm flex items-center justify-center transition-all hover:shadow-md overflow-hidden"
                     [class.border-green-500]="page.selected"
                     [class.bg-green-50]="page.selected"
-                    [class.border-gray-200]="!page.selected"
-                    (click)="extractMode() === 'select' && togglePageSelection(page.pageNumber)">
-                    @if (page.selected) {
-                      <span class="material-icons absolute -top-2 -right-2 text-green-500 bg-white rounded-full text-xl shadow-md">
-                        check_circle
-                      </span>
-                    }
+                    [class.border-gray-200]="!page.selected">
                     @if (page.thumbnail) {
                       <img
-                        [ngSrc]="page.thumbnail"
-                        fill
-                        sizes="128px"
+                        [src]="page.thumbnail"
                         [alt]="'Preview page ' + page.pageNumber"
-                        class="w-full h-full object-contain bg-gray-50">
+                        class="absolute inset-0 w-full h-full object-contain bg-gray-50">
                     } @else {
                       <div class="w-full h-full flex items-center justify-center bg-gray-50">
                         <span class="text-gray-500 text-xs font-medium">Loading...</span>
                       </div>
                     }
                   </div>
+                  @if (page.selected) {
+                    <span class="material-icons absolute -top-2 -right-2 text-green-500 bg-white rounded-full text-xl shadow-md">
+                      check_circle
+                    </span>
+                  }
                   <div class="text-center text-sm text-gray-600 mt-1.5">{{ page.pageNumber }}</div>
                 </div>
               }
@@ -208,8 +198,8 @@
     </div>
   </div>
 
-  <!-- Right: Split Options (Fixed Sidebar) -->
-  <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+  <!-- Right: Split Options (Sticky Sidebar) -->
+  <div class="hidden lg:flex sticky top-[70px] w-[380px] max-h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-30 self-start shrink-0">
     <div class="p-6 flex-1">
       <h2 class="text-2xl font-bold text-primary mb-6">Split</h2>
 
@@ -285,21 +275,21 @@
             <div class="mb-6">
               <h3 class="text-sm font-semibold text-primary mb-3">Range mode:</h3>
               <div class="flex gap-2 mb-4">
-                <button 
+                <button
                   class="flex-1 py-1.5 px-3 rounded-md border-2 text-sm font-medium transition-colors"
                   [class.border-blue-500]="rangeMode() === 'custom'"
                   [class.bg-blue-50]="rangeMode() === 'custom'"
-                  [class.text-white]="rangeMode() === 'custom'"
+                  [class.text-blue-700]="rangeMode() === 'custom'"
                   [class.border-gray-300]="rangeMode() !== 'custom'"
-                  [class.text-primary]="rangeMode() === 'custom'"
+                  [class.text-secondary]="rangeMode() !== 'custom'"
                   (click)="setRangeMode('custom')">Custom</button>
-                <button 
+                <button
                   class="flex-1 py-1.5 px-3 rounded-md border-2 text-sm font-medium transition-colors hover:border-gray-400"
                   [class.border-blue-500]="rangeMode() === 'fixed'"
                   [class.bg-blue-50]="rangeMode() === 'fixed'"
-                  [class.text-white]="rangeMode() === 'fixed'"
+                  [class.text-blue-700]="rangeMode() === 'fixed'"
                   [class.border-gray-300]="rangeMode() !== 'fixed'"
-                  [class.text-primary]="rangeMode() === 'fixed'"
+                  [class.text-secondary]="rangeMode() !== 'fixed'"
                   (click)="setRangeMode('fixed')">Fixed</button>
               </div>
 
@@ -359,11 +349,11 @@
 
                 <div class="mt-4">
                   <label class="flex items-center gap-2 cursor-pointer">
-                    <input 
-                      type="checkbox" 
+                    <input
+                      type="checkbox"
                       [checked]="mergeRanges()"
                       (change)="mergeRanges.set($any($event.target).checked)"
-                      class="rounded border-gray-300">
+                      class="w-4 h-4 text-blue-600 rounded border-gray-400 focus:ring-blue-500 shrink-0">
                     <span class="text-sm text-secondary">Merge all ranges in one PDF file.</span>
                   </label>
                 </div>
@@ -438,7 +428,7 @@
                   [class.bg-blue-50]="extractMode() === 'all'"
                   [class.text-blue-700]="extractMode() === 'all'"
                   [class.border-gray-200]="extractMode() !== 'all'"
-                  [class.text-primary]="extractMode() === 'all'"
+                  [class.text-gray-700]="extractMode() !== 'all'"
                   (click)="setExtractMode('all')">
                   Extract all pages
                 </button>
@@ -467,8 +457,12 @@
                 </div>
 
                 <div class="mb-4">
-                  <label class="flex items-center gap-2">
-                    <input type="checkbox" class="rounded">
+                  <label class="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      [checked]="mergeExtractedPages()"
+                      (change)="mergeExtractedPages.set($any($event.target).checked)"
+                      class="w-4 h-4 text-blue-600 rounded border-gray-400 focus:ring-blue-500 shrink-0">
                     <span class="text-sm text-primary">Merge extracted pages into one PDF file.</span>
                   </label>
                 </div>
@@ -478,7 +472,12 @@
                 <div class="flex gap-2">
                   <span class="material-icons text-blue-600 text-lg">info</span>
                   <div class="text-sm text-blue-900">
-                    Selected pages will be converted into separate PDF files.<br>
+                    @if (extractMode() === 'select' && mergeExtractedPages()) {
+                      Selected pages will be converted into one PDF file.
+                    } @else {
+                      Selected pages will be converted into separate PDF files.
+                    }
+                    <br>
                     <strong>{{ outputFileCount }} PDF{{ outputFileCount > 1 ? 's' : '' }}</strong> will be created.
                   </div>
                 </div>
@@ -501,6 +500,7 @@
             </div>
           }
     </div>
+  </div>
   </div>
 }
 

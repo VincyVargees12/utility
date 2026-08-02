@@ -10,7 +10,6 @@
 
 <!-- Upload State -->
 @if (state() === 'upload') {
-
   <app-file-uploader
     [buttonText]="'Select images'"
     [subtitleText]="'or drop images here'"
@@ -25,56 +24,104 @@
 @if (state() === 'configure') {
   <div class="max-w-none mx-auto px-4 pb-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
-      <div class="flex-1 w-full bg-white border border-gray-200 rounded-2xl p-5 shadow-sm mt-6">
-        <div class="flex flex-wrap gap-2 mb-4">
-          @for (img of images(); track img.id) {
-            <button
-              class="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-              [class.bg-blue-600]="activeImageId() === img.id"
-              [class.text-white]="activeImageId() === img.id"
-              [class.bg-gray-100]="activeImageId() !== img.id"
-              [class.text-gray-700]="activeImageId() !== img.id"
-              (click)="setActiveImage(img.id)">
-              {{ img.name }}
-            </button>
-          }
-        </div>
 
-        @if (getActiveImage()) {
-          <div class="overflow-hidden rounded-xl border border-gray-200 bg-gray-50 p-4">
-            <img #cropperImage [src]="getActiveImage()!.previewUrl" alt="Crop preview" class="max-w-full max-h-[70vh] mx-auto rounded-lg bg-white shadow-inner" />
+      <!-- Main Content Area -->
+      <div class="flex-1 w-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-2xl p-5 shadow-sm mt-6">
+
+        <!-- Thumbnail strip -->
+        @if (images().length > 1) {
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 mb-4 custom-scrollbar">
+            @for (img of images(); track img.id) {
+              <button
+                type="button"
+                class="relative shrink-0 w-14 h-14 rounded-lg overflow-hidden border-2 transition-colors group"
+                [class]="activeImageId() === img.id ? 'border-blue-500' : 'border-transparent hover:border-gray-300 dark:hover:border-gray-600'"
+                (click)="setActiveImage(img.id)"
+                [title]="img.name">
+                <img [src]="img.previewUrl" class="w-full h-full object-cover bg-gray-100 dark:bg-gray-900" [alt]="img.name">
+                <span
+                  class="absolute top-0.5 right-0.5 w-4 h-4 bg-red-500 text-white rounded-full text-[10px] leading-4 text-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  (click)="removeImage(img.id, $event)">&times;</span>
+              </button>
+            }
+          </div>
+        }
+
+        @if (getActiveImage(); as active) {
+          <p class="text-sm font-medium text-primary truncate mb-2">{{ active.name }}</p>
+
+          <!-- Crop stage -->
+          <div class="crop-stage overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-900">
+            <img #cropperImage [src]="active.previewUrl" alt="Crop preview" />
+          </div>
+
+          <!-- Zoom controls -->
+          <div class="flex items-center justify-center gap-2 mt-3">
+            <button type="button" class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-secondary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" title="Zoom out" (click)="zoomImage(-0.1)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"/></svg>
+            </button>
+            <span class="text-xs text-tertiary">Scroll or drag on the image to move &amp; resize the crop box</span>
+            <button type="button" class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 flex items-center justify-center text-secondary hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" title="Zoom in" (click)="zoomImage(0.1)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            </button>
           </div>
         }
       </div>
 
-      <app-tool-sidebar [width]="340">
+      <!-- Sidebar -->
+      <app-tool-sidebar [width]="360">
         <div class="p-5">
-        <h3 class="text-lg font-bold text-primary mb-5">Crop settings</h3>
+          <h3 class="text-lg font-bold text-primary mb-5">Crop settings</h3>
 
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-primary mb-1">X</label>
-            <input type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2" [ngModel]="currentCropX()" (ngModelChange)="onCropInputX($event)">
+          <!-- Aspect ratio presets -->
+          <label class="block text-xs font-semibold text-tertiary uppercase tracking-wide mb-2">Aspect ratio</label>
+          <div class="grid grid-cols-3 gap-2 mb-6">
+            @for (preset of aspectPresets; track preset.value) {
+              <button
+                type="button"
+                class="py-2 rounded-lg border text-xs font-semibold transition-colors"
+                [class]="currentAspectRatio() === preset.value ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400' : 'border-gray-200 dark:border-gray-700 text-secondary hover:bg-gray-50 dark:hover:bg-gray-700'"
+                (click)="setAspectRatio(preset.value)">
+                {{ preset.label }}
+              </button>
+            }
           </div>
-          <div>
-            <label class="block text-sm font-medium text-primary mb-1">Y</label>
-            <input type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2" [ngModel]="currentCropY()" (ngModelChange)="onCropInputY($event)">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-primary mb-1">Width</label>
-            <input type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2" [ngModel]="currentCropW()" (ngModelChange)="onCropInputW($event)">
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-primary mb-1">Height</label>
-            <input type="number" class="w-full border border-gray-300 rounded-lg px-3 py-2" [ngModel]="currentCropH()" (ngModelChange)="onCropInputH($event)">
-          </div>
-        </div>
 
-        <div class="mt-6">
-          <button class="w-full btn btn-primary px-6 py-3 font-bold" (click)="processCrop()">
-            Crop images
+          <!-- Numeric crop box -->
+          <label class="block text-xs font-semibold text-tertiary uppercase tracking-wide mb-2">Crop box (px)</label>
+          <div class="grid grid-cols-2 gap-3 mb-2">
+            <div>
+              <label class="block text-xs text-secondary mb-1">X</label>
+              <input type="number" class="input-field text-right" [ngModel]="currentCropX()" (ngModelChange)="onCropInputX($event)">
+            </div>
+            <div>
+              <label class="block text-xs text-secondary mb-1">Y</label>
+              <input type="number" class="input-field text-right" [ngModel]="currentCropY()" (ngModelChange)="onCropInputY($event)">
+            </div>
+            <div>
+              <label class="block text-xs text-secondary mb-1">Width</label>
+              <input type="number" class="input-field text-right" [ngModel]="currentCropW()" (ngModelChange)="onCropInputW($event)">
+            </div>
+            <div>
+              <label class="block text-xs text-secondary mb-1">Height</label>
+              <input type="number" class="input-field text-right" [ngModel]="currentCropH()" (ngModelChange)="onCropInputH($event)">
+            </div>
+          </div>
+
+          <button type="button" class="text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline mb-5" (click)="resetCrop()">
+            Reset crop box
           </button>
-        </div>
+
+          <!-- Live output size -->
+          <div class="flex items-center justify-between px-4 py-3 rounded-xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900 mb-6">
+            <span class="text-xs font-medium text-blue-700 dark:text-blue-300">Output size</span>
+            <span class="text-sm font-bold text-blue-700 dark:text-blue-300">{{ currentCropW() }} &times; {{ currentCropH() }} px</span>
+          </div>
+
+          <button class="w-full btn btn-primary px-6 py-3 font-bold flex items-center justify-center gap-2" (click)="processCrop()" [disabled]="images().length === 0">
+            Crop {{ images().length }} image{{ images().length === 1 ? '' : 's' }}
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </button>
         </div>
       </app-tool-sidebar>
     </div>
@@ -95,16 +142,16 @@
 <!-- Complete State -->
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
-    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200">
-      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8 text-center border border-gray-200 dark:border-gray-700">
+      <div class="w-16 h-16 bg-green-100 dark:bg-green-950 rounded-full flex items-center justify-center mx-auto mb-6">
         <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
       </div>
-      <h2 class="text-2xl font-bold text-gray-900 mb-2">Images Cropped!</h2>
-      <p class="text-gray-600 mb-8">Your cropped images are ready for download.</p>
+      <h2 class="text-2xl font-bold text-primary mb-2">Images Cropped!</h2>
+      <p class="text-secondary mb-8">Your cropped images are ready for download.</p>
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <button class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium" (click)="reset()">Crop More</button>
+        <button class="btn bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-primary px-8 py-3 rounded-lg font-medium" (click)="reset()">Crop More</button>
         <button class="btn btn-primary px-8 py-3 flex items-center justify-center gap-2" (click)="downloadResult()">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>

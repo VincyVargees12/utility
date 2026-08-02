@@ -13,3 +13,22 @@
 img {
   display: block;
 }
+
+.input-field {
+  width: 100%;
+}
+
+// Cropper.js v2 replaces the <img> with its own <cropper-canvas> custom element
+// tree at runtime, so it can't be targeted by normal Angular view encapsulation.
+.crop-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 340px;
+
+  ::ng-deep cropper-canvas {
+    width: 100% !important;
+    height: 480px !important;
+    max-height: 65vh;
+  }
+}

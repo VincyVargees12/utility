@@ -1,62 +1,46 @@
-import { Component, signal, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { SeoService } from '../../../../services/seo.service';
 
-interface PdfFile {
+type AppState = 'upload' | 'configure' | 'processing' | 'complete';
+
+interface PdfFileItem {
   id: string;
   file: File;
   name: string;
-  size: number;
-  selected: boolean;
-  order: number;
-  passwordRequired?: boolean;
-  passwordError?: boolean;
-  showPasswordInput?: boolean;
-  password?: string;
-  unlocking?: boolean;
+  pageCount: number;
+  thumbnail?: string;
 }
-
-type ProcessingState = 'idle' | 'processing' | 'complete' | 'error';
 
 @Component({
   selector: 'app-merge-pdf',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    DragDropModule,
-    ToolHeaderComponent,
-    FileUploaderComponent,
-    RelatedToolsComponent
-  ],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
   templateUrl: './merge-pdf.component.html',
-  styleUrls: ['./merge-pdf.component.scss']
+  styleUrl: './merge-pdf.component.scss'
 })
 export class MergePdfComponent implements OnInit {
-  private readonly seoService = inject(SeoService);
+  private seoService = inject(SeoService);
   private PDFDocument?: any;
 
-  files = signal<PdfFile[]>([]);
-  state = signal<ProcessingState>('idle');
-  progress = signal(0);
-  errorMessage = signal('');
-  downloadUrl = signal('');
-  downloadFileName = signal('');
-  downloadFileSize = signal('');
-  sortOrder = signal<'asc' | 'desc'>('asc');
+  state = signal<AppState>('upload');
+  files = signal<PdfFileItem[]>([]);
+  resultBlob = signal<Blob | null>(null);
+  errorMessage = signal<string>('');
+
+  private draggedIndex: number | null = null;
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Merge PDF - Combine Multiple PDFs Online Free | DataUtil',
-      description: 'Merge multiple PDF files into one document online for free. Fast, secure, and easy to use. No registration required.',
-      keywords: 'merge pdf, combine pdf, join pdf, pdf merger, online pdf tools',
-      ogTitle: 'Merge PDF - Free Online PDF Merger',
-      ogDescription: 'Combine multiple PDF files into a single document. 100% free and secure.',
+      title: 'Merge PDF - Combine PDF Files Online Free | DataUtil',
+      description: 'Combine PDFs in the order you want with the easiest PDF merger available. Merge multiple PDF files into one document for free.',
+      keywords: 'merge pdf, combine pdf, join pdf files, pdf merger',
+      ogTitle: 'Merge PDF - Combine PDF Files Online Free',
+      ogDescription: 'Combine PDFs in the order you want. 100% free and secure.',
       canonicalUrl: 'https://datautility.com/categories/pdf/merge-pdf'
     });
   }
@@ -70,264 +54,229 @@ export class MergePdfComponent implements OnInit {
     return this.PDFDocument;
   }
 
-  public onFileSelected(files: FileList): void {
-    if (files) {
-      this.handleFiles(Array.from(files));
-    }
-  }
-
-  async handleFiles(newFiles: File[]): Promise<void> {
-    const currentFiles = this.files();
-    const nextOrder = currentFiles.length;
-    
-    const pdfFiles: PdfFile[] = [];
-    const PDFDocClass = await this.loadPdfLib();
-    
-    for (let i = 0; i < newFiles.length; i++) {
-      const file = newFiles[i];
-      const pdfFile: PdfFile = {
-        id: crypto.randomUUID(),
-        file,
-        name: file.name,
-        size: file.size,
-        selected: true,
-        order: nextOrder + i,
-        passwordRequired: false
-      };
-      
-      // Check if file is password protected
-      try {
-        const arrayBuffer = await file.arrayBuffer();
-        await PDFDocClass.load(arrayBuffer, { ignoreEncryption: false });
-        // File is not encrypted or can be loaded
-        pdfFile.passwordRequired = false;
-      } catch (error: any) {
-        // Check if it's a password-related error
-        if (error.message?.includes('encrypted') || 
-            error.message?.includes('password') ||
-            error.message?.includes('Encrypted')) {
-          pdfFile.passwordRequired = true;
-        }
-      }
-      
-      pdfFiles.push(pdfFile);
-    }
-    
-    this.files.update(existing => [...existing, ...pdfFiles]);
-    this.resetState();
-  }
-
-  public removeFile(id: string): void {
-    this.files.update(files => files.filter(f => f.id !== id));
-    this.resetState();
-  }
-
-  public onDrop(event: CdkDragDrop<PdfFile[]>): void {
-    const files = [...this.files()];
-    moveItemInArray(files, event.previousIndex, event.currentIndex);
-    this.files.set(files);
-  }
-
-  public toggleSelectAll(): void {
-    const allSelected = this.files().every(f => f.selected);
-    this.files.update(files => 
-      files.map(f => ({ ...f, selected: !allSelected }))
-    );
-  }
-
-  get selectedCount(): number {
-    return this.files().filter(f => f.selected).length;
-  }
-
-  get allSelected(): boolean {
-    return this.files().length > 0 && this.files().every(f => f.selected);
-  }
-
-  public toggleSortOrder(): void {
-    const current = this.sortOrder();
-    this.sortOrder.set(current === 'asc' ? 'desc' : 'asc');
-    this.sortFiles();
-  }
-
-  public sortFiles(): void {
-    // Batch DOM update to avoid layout thrashing
-    requestAnimationFrame(() => {
-      const files = [...this.files()];
-      const order = this.sortOrder();
-      
-      files.sort((a, b) => {
-        const comparison = a.name.localeCompare(b.name);
-        return order === 'asc' ? comparison : -comparison;
-      });
-      
-      this.files.set(files);
-    });
+  get totalPages(): number {
+    return this.files().reduce((sum, f) => sum + (f.pageCount || 0), 0);
   }
 
   get canMerge(): boolean {
-    const selectedFiles = this.files().filter(f => f.selected);
-    const hasLockedFiles = selectedFiles.some(f => f.passwordRequired);
-    return selectedFiles.length >= 2 && this.state() === 'idle' && !hasLockedFiles;
+    return this.files().length >= 2 && this.state() !== 'processing';
   }
 
-  get hasSelectedLockedFiles(): boolean {
-    return this.files().some(f => f.selected && f.passwordRequired);
+  onFileSelected(fileList: FileList): void {
+    if (fileList && fileList.length > 0) {
+      this.addFiles(Array.from(fileList));
+    }
   }
 
-  async mergePDFs(): Promise<void> {
-    if (!this.canMerge) return;
+  onFileInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.addFiles(Array.from(input.files));
+      input.value = '';
+    }
+  }
 
-    this.state.set('processing');
-    this.progress.set(0);
+  onFileDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      this.addFiles(Array.from(event.dataTransfer.files));
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  async addFiles(newFiles: File[]): Promise<void> {
+    const pdfFiles = newFiles.filter(f =>
+      f.type === 'application/pdf' || f.name.toLowerCase().endsWith('.pdf')
+    );
+
+    if (pdfFiles.length === 0) {
+      this.errorMessage.set('Please upload valid PDF files.');
+      return;
+    }
+
     this.errorMessage.set('');
 
-    try {
-      const PDFDocClass = await this.loadPdfLib();
-      const mergedPdf = await PDFDocClass.create();
-      const selectedFiles = this.files().filter(f => f.selected);
-      const totalFiles = selectedFiles.length;
+    const items: PdfFileItem[] = pdfFiles.map(file => ({
+      id: crypto.randomUUID(),
+      file,
+      name: file.name,
+      pageCount: 0
+    }));
 
-      for (let i = 0; i < selectedFiles.length; i++) {
-        const fileItem = selectedFiles[i];
-        this.progress.set(Math.round((i / totalFiles) * 90));
+    this.files.update(files => [...files, ...items]);
 
-        try {
-          const arrayBuffer = await fileItem.file.arrayBuffer();
-          
-          // Try loading the PDF
-          const pdf = await PDFDocClass.load(arrayBuffer);
-          
-          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-          
-          copiedPages.forEach((page) => {
-            mergedPdf.addPage(page);
-          });
+    if (this.state() === 'upload') {
+      this.state.set('configure');
+    }
 
-          // Clear any previous password error
-          this.files.update(files => 
-            files.map(f => f.id === fileItem.id ? { ...f, passwordError: false, passwordRequired: false } : f)
-          );
-
-        } catch (fileError: any) {
-          // Check if it's a password-related error
-          if (fileError.message?.includes('encrypted') || 
-              fileError.message?.includes('password') ||
-              fileError.message?.includes('Encrypted')) {
-            
-            // Mark this file as requiring password
-            this.files.update(files => 
-              files.map(f => f.id === fileItem.id ? 
-                { ...f, passwordRequired: true, passwordError: true } : f
-              )
-            );
-
-            this.errorMessage.set(
-              `"${fileItem.name}" is password-protected. Unfortunately, password-protected PDFs cannot be merged directly. ` +
-              `Please remove the password from this file first using our <a href="/categories/pdf/unlock-pdf" class="error-link">Unlock PDF</a> tool, then try merging again.`
-            );
-            this.state.set('error');
-            return;
-          }
-          
-          // Re-throw if it's not a password error
-          throw fileError;
-        }
-      }
-
-      this.progress.set(95);
-
-      const pdfBytes = await mergedPdf.save();
-      const blob = new Blob([new Uint8Array(pdfBytes)], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-
-      this.downloadUrl.set(url);
-      this.downloadFileName.set('merged-document.pdf');
-      this.downloadFileSize.set(this.formatFileSize(blob.size));
-      this.progress.set(100);
-      this.state.set('complete');
-
-    } catch (error: any) {
-      console.error('Error merging PDFs:', error);
-      this.errorMessage.set('Failed to merge PDFs. Please ensure all files are valid PDF documents.');
-      this.state.set('error');
+    for (const item of items) {
+      this.loadFileMeta(item.id, item.file);
     }
   }
 
-  resetState(): void {
-    if (this.state() !== 'idle') {
-      this.state.set('idle');
-      this.progress.set(0);
+  private async loadFileMeta(id: string, file: File): Promise<void> {
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const PDFDocClass = await this.loadPdfLib();
+      const pdfDoc = await PDFDocClass.load(arrayBuffer, { ignoreEncryption: true });
+      const pageCount = pdfDoc.getPageCount();
+
+      this.files.update(files =>
+        files.map(f => f.id === id ? { ...f, pageCount } : f)
+      );
+
+      this.generateThumbnail(id, file);
+    } catch (error) {
+      console.error(`Error reading PDF "${file.name}":`, error);
+      this.errorMessage.set(`"${file.name}" could not be read and was removed. It may be corrupted or password protected.`);
+      this.files.update(files => files.filter(f => f.id !== id));
+      if (this.files().length === 0) {
+        this.state.set('upload');
+      }
+    }
+  }
+
+  private async generateThumbnail(id: string, file: File): Promise<void> {
+    try {
+      if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return;
+      }
+
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfjs = await import('pdfjs-dist');
+      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+        'pdfjs-dist/build/pdf.worker.min.mjs',
+        import.meta.url
+      ).toString();
+
+      const loadingTask = pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) });
+      const pdf = await loadingTask.promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 0.4 });
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d', { alpha: false });
+
+      if (!context) {
+        loadingTask.destroy();
+        return;
+      }
+
+      canvas.width = Math.max(1, Math.floor(viewport.width));
+      canvas.height = Math.max(1, Math.floor(viewport.height));
+
+      await page.render({ canvasContext: context, viewport, canvas }).promise;
+
+      const thumbnail = canvas.toDataURL('image/jpeg', 0.82);
+      this.files.update(files =>
+        files.map(f => f.id === id ? { ...f, thumbnail } : f)
+      );
+
+      loadingTask.destroy();
+    } catch (error) {
+      console.error('Error generating thumbnail:', error);
+    }
+  }
+
+  removeFile(id: string, event?: Event): void {
+    event?.stopPropagation();
+    this.files.update(files => files.filter(f => f.id !== id));
+    if (this.files().length === 0) {
+      this.state.set('upload');
+    }
+  }
+
+  moveUp(index: number): void {
+    if (index <= 0) return;
+    const files = [...this.files()];
+    [files[index - 1], files[index]] = [files[index], files[index - 1]];
+    this.files.set(files);
+  }
+
+  moveDown(index: number): void {
+    const files = [...this.files()];
+    if (index >= files.length - 1) return;
+    [files[index + 1], files[index]] = [files[index], files[index + 1]];
+    this.files.set(files);
+  }
+
+  onDragStart(event: DragEvent, index: number): void {
+    this.draggedIndex = index;
+    event.dataTransfer?.setData('text/plain', index.toString());
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move';
+    }
+  }
+
+  onDragOverCard(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  onDropCard(event: DragEvent, index: number): void {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const from = this.draggedIndex;
+    this.draggedIndex = null;
+
+    if (from === null || from === index) return;
+
+    const files = [...this.files()];
+    const [moved] = files.splice(from, 1);
+    files.splice(index, 0, moved);
+    this.files.set(files);
+  }
+
+  async mergePdfs(): Promise<void> {
+    if (!this.canMerge) return;
+
+    try {
+      this.state.set('processing');
       this.errorMessage.set('');
-      
-      if (this.downloadUrl()) {
-        URL.revokeObjectURL(this.downloadUrl());
-        this.downloadUrl.set('');
-      }
-    }
-  }
 
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
-  }
-
-  startNewMerge(): void {
-    this.files.set([]);
-    this.resetState();
-  }
-
-  togglePasswordInput(fileId: string): void {
-    this.files.update(files =>
-      files.map(f => f.id === fileId ? { ...f, showPasswordInput: !f.showPasswordInput } : f)
-    );
-  }
-
-  async unlockFile(fileId: string): Promise<void> {
-    const fileItem = this.files().find(f => f.id === fileId);
-    if (!fileItem || !fileItem.password) return;
-
-    // Set unlocking state
-    this.files.update(files =>
-      files.map(f => f.id === fileId ? { ...f, unlocking: true, passwordError: false } : f)
-    );
-
-    try {
-      const arrayBuffer = await fileItem.file.arrayBuffer();
       const PDFDocClass = await this.loadPdfLib();
-      
-      // Try to load with password
-      await PDFDocClass.load(arrayBuffer, { 
-        ignoreEncryption: false
-      });
+      const mergedDoc = await PDFDocClass.create();
 
-      // If successful, mark as unlocked
-      this.files.update(files =>
-        files.map(f => f.id === fileId ? 
-          { 
-            ...f, 
-            passwordRequired: false, 
-            passwordError: false, 
-            showPasswordInput: false,
-            unlocking: false 
-          } : f
-        )
-      );
+      for (const item of this.files()) {
+        const arrayBuffer = await item.file.arrayBuffer();
+        const pdfDoc = await PDFDocClass.load(arrayBuffer, { ignoreEncryption: true });
+        const pageIndices = pdfDoc.getPageIndices();
+        const copiedPages = await mergedDoc.copyPages(pdfDoc, pageIndices);
+        copiedPages.forEach((page: any) => mergedDoc.addPage(page));
+      }
 
-    } catch (error: any) {
-      // If still encrypted or wrong password
-      this.files.update(files =>
-        files.map(f => f.id === fileId ? 
-          { 
-            ...f, 
-            passwordError: true, 
-            unlocking: false 
-          } : f
-        )
-      );
+      const pdfBytes = await mergedDoc.save();
+      this.resultBlob.set(new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }));
+      this.state.set('complete');
+    } catch (error) {
+      console.error('Error merging PDFs:', error);
+      this.errorMessage.set('Failed to merge PDF files. Please try again.');
+      this.state.set('configure');
     }
+  }
+
+  downloadResult(): void {
+    const blob = this.resultBlob();
+    if (!blob) return;
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'merged.pdf';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  reset(): void {
+    this.state.set('upload');
+    this.files.set([]);
+    this.resultBlob.set(null);
+    this.errorMessage.set('');
   }
 }
-

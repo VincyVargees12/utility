@@ -10,6 +10,20 @@ import Cropper from 'cropperjs';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 
+interface AspectPreset {
+  label: string;
+  value: number; // 0 = free
+}
+
+const ASPECT_PRESETS: AspectPreset[] = [
+  { label: 'Free', value: 0 },
+  { label: '1:1', value: 1 },
+  { label: '4:3', value: 4 / 3 },
+  { label: '3:4', value: 3 / 4 },
+  { label: '16:9', value: 16 / 9 },
+  { label: '9:16', value: 9 / 16 },
+];
+
 interface ImageItem {
   id: string;
   file: File;
@@ -17,7 +31,7 @@ interface ImageItem {
   previewUrl: string;
   originalWidth: number;
   originalHeight: number;
-  cropData?: { x: number; y: number; width: number; height: number };
+  cropData?: { x: number; y: number; width: number; height: number; aspectRatio: number };
 }
 
 @Component({
@@ -32,6 +46,8 @@ export class CropImageComponent implements OnInit, OnDestroy {
 
   @ViewChild('cropperImage') cropperImageRef!: ElementRef<HTMLImageElement>;
 
+  aspectPresets = ASPECT_PRESETS;
+
   state = signal<AppState>('upload');
   errorMessage = signal<string>('');
 
@@ -43,9 +59,9 @@ export class CropImageComponent implements OnInit, OnDestroy {
   currentCropY = signal<number>(0);
   currentCropW = signal<number>(0);
   currentCropH = signal<number>(0);
+  currentAspectRatio = signal<number>(0);
 
   private cropper: any | null = null;
-  private isUpdatingFromSidebar = false;
 
   constructor() {
     // When the active image changes, rebuild the cropper instance
@@ -91,7 +107,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
     }
 
     this.errorMessage.set('');
-    
+
     const newItems: ImageItem[] = [];
     for (const file of validFiles) {
       const url = window.URL.createObjectURL(file);
@@ -113,17 +129,17 @@ export class CropImageComponent implements OnInit, OnDestroy {
     const current = this.images();
     const updated = [...current, ...newItems];
     this.images.set(updated);
-    
+
     if (updated.length > 0 && current.length === 0) {
       this.activeImageId.set(updated[0].id);
     }
-    
+
     if (this.state() === 'upload') {
       this.state.set('configure');
     }
   }
 
-  private getImageDimensions(url: string): Promise<{width: number, height: number}> {
+  private getImageDimensions(url: string): Promise<{ width: number, height: number }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
@@ -147,7 +163,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
 
   removeImage(id: string, event: Event) {
     event.stopPropagation();
-    
+
     if (this.activeImageId() === id) {
       this.saveCurrentCropData();
     }
@@ -160,7 +176,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
       return true;
     });
     this.images.set(updated);
-    
+
     if (updated.length === 0) {
       this.activeImageId.set(null);
       this.state.set('upload');
@@ -169,7 +185,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
     }
   }
 
-  private getCurrentCropData(): { x: number; y: number; width: number; height: number } | null {
+  private getCurrentCropData(): { x: number; y: number; width: number; height: number; aspectRatio: number } | null {
     const selection = this.cropper?.getCropperSelection?.();
     if (!selection) return null;
 
@@ -177,7 +193,8 @@ export class CropImageComponent implements OnInit, OnDestroy {
       x: Math.round(selection.x ?? 0),
       y: Math.round(selection.y ?? 0),
       width: Math.round(selection.width ?? 0),
-      height: Math.round(selection.height ?? 0)
+      height: Math.round(selection.height ?? 0),
+      aspectRatio: this.currentAspectRatio()
     };
   }
 
@@ -192,7 +209,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
     if (this.cropper && this.activeImageId()) {
       const activeId = this.activeImageId();
       const cropData = this.getCurrentCropData();
-      const updatedImages = this.images().map(img => 
+      const updatedImages = this.images().map(img =>
         img.id === activeId ? { ...img, cropData: cropData ?? img.cropData } : img
       );
       this.images.set(updatedImages);
@@ -201,7 +218,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
 
   private initCropper(activeId: string) {
     if (!this.cropperImageRef?.nativeElement) return;
-    
+
     if (this.cropper) {
       this.cropper.destroy();
       this.cropper = null;
@@ -213,8 +230,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
     this.cropper = new Cropper(imgElement, {
       viewMode: 1,
       dragMode: 'crop',
-      background: true,
-      autoCropArea: 0.8
+      background: false,
     } as any);
 
     setTimeout(() => {
@@ -222,20 +238,21 @@ export class CropImageComponent implements OnInit, OnDestroy {
       if (!selection) return;
 
       if (activeImage?.cropData) {
-        this.isUpdatingFromSidebar = true;
+        this.currentAspectRatio.set(activeImage.cropData.aspectRatio);
+        selection.aspectRatio = activeImage.cropData.aspectRatio || 0;
         selection.$change(activeImage.cropData.x, activeImage.cropData.y, activeImage.cropData.width, activeImage.cropData.height, undefined, true);
         this.syncSidebarFromSelection(activeImage.cropData);
-        this.isUpdatingFromSidebar = false;
       } else {
-        const fallback = {
-          x: 0,
-          y: 0,
-          width: imgElement.naturalWidth || imgElement.width || 0,
-          height: imgElement.naturalHeight || imgElement.height || 0
+        this.currentAspectRatio.set(0);
+        const data = {
+          x: Math.round(selection.x ?? 0),
+          y: Math.round(selection.y ?? 0),
+          width: Math.round(selection.width ?? 0),
+          height: Math.round(selection.height ?? 0)
         };
-        this.syncSidebarFromSelection(fallback);
+        this.syncSidebarFromSelection(data);
       }
-    }, 0);
+    }, 50);
   }
 
   // Handle sidebar input changes
@@ -259,7 +276,6 @@ export class CropImageComponent implements OnInit, OnDestroy {
   private updateCropperBox() {
     const selection = this.cropper?.getCropperSelection?.();
     if (selection) {
-      this.isUpdatingFromSidebar = true;
       selection.$change(
         this.currentCropX(),
         this.currentCropY(),
@@ -268,8 +284,58 @@ export class CropImageComponent implements OnInit, OnDestroy {
         undefined,
         true
       );
-      this.isUpdatingFromSidebar = false;
     }
+  }
+
+  setAspectRatio(ratio: number): void {
+    this.currentAspectRatio.set(ratio);
+    const selection = this.cropper?.getCropperSelection?.();
+    if (!selection) return;
+
+    selection.aspectRatio = ratio || NaN;
+
+    // Reshape the current box to the new ratio, keeping its area and center
+    // point roughly the same — avoids depending on the cropper-image element's
+    // rendered size, which isn't exposed as a simple width/height property.
+    if (ratio > 0) {
+      const centerX = selection.x + selection.width / 2;
+      const centerY = selection.y + selection.height / 2;
+      const area = Math.max(1, selection.width * selection.height);
+      const width = Math.sqrt(area * ratio);
+      const height = width / ratio;
+      const x = centerX - width / 2;
+      const y = centerY - height / 2;
+      selection.$change(x, y, width, height, ratio, true);
+      setTimeout(() => {
+        this.syncSidebarFromSelection({
+          x: Math.round(selection.x ?? x),
+          y: Math.round(selection.y ?? y),
+          width: Math.round(selection.width ?? width),
+          height: Math.round(selection.height ?? height)
+        });
+      }, 0);
+    }
+  }
+
+  resetCrop(): void {
+    const selection = this.cropper?.getCropperSelection?.();
+    if (!selection) return;
+    this.currentAspectRatio.set(0);
+    selection.aspectRatio = NaN;
+    selection.$reset();
+    setTimeout(() => {
+      this.syncSidebarFromSelection({
+        x: Math.round(selection.x ?? 0),
+        y: Math.round(selection.y ?? 0),
+        width: Math.round(selection.width ?? 0),
+        height: Math.round(selection.height ?? 0)
+      });
+    }, 0);
+  }
+
+  zoomImage(delta: number): void {
+    const image = this.cropper?.getCropperImage?.();
+    image?.$zoom(delta);
   }
 
   async processCrop(): Promise<void> {
@@ -286,7 +352,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
       let JSZip;
       let zip: any;
       const multiple = this.images().length > 1;
-      
+
       if (multiple) {
         JSZip = (await import('jszip')).default;
         zip = new JSZip();
@@ -297,7 +363,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
 
       for (const img of this.images()) {
         const cropBox = img.cropData || { x: 0, y: 0, width: img.originalWidth, height: img.originalHeight };
-        
+
         const canvas = document.createElement('canvas');
         const imageEl = new Image();
         await new Promise((res, rej) => {
@@ -322,7 +388,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
 
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
-        
+
         ctx.drawImage(
           imageEl,
           sourceX, sourceY, sourceWidth, sourceHeight,
@@ -331,7 +397,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
 
         const format = img.file.type === 'image/png' ? 'image/png' : 'image/jpeg';
         const quality = format === 'image/jpeg' ? 0.95 : undefined;
-        
+
         const dataUrl = canvas.toDataURL(format, quality);
         const base64Data = dataUrl.split(',')[1];
         const bytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
@@ -343,11 +409,11 @@ export class CropImageComponent implements OnInit, OnDestroy {
         const newName = `${base}_cropped.${ext}`;
 
         if (multiple) {
-           zip.file(newName, bytes);
+          zip.file(newName, bytes);
         } else {
-           const blob = new Blob([bytes], { type: format });
-           singleBlobUrl = window.URL.createObjectURL(blob);
-           singleFileName = newName;
+          const blob = new Blob([bytes], { type: format });
+          singleBlobUrl = window.URL.createObjectURL(blob);
+          singleFileName = newName;
         }
       }
 
@@ -368,10 +434,10 @@ export class CropImageComponent implements OnInit, OnDestroy {
       a.download = dlName;
       document.body.appendChild(a);
       a.click();
-      
-      setTimeout(() => { 
-        document.body.removeChild(a); 
-        window.URL.revokeObjectURL(dlUrl); 
+
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(dlUrl);
       }, 100);
 
       this.state.set('complete');

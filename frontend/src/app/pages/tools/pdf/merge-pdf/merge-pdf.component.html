@@ -1,233 +1,207 @@
-<!-- Header - Only show when not complete -->
-@if (state() !== 'complete') {
-  <app-tool-header
-    title="Merge PDF files"
-    subtitle="Combine PDFs in the order you want with the easiest PDF merger available."
-    [breadcrumbs]="[
-      { label: 'Home', route: '/' },
-      { label: 'PDF Tools', route: '/categories/pdf' },
-      { label: 'Merge PDF' }
-    ]"
-  ></app-tool-header>
+<app-tool-header
+  [title]="state() !== 'configure' ? 'Merge PDF files' : ''"
+  [subtitle]="state() !== 'configure' ? 'Combine PDFs in the order you want with the easiest PDF merger available.' : ''"
+  [breadcrumbs]="[
+    { label: 'Home', route: '/' },
+    { label: 'PDF Tools', route: '/categories/pdf' },
+    { label: 'Merge PDF' }
+  ]"
+></app-tool-header>
+
+<!-- Upload State -->
+@if (state() === 'upload') {
+  <app-file-uploader
+    [buttonText]="'Select PDF files'"
+    [subtitleText]="'or drop PDFs here'"
+    [accept]="'application/pdf'"
+    [multiple]="true"
+    [errorMessage]="errorMessage()"
+    (fileSelected)="onFileSelected($event)">
+  </app-file-uploader>
 }
 
-<div class="merge-pdf-container">
-  <!-- Main Content -->
-  @if (state() !== 'complete') {
-    <!-- <div class="upload-section"> -->
-      <!-- Upload Area -->
-      @if (files().length === 0) {
-        <app-file-uploader
-          [buttonText]="'Select PDF files'"
-          [subtitleText]="'or drop PDFs here'"
-          [accept]="'application/pdf'"
-          [multiple]="true"
-          (fileSelected)="onFileSelected($event)">
-        </app-file-uploader>
-      }
+<!-- Configure State -->
+@if (state() === 'configure') {
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
 
-      <!-- File List -->
-      @if (files().length > 0 && state() === 'idle') {
-        <div class="files-container">
-          <div class="files-header">
-            <div class="select-all">
-              <input type="checkbox" 
-                     [checked]="allSelected"
-                     (change)="toggleSelectAll()"
-                     id="selectAll" />
-              <label for="selectAll">
-                {{ selectedCount }} of {{ files().length }} selected
-              </label>
-            </div>
-            <div class="order-indicator" (click)="toggleSortOrder()">
-              <span class="order-icon">🔤</span>
-              <span>{{ sortOrder() === 'asc' ? 'A-Z' : 'Z-A' }}</span>
-            </div>
-          </div>
+      <!-- Main Content Area: File Grid -->
+      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+        <p class="text-sm text-tertiary mb-4">Drag files to reorder, or use the arrows on each card.</p>
 
-          <div class="files-list" 
-               cdkDropList
-               [cdkDropListEnablePointerEvents]="false"
-               (cdkDropListDropped)="onDrop($event)">
-            @for (file of files(); track file.id) {
-              <div class="file-item" cdkDrag [class.has-password-field]="file.showPasswordInput">
-                <div class="file-item-header">
-                  <div class="drag-handle" cdkDragHandle>
-                    <span class="drag-icon">⋮⋮</span>
-                  </div>
-                  <input type="checkbox" 
-                         [(ngModel)]="file.selected"
-                         [id]="'file-' + file.id" />
-                  <label [for]="'file-' + file.id" class="file-info">
-                    <div class="file-icon">
-                      @if (file.passwordRequired) {
-                        <span class="material-icons" style="color: #f59e0b; font-size: 28px;">lock</span>
-                      } @else {
-                        📄
-                      }
-                    </div>
-                    <div class="file-details">
-                      <div class="file-name">{{ file.name }}</div>
-                      <div class="file-size">
-                        {{ formatFileSize(file.size) }}
-                        @if (file.passwordRequired) {
-                          <span class="password-badge">Password Protected</span>
-                        }
-                      </div>
-                    </div>
-                  </label>
-                  
-                  @if (file.passwordRequired) {
-                    <button class="unlock-btn" 
-                            (click)="togglePasswordInput(file.id)"
-                            type="button"
-                            title="Unlock this file">
-                      <span class="material-icons">{{file.showPasswordInput ? 'expand_less' : 'vpn_key'}}</span>
-                      {{file.showPasswordInput ? 'Cancel' : 'Unlock'}}
-                    </button>
-                  }
-                  
-                  <button class="remove-btn" 
-                          (click)="removeFile(file.id)"
-                          type="button">
-                    ×
-                  </button>
-                </div>
-                
-                @if (file.showPasswordInput) {
-                  <div class="password-input-wrapper">
-                    <span class="material-icons password-icon">key</span>
-                    <input 
-                      type="password" 
-                      class="password-input"
-                      [class.error]="file.passwordError"
-                      [(ngModel)]="file.password"
-                      [placeholder]="file.passwordError ? 'Incorrect password - try again' : 'Enter file password'"
-                      [disabled]="file.unlocking || false"
-                      (keyup.enter)="unlockFile(file.id)"
-                      [id]="'password-' + file.id" />
-                    <button 
-                      class="btn btn-sm btn-primary unlock-submit-btn"
-                      (click)="unlockFile(file.id)"
-                      [disabled]="!file.password || file.unlocking || false"
-                      type="button">
-                      @if (file.unlocking) {
-                        <span class="spinner-small"></span>
-                      } @else {
-                        <span class="material-icons" style="font-size: 18px;">lock_open</span>
-                      }
-                      {{ file.unlocking ? 'Unlocking...' : 'Unlock' }}
-                    </button>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 pt-4 pb-10">
+
+          @for (item of files(); track item.id; let i = $index) {
+            <div
+              class="relative bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col h-56 cursor-move"
+              draggable="true"
+              (dragstart)="onDragStart($event, i)"
+              (dragover)="onDragOverCard($event)"
+              (drop)="onDropCard($event, i)">
+
+              <!-- Order badge -->
+              <div class="absolute top-2 left-2 z-10 flex items-center justify-center min-w-[22px] h-[22px] px-1 rounded-full bg-black/60 text-white text-xs font-semibold">
+                {{ i + 1 }}
+              </div>
+
+              <!-- Remove button -->
+              <button
+                class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+                (click)="removeFile(item.id, $event)"
+                title="Remove file">
+                &times;
+              </button>
+
+              <!-- Reorder arrows -->
+              <div class="absolute top-2 right-2 z-10 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  class="w-6 h-6 flex items-center justify-center rounded bg-white/90 border border-gray-200 text-gray-600 hover:text-red-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                  [disabled]="i === 0"
+                  (click)="moveUp(i)"
+                  title="Move earlier">
+                  <span class="material-icons text-sm">arrow_upward</span>
+                </button>
+                <button
+                  class="w-6 h-6 flex items-center justify-center rounded bg-white/90 border border-gray-200 text-gray-600 hover:text-red-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                  [disabled]="i === files().length - 1"
+                  (click)="moveDown(i)"
+                  title="Move later">
+                  <span class="material-icons text-sm">arrow_downward</span>
+                </button>
+              </div>
+
+              <div class="flex-1 p-2 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg">
+                @if (item.thumbnail) {
+                  <img
+                    [src]="item.thumbnail"
+                    class="absolute inset-0 w-full h-full object-contain shadow-sm bg-white"
+                    [alt]="'Preview of ' + item.name">
+                } @else {
+                  <div class="w-full h-full flex items-center justify-center">
+                    <span class="material-icons text-5xl text-gray-300">picture_as_pdf</span>
                   </div>
                 }
               </div>
-            }
-          </div>
 
-          <div class="actions">
-            @if (hasSelectedLockedFiles) {
-              <div class="locked-files-warning">
-                <span class="material-icons">info</span>
-                <span>Please unlock all password-protected files before merging</span>
+              <div class="bg-white border-t border-gray-100 p-2 text-center rounded-b-lg">
+                <div class="text-xs font-medium text-primary truncate" [title]="item.name">{{ item.name }}</div>
+                <div class="text-[11px] text-tertiary">
+                  @if (item.pageCount > 0) {
+                    {{ item.pageCount }} page{{ item.pageCount > 1 ? 's' : '' }}
+                  } @else {
+                    Loading...
+                  }
+                </div>
               </div>
-            }
-            <input type="file" 
-                   #moreFilesInput
-                   (change)="onFileInput($event)"
-                   accept="application/pdf"
-                   multiple
-                   hidden />
-            <button class="add-more-btn" (click)="moreFilesInput.click()">
-              + Add more files
-            </button>
-            <button class="merge-btn" 
-                    [disabled]="!canMerge"
-                    [title]="hasSelectedLockedFiles ? 'Please unlock all password-protected files first' : 'Merge selected PDF files'"
-                    (click)="mergePDFs()">
-              Merge PDF
-            </button>
+            </div>
+          }
+
+          <!-- Add more button -->
+          <div
+            class="relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center h-56 hover:bg-gray-100 cursor-pointer transition-colors"
+            (click)="addMoreInput.click()"
+            (drop)="onFileDrop($event)"
+            (dragover)="onDragOver($event)">
+            <div class="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mb-2">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            </div>
+            <span class="text-sm font-medium text-secondary">Add more</span>
+            <input
+              #addMoreInput
+              type="file"
+              accept="application/pdf"
+              multiple
+              class="hidden"
+              (change)="onFileInput($event)">
           </div>
-        </div>
-      }
 
-      <!-- Processing -->
-      @if (state() === 'processing') {
-        <div class="processing">
-          <div class="spinner"></div>
-          <h3>Merging PDFs...</h3>
-          <div class="progress-bar">
-            <div class="progress-fill" [style.width.%]="progress()"></div>
-          </div>
-          <p>{{ progress() }}%</p>
         </div>
-      }
-
-      <!-- Error -->
-      @if (state() === 'error') {
-        <div class="error">
-          <div class="error-icon">❌</div>
-          <h3>Error</h3>
-          <p [innerHTML]="errorMessage()"></p>
-          <button class="retry-btn" (click)="resetState()">Try Again</button>
-        </div>
-      }
-    <!-- </div> -->
-  }
-
-  <!-- Success / Download -->
-  @if (state() === 'complete') {
-    <div class="success-section">
-      <h2 class="success-title">PDFs have been merged!</h2>
-      
-      <div class="download-wrapper">
-        <button class="btn btn-back" (click)="startNewMerge()" title="Go back">
-          <span class="material-icons">arrow_back</span>
-        </button>
-        <a [href]="downloadUrl()" 
-           [download]="downloadFileName()" 
-           class="btn btn-primary btn-download">
-          <span class="material-icons">download</span>
-          Download merged PDF
-        </a>
       </div>
 
-      <div class="continue-section">
-        <h3>Continue to...</h3>
-        <div class="related-tools-grid">
-          <a href="/categories/pdf/compress-pdf" class="tool-link">
-            <div class="tool-icon-wrapper green">
-              <span class="material-icons">compress</span>
+      <!-- Sidebar -->
+      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Merge PDF</h3>
+
+        <div class="flex flex-col mb-auto p-6 space-y-6">
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <div class="flex gap-2">
+              <span class="material-icons text-blue-600 text-lg">info</span>
+              <div class="text-sm text-blue-900">
+                <strong>{{ files().length }}</strong> file{{ files().length === 1 ? '' : 's' }} &middot;
+                <strong>{{ totalPages }}</strong> page{{ totalPages === 1 ? '' : 's' }} total.<br>
+                Files will be merged in the order shown.
+              </div>
             </div>
-            <span>Compress PDF</span>
-            <span class="arrow">›</span>
-          </a>
-          <a href="/categories/pdf/split-pdf" class="tool-link">
-            <div class="tool-icon-wrapper red">
-              <span class="material-icons">content_cut</span>
-            </div>
-            <span>Split PDF</span>
-            <span class="arrow">›</span>
-          </a>
-          <a href="/categories/pdf/rotate-pdf" class="tool-link">
-            <div class="tool-icon-wrapper blue">
-              <span class="material-icons">rotate_right</span>
-            </div>
-            <span>Rotate PDF</span>
-            <span class="arrow">›</span>
-          </a>
-          <a href="/categories/pdf/pdf-to-word" class="tool-link">
-            <div class="tool-icon-wrapper pink">
-              <span class="material-icons">description</span>
-            </div>
-            <span>PDF to Word</span>
-            <span class="arrow">›</span>
-          </a>
+          </div>
+
+          @if (files().length === 1) {
+            <p class="text-sm text-tertiary">Add at least one more PDF to merge.</p>
+          }
         </div>
+
+        <div class="p-6 mt-auto">
+          @if (errorMessage()) {
+            <div class="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded border border-red-100">
+              {{ errorMessage() }}
+            </div>
+          }
+          <button
+            class="w-full btn btn-primary px-6 py-4 font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2"
+            (click)="mergePdfs()"
+            [disabled]="!canMerge">
+            Merge PDF
+            <span class="material-icons">arrow_circle_right</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Processing State -->
+@if (state() === 'processing') {
+  <div class="max-w-4xl mx-auto px-4 py-16">
+    <div class="text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent mb-4"></div>
+      <h2 class="text-xl font-semibold text-primary mb-2">Merging PDFs...</h2>
+      <p class="text-tertiary">Please wait while we combine your documents.</p>
+    </div>
+  </div>
+}
+
+<!-- Complete State -->
+@if (state() === 'complete') {
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+
+      <h2 class="text-2xl font-bold text-primary mb-2">Your PDFs have been merged!</h2>
+      <p class="text-secondary mb-8">{{ files().length }} files combined into one document, {{ totalPages }} pages total.</p>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button
+          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium"
+          (click)="reset()">
+          Merge More
+        </button>
+
+        <button
+          class="btn btn-primary px-8 py-3 flex items-center justify-center gap-2"
+          (click)="downloadResult()">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          Download PDF
+        </button>
       </div>
     </div>
-  }
-</div>
+  </div>
+}
 
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/pdf/merge-pdf'" [maxTools]="6"></app-related-tools>
-

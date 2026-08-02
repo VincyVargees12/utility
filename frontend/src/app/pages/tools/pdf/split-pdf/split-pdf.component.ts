@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
@@ -26,7 +26,7 @@ interface PageRange {
 @Component({
   selector: 'app-split-pdf',
   standalone: true,
-  imports: [CommonModule, NgOptimizedImage, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
   templateUrl: './split-pdf.component.html',
   styleUrl: './split-pdf.component.scss'
 })
@@ -49,6 +49,7 @@ export class SplitPdfComponent implements OnInit {
   fixedPageCount = signal<number>(1);
   pagesInput = signal<string>('');
   mergeRanges = signal<boolean>(false);
+  mergeExtractedPages = signal<boolean>(false);
   
   resultFiles = signal<Blob[]>([]);
   errorMessage = signal<string>('');
@@ -185,12 +186,13 @@ export class SplitPdfComponent implements OnInit {
 
   setExtractMode(mode: ExtractMode): void {
     this.extractMode.set(mode);
-    
+
     if (mode === 'all') {
       // Select all pages
-      this.pages.update(pages => 
+      this.pages.update(pages =>
         pages.map(p => ({ ...p, selected: true }))
       );
+      this.mergeExtractedPages.set(false);
     }
   }
 
@@ -336,7 +338,8 @@ export class SplitPdfComponent implements OnInit {
       return Math.ceil(pageCount / pagesPerFile);
     } else {
       // pages mode
-      return this.pages().filter(p => p.selected).length;
+      const selectedCount = this.pages().filter(p => p.selected).length;
+      return this.mergeExtractedPages() ? Math.min(1, selectedCount) : selectedCount;
     }
   }
 
@@ -448,14 +451,24 @@ export class SplitPdfComponent implements OnInit {
       } else {
         // Extract selected pages
         const selectedPages = this.pages().filter(p => p.selected);
-        
-        for (const page of selectedPages) {
+
+        if (this.mergeExtractedPages()) {
           const newDoc = await PDFDocClass.create();
-          const [copiedPage] = await newDoc.copyPages(pdfDoc, [page.pageNumber - 1]);
-          newDoc.addPage(copiedPage);
-          
+          const pageIndices = selectedPages.map(page => page.pageNumber - 1);
+          const copiedPages = await newDoc.copyPages(pdfDoc, pageIndices);
+          copiedPages.forEach((page: any) => newDoc.addPage(page));
+
           const pdfBytes = await newDoc.save();
           results.push(new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }));
+        } else {
+          for (const page of selectedPages) {
+            const newDoc = await PDFDocClass.create();
+            const [copiedPage] = await newDoc.copyPages(pdfDoc, [page.pageNumber - 1]);
+            newDoc.addPage(copiedPage);
+
+            const pdfBytes = await newDoc.save();
+            results.push(new Blob([pdfBytes as BlobPart], { type: 'application/pdf' }));
+          }
         }
       }
       
@@ -491,5 +504,7 @@ export class SplitPdfComponent implements OnInit {
     this.resultFiles.set([]);
     this.errorMessage.set('');
     this.pagesInput.set('');
+    this.mergeRanges.set(false);
+    this.mergeExtractedPages.set(false);
   }
 }
