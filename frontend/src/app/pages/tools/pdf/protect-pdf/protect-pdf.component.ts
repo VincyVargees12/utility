@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
 import { SeoService } from '../../../../services/seo.service';
 import { environment } from '../../../../../environments/environment';
 
@@ -13,7 +14,7 @@ type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 @Component({
   selector: 'app-protect-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
   templateUrl: './protect-pdf.component.html',
   styleUrl: './protect-pdf.component.scss'
 })

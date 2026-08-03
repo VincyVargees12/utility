@@ -34,7 +34,7 @@
             </button>
             <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg h-72">
               @if (pdfThumbnail()) {
-                <img [ngSrc]="pdfThumbnail()!" fill sizes="224px" class="object-contain shadow-sm bg-white" alt="Preview" />
+                <img [src]="pdfThumbnail()!" class="absolute inset-0 w-full h-full object-contain shadow-sm bg-white" alt="Preview" />
               } @else {
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-gray-600"></div>
               }
@@ -47,7 +47,7 @@
       </div>
 
       <!-- Sidebar -->
-      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+      <app-tool-sidebar [width]="380">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">PDF to JPG</h3>
         
         <!-- Options List -->
@@ -104,40 +104,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </button>
         </div>
-      </div>
-
-      <!-- Mobile Button -->
-      <div class="lg:hidden w-full mt-4">
-        <div class="flex gap-3 mb-4">
-          <button 
-            class="flex-1 py-3 rounded-lg border text-sm font-semibold transition-colors"
-            [class.bg-[#f4f7fc]]="quality() === 'normal'"
-            [class.border-[#e5322d]]="quality() === 'normal'"
-            [class.text-[#e5322d]]="quality() === 'normal'"
-            [class.border-gray-200]="quality() !== 'normal'"
-            [class.text-gray-600]="quality() !== 'normal'"
-            (click)="quality.set('normal')">
-            Normal Quality
-          </button>
-          <button 
-            class="flex-1 py-3 rounded-lg border text-sm font-semibold transition-colors"
-            [class.bg-[#f4f7fc]]="quality() === 'high'"
-            [class.border-[#e5322d]]="quality() === 'high'"
-            [class.text-[#e5322d]]="quality() === 'high'"
-            [class.border-gray-200]="quality() !== 'high'"
-            [class.text-gray-600]="quality() !== 'high'"
-            (click)="quality.set('high')">
-            High Quality
-          </button>
-        </div>
-        <button 
-          class="w-full btn btn-primary px-6 py-4 font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2"
-          (click)="processConversion()"
-          [disabled]="state() === 'processing'">
-          Convert to JPG
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        </button>
-      </div>
+      </app-tool-sidebar>
     </div>
   </div>
 }

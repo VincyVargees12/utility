@@ -4,15 +4,24 @@ import { FormsModule } from '@angular/forms';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
 import { SeoService } from '../../../../services/seo.service';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
-type CompressionLevel = 'low' | 'medium' | 'high';
+type CompressionLevel = 'extreme' | 'recommended' | 'less';
+
+interface PdfFileItem {
+  file: File;
+  name: string;
+  originalSize: number;
+  pageCount: number;
+  thumbnail?: string;
+}
 
 @Component({
   selector: 'app-compress-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
   templateUrl: './compress-pdf.component.html',
   styleUrl: './compress-pdf.component.scss'
 })
@@ -21,21 +30,21 @@ export class CompressPdfComponent implements OnInit {
   private PDFDocument?: any;
 
   state = signal<AppState>('upload');
-  compressionLevel = signal<CompressionLevel>('medium');
-
-  pdfFile = signal<File | null>(null);
-  originalSize = signal<number>(0);
-  compressedSize = signal<number>(0);
-  resultBlob = signal<Blob | null>(null);
   errorMessage = signal<string>('');
+
+  pdfFile = signal<PdfFileItem | null>(null);
+  compressionLevel = signal<CompressionLevel>('recommended');
+
+  resultBlob = signal<Blob | null>(null);
+  savedBytes = signal<number>(0);
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Compress PDF - Free Online PDF Compressor | DataUtil',
-      description: 'Compress PDF files to reduce file size while maintaining quality. 100% free and secure.',
-      keywords: 'compress pdf, pdf compressor, reduce pdf size, optimize pdf',
-      ogTitle: 'Compress PDF - Free Online PDF Compressor',
-      ogDescription: 'Compress PDF files to reduce file size. 100% free and secure.',
+      title: 'Compress PDF - Reduce PDF File Size Online Free | DataUtil',
+      description: 'Reduce the file size of your PDF while optimizing for maximal PDF quality. Compress PDF files online for free.',
+      keywords: 'compress pdf, reduce pdf size, shrink pdf, pdf compressor',
+      ogTitle: 'Compress PDF - Reduce PDF File Size Online Free',
+      ogDescription: 'Reduce PDF file size while keeping quality. 100% free and secure.',
       canonicalUrl: 'https://datautility.com/categories/pdf/compress-pdf'
     });
   }
@@ -49,170 +58,208 @@ export class CompressPdfComponent implements OnInit {
     return this.PDFDocument;
   }
 
-  onFileSelected(files: FileList): void {
-    if (files && files[0]) {
-      this.loadPdfFile(files[0]);
+  private async loadPdfjs(): Promise<any> {
+    const pdfjs = await import('pdfjs-dist');
+    pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+      'pdfjs-dist/build/pdf.worker.min.mjs',
+      import.meta.url
+    ).toString();
+    return pdfjs;
+  }
+
+  formatBytes(bytes: number, decimals = 2): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+  }
+
+  get canCompress(): boolean {
+    return !!this.pdfFile() && this.state() !== 'processing';
+  }
+
+  onFileSelected(fileList: FileList): void {
+    if (fileList && fileList.length > 0) {
+      this.loadFile(fileList[0]);
     }
   }
 
-  async loadPdfFile(file: File): Promise<void> {
-    try {
-      this.pdfFile.set(file);
-      this.originalSize.set(file.size);
-      this.errorMessage.set('');
+  private async loadFile(file: File): Promise<void> {
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      this.errorMessage.set('Please upload a valid PDF file.');
+      return;
+    }
 
-      // Validate PDF
+    this.errorMessage.set('');
+
+    const item: PdfFileItem = {
+      file,
+      name: file.name,
+      originalSize: file.size,
+      pageCount: 0
+    };
+    this.pdfFile.set(item);
+    this.state.set('configure');
+
+    try {
       const arrayBuffer = await file.arrayBuffer();
       const PDFDocClass = await this.loadPdfLib();
-      await PDFDocClass.load(arrayBuffer);
+      const pdfDoc = await PDFDocClass.load(arrayBuffer, { ignoreEncryption: true });
+      const pageCount = pdfDoc.getPageCount();
 
-      this.state.set('configure');
-    } catch (error: any) {
-      this.errorMessage.set('Failed to load PDF file. Please try again.');
-      console.error('Error loading PDF:', error);
+      this.pdfFile.update(f => f ? { ...f, pageCount } : f);
+      this.generateThumbnail(file);
+    } catch (error) {
+      console.error(`Error reading PDF "${file.name}":`, error);
+      this.errorMessage.set(`"${file.name}" could not be read. It may be corrupted or password protected.`);
+      this.pdfFile.set(null);
+      this.state.set('upload');
     }
+  }
+
+  private async generateThumbnail(file: File): Promise<void> {
+    try {
+      if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return;
+      }
+
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfjs = await this.loadPdfjs();
+
+      const loadingTask = pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) });
+      const pdf = await loadingTask.promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 0.6 });
+
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d', { alpha: false });
+
+      if (!context) {
+        loadingTask.destroy();
+        return;
+      }
+
+      canvas.width = Math.max(1, Math.floor(viewport.width));
+      canvas.height = Math.max(1, Math.floor(viewport.height));
+
+      await page.render({ canvasContext: context, viewport, canvas }).promise;
+
+      const thumbnail = canvas.toDataURL('image/jpeg', 0.82);
+      this.pdfFile.update(f => f ? { ...f, thumbnail } : f);
+
+      loadingTask.destroy();
+    } catch (error) {
+      console.error('Error generating thumbnail:', error);
+    }
+  }
+
+  private settingsForLevel(level: CompressionLevel): { scale: number; quality: number } {
+    switch (level) {
+      case 'extreme':
+        return { scale: 1.0, quality: 0.35 };
+      case 'less':
+        return { scale: 2.0, quality: 0.85 };
+      default:
+        return { scale: 1.5, quality: 0.6 };
+    }
+  }
+
+  private renderPageToJpeg(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(
+        blob => blob ? resolve(blob) : reject(new Error('Failed to encode page image')),
+        'image/jpeg',
+        quality
+      );
+    });
   }
 
   async compressPdf(): Promise<void> {
-    if (!this.pdfFile()) return;
+    const item = this.pdfFile();
+    if (!item || !this.canCompress) return;
 
     try {
       this.state.set('processing');
       this.errorMessage.set('');
 
-      const file = this.pdfFile()!;
-      const arrayBuffer = await file.arrayBuffer();
-      const level = this.compressionLevel();
-      const PDFDocClass = await this.loadPdfLib();
-
-      // Configure pdf.js for rendering
-      const pdfjs = await import('pdfjs-dist');
-      pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-        'pdfjs-dist/build/pdf.worker.min.mjs',
-        import.meta.url
-      ).toString();
-
-      const loadingTask = pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) });
-      const pdf = await loadingTask.promise;
-      const numPages = pdf.numPages;
-
-      const newPdfDoc = await PDFDocClass.create();
-
-      // Compression settings based on level
-      let scale = 1.0;
-      let quality = 0.8;
-
-      if (level === 'high') {
-        scale = 0.80; 
-        quality = 0.75;
-      } else if (level === 'medium') {
-        scale = 0.95;
-        quality = 0.90;
-      } else {
-        scale = 1.0;
-        quality = 0.97;
+      if (typeof window === 'undefined' || typeof document === 'undefined') {
+        throw new Error('Browser only');
       }
 
-      // Rasterize each page and compress as JPEG
-      for (let i = 1; i <= numPages; i++) {
-        const page = await pdf.getPage(i);
-        const viewport = page.getViewport({ scale });
+      const { scale, quality } = this.settingsForLevel(this.compressionLevel());
+      const arrayBuffer = await item.file.arrayBuffer();
+
+      const pdfjs = await this.loadPdfjs();
+      const loadingTask = pdfjs.getDocument({ data: new Uint8Array(arrayBuffer) });
+      const sourcePdf = await loadingTask.promise;
+
+      const PDFDocClass = await this.loadPdfLib();
+      const outputDoc = await PDFDocClass.create();
+
+      for (let pageNum = 1; pageNum <= sourcePdf.numPages; pageNum++) {
+        const page = await sourcePdf.getPage(pageNum);
+        const baseViewport = page.getViewport({ scale: 1 });
+        const renderViewport = page.getViewport({ scale });
 
         const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        if (!context) continue;
+        canvas.width = Math.max(1, Math.floor(renderViewport.width));
+        canvas.height = Math.max(1, Math.floor(renderViewport.height));
+        const context = canvas.getContext('2d', { alpha: false });
 
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
+        if (!context) {
+          throw new Error('Canvas context not available');
+        }
 
-        // Fill white background (since empty canvas is transparent and JPEG needs background)
-        context.fillStyle = '#ffffff';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        await page.render({ canvasContext: context, viewport: renderViewport, canvas }).promise;
 
-        await page.render({ canvasContext: context, viewport, canvas: canvas } as any).promise;
+        const jpegBlob = await this.renderPageToJpeg(canvas, quality);
+        const jpegBytes = await jpegBlob.arrayBuffer();
+        const jpegImage = await outputDoc.embedJpg(jpegBytes);
 
-        const imgDataUrl = canvas.toDataURL('image/jpeg', quality);
-        const jpgImage = await newPdfDoc.embedJpg(imgDataUrl);
-        
-        // Add page matching original dimensions (divide by scale)
-        const pdfPage = newPdfDoc.addPage([viewport.width / scale, viewport.height / scale]);
-
-        pdfPage.drawImage(jpgImage, {
+        const pdfPage = outputDoc.addPage([baseViewport.width, baseViewport.height]);
+        pdfPage.drawImage(jpegImage, {
           x: 0,
           y: 0,
-          width: viewport.width / scale,
-          height: viewport.height / scale,
+          width: baseViewport.width,
+          height: baseViewport.height
         });
       }
 
-      newPdfDoc.setTitle('');
-      newPdfDoc.setAuthor('');
-      newPdfDoc.setSubject('');
-      newPdfDoc.setProducer('');
-      newPdfDoc.setCreator('');
+      loadingTask.destroy();
 
-      const pdfBytes = await newPdfDoc.save({ 
-        useObjectStreams: true
-      });
-      
-      let blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
+      const pdfBytes = await outputDoc.save();
+      const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
 
-      // Fallback: If rasterized is somehow larger (e.g. text-only PDF), do a simple re-save
-      if (blob.size >= file.size) {
-        // Read the file again since the previous arrayBuffer may have been transferred/detached by pdf.js worker
-        const freshArrayBuffer = await file.arrayBuffer();
-        const fallbackDoc = await PDFDocClass.load(freshArrayBuffer);
-        fallbackDoc.setTitle('');
-        fallbackDoc.setAuthor('');
-        fallbackDoc.setCreator('');
-        fallbackDoc.setProducer('');
-        
-        // Remove objects/unused properties manually to squeeze some bytes
-        const fallbackBytes = await fallbackDoc.save({ useObjectStreams: true });
-        blob = new Blob([fallbackBytes as BlobPart], { type: 'application/pdf' });
-      }
-
-      this.compressedSize.set(blob.size);
+      this.savedBytes.set(Math.max(0, item.originalSize - blob.size));
       this.resultBlob.set(blob);
       this.state.set('complete');
-    } catch (error: any) {
-      this.errorMessage.set('Failed to compress PDF. Please try again.');
-      this.state.set('configure');
+    } catch (error) {
       console.error('Error compressing PDF:', error);
+      this.errorMessage.set('Failed to compress PDF file. Please try again.');
+      this.state.set('configure');
     }
   }
 
-  downloadPdf(): void {
+  downloadResult(): void {
     const blob = this.resultBlob();
+    const item = this.pdfFile();
     if (!blob) return;
 
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = this.pdfFile()?.name?.replace('.pdf', '') + '-compressed.pdf' || 'compressed.pdf';
-    link.click();
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = item ? item.name.replace(/\.pdf$/i, '') + '-compressed.pdf' : 'compressed.pdf';
+    a.click();
     URL.revokeObjectURL(url);
   }
 
-  resetUpload(): void {
+  reset(): void {
     this.state.set('upload');
     this.pdfFile.set(null);
-    this.originalSize.set(0);
-    this.compressedSize.set(0);
     this.resultBlob.set(null);
+    this.savedBytes.set(0);
     this.errorMessage.set('');
-  }
-
-  getCompressionPercentage(): number {
-    if (this.originalSize() === 0) return 0;
-    return Math.round((1 - this.compressedSize() / this.originalSize()) * 100);
-  }
-
-  formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
   }
 }

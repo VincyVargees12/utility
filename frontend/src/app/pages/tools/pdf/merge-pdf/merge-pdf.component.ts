@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
 import { SeoService } from '../../../../services/seo.service';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
@@ -19,7 +20,7 @@ interface PdfFileItem {
 @Component({
   selector: 'app-merge-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
   templateUrl: './merge-pdf.component.html',
   styleUrl: './merge-pdf.component.scss'
 })

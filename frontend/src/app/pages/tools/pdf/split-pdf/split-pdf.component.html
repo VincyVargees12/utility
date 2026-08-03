@@ -21,7 +21,7 @@
 <!-- Configure State -->
 @if (state() === 'configure') {
   <div class="flex flex-col lg:flex-row items-start">
-    <div class="flex-1 w-full min-w-0">
+    <div class="flex-1 w-full min-w-0 pr-0 lg:pr-[380px]">
     <div class="px-6 py-2">
       <div class="max-w-4xl mx-auto">
         <!-- Left: Page Preview -->
@@ -198,8 +198,8 @@
     </div>
   </div>
 
-  <!-- Right: Split Options (Sticky Sidebar) -->
-  <div class="hidden lg:flex sticky top-[70px] w-[380px] max-h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-30 self-start shrink-0">
+  <!-- Right: Split Options Sidebar -->
+  <app-tool-sidebar [width]="380">
     <div class="p-6 flex-1">
       <h2 class="text-2xl font-bold text-primary mb-6">Split</h2>
 
@@ -500,7 +500,7 @@
             </div>
           }
     </div>
-  </div>
+  </app-tool-sidebar>
   </div>
 }
 

@@ -41,7 +41,7 @@
                 &times;
               </button>
               <div class="flex-1 p-2 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg">
-                <img [ngSrc]="img.previewUrl" fill sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw" class="object-contain shadow-sm bg-white" [alt]="img.name" />
+                <img [src]="img.previewUrl" class="absolute inset-0 w-full h-full object-contain shadow-sm bg-white" [alt]="img.name" />
               </div>
               <div class="bg-white border-t border-gray-100 p-2 text-center text-xs font-medium text-primary truncate rounded-b-lg">
                 {{ img.name }}
@@ -72,7 +72,7 @@
       </div>
 
       <!-- Sidebar -->
-      <div class="hidden lg:flex fixed right-0 top-[70px] w-[380px] h-[calc(100vh-70px)] bg-white border-l border-gray-200 shadow-xl flex-col overflow-y-auto z-50">
+      <app-tool-sidebar [width]="380">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">JPG to PDF</h3>
         
         <div class="flex flex-col mb-auto p-6 space-y-8">
@@ -162,7 +162,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           </button>
         </div>
-      </div>
+      </app-tool-sidebar>
 
     </div>
   </div>

@@ -19,94 +19,154 @@
 }
 
 <!-- Configure State -->
-@if (state() === 'configure') {
-  <div class="max-w-4xl mx-auto px-4 py-8">
-    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-      <h2 class="text-lg font-semibold text-primary mb-4">Compression Settings</h2>
-      
-      <div class="mb-6">
-        <label class="text-sm font-medium text-primary mb-3 block">Compression Level:</label>
-        <div class="space-y-2">
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input 
-              type="radio" 
-              [value]="'low'" 
-              [checked]="compressionLevel() === 'low'"
-              (change)="compressionLevel.set('low')"
-              name="compression-level"
-              class="rounded border-gray-300">
-            <div>
-              <div class="text-sm font-medium text-primary">Low Compression</div>
-              <div class="text-xs text-tertiary">Smaller file reduction, maximum quality</div>
-            </div>
-          </label>
-          
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input 
-              type="radio" 
-              [value]="'medium'" 
-              [checked]="compressionLevel() === 'medium'"
-              (change)="compressionLevel.set('medium')"
-              name="compression-level"
-              class="rounded border-gray-300">
-            <div>
-              <div class="text-sm font-medium text-primary">Medium Compression (Recommended)</div>
-              <div class="text-xs text-tertiary">Balanced quality and file size</div>
-            </div>
-          </label>
-          
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input 
-              type="radio" 
-              [value]="'high'" 
-              [checked]="compressionLevel() === 'high'"
-              (change)="compressionLevel.set('high')"
-              name="compression-level"
-              class="rounded border-gray-300">
-            <div>
-              <div class="text-sm font-medium text-primary">High Compression</div>
-              <div class="text-xs text-tertiary">Maximum file reduction, lower quality</div>
-            </div>
-          </label>
-        </div>
-      </div>
+@if (state() === 'configure' && pdfFile(); as item) {
+  <div class="max-w-6xl mx-auto px-4 py-8">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 max-w-[1400px]">
 
-      <div class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <div class="flex gap-3">
-          <span class="material-icons text-blue-600 text-lg">info</span>
-          <div class="text-sm text-blue-900">
-            <div class="font-medium mb-1">Selected File: {{ pdfFile()?.name }}</div>
-            <div>File size: <strong>{{ formatFileSize(originalSize()) }}</strong></div>
+      <!-- Main Content Area: File Preview -->
+      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+        <div class="flex flex-col items-center justify-center">
+          <div class="relative w-full max-w-xs bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col h-96 mb-8">
+            <button
+              class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20"
+              (click)="reset()"
+              title="Remove file">
+              &times;
+            </button>
+            <div class="flex-1 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg">
+              @if (item.thumbnail) {
+                <img
+                  [src]="item.thumbnail"
+                  class="absolute inset-0 w-full h-full object-contain bg-white"
+                  [alt]="'Preview of ' + item.name">
+              } @else {
+                <span class="material-icons text-6xl text-gray-300">picture_as_pdf</span>
+              }
+            </div>
+            <div class="bg-white border-t border-gray-100 p-3 text-center rounded-b-lg">
+              <p class="font-medium text-primary truncate" [title]="item.name">{{ item.name }}</p>
+              <p class="text-sm text-tertiary mt-1">
+                {{ formatBytes(item.originalSize) }}
+                @if (item.pageCount > 0) {
+                  &middot; {{ item.pageCount }} page{{ item.pageCount > 1 ? 's' : '' }}
+                }
+              </p>
+            </div>
           </div>
         </div>
       </div>
 
-      <button 
-        (click)="compressPdf()"
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
-        Compress PDF
-      </button>
+      <!-- Sidebar -->
+      <app-tool-sidebar [width]="380">
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center bg-gray-50">Compression level</h3>
 
-      <button 
-        (click)="resetUpload()"
-        class="w-full mt-3 border-2 border-gray-300 hover:border-gray-400 text-primary font-semibold py-3 px-6 rounded-lg transition-colors">
-        Choose Another File
-      </button>
+        <div class="flex flex-col mb-auto p-4 gap-3">
+
+          <!-- Extreme Compression -->
+          <button
+            class="w-full text-left p-4 rounded-xl border-2 transition-all flex items-start gap-4 relative"
+            [class.border-blue-500]="compressionLevel() === 'extreme'"
+            [class.bg-blue-50]="compressionLevel() === 'extreme'"
+            [class.border-transparent]="compressionLevel() !== 'extreme'"
+            [class.bg-gray-100]="compressionLevel() !== 'extreme'"
+            [class.hover:bg-gray-200]="compressionLevel() !== 'extreme'"
+            (click)="compressionLevel.set('extreme')">
+
+            <div class="mt-1">
+              @if (compressionLevel() === 'extreme') {
+                <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shadow-sm">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+              } @else {
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 bg-white"></div>
+              }
+            </div>
+            <div>
+              <h4 class="font-bold text-primary mb-1" [class.text-blue-700]="compressionLevel() === 'extreme'">Extreme compression</h4>
+              <p class="text-[13px] text-secondary leading-tight">Less quality, high compression.</p>
+            </div>
+          </button>
+
+          <!-- Recommended Compression -->
+          <button
+            class="w-full text-left p-4 rounded-xl border-2 transition-all flex items-start gap-4 relative"
+            [class.border-blue-500]="compressionLevel() === 'recommended'"
+            [class.bg-blue-50]="compressionLevel() === 'recommended'"
+            [class.border-transparent]="compressionLevel() !== 'recommended'"
+            [class.bg-gray-100]="compressionLevel() !== 'recommended'"
+            [class.hover:bg-gray-200]="compressionLevel() !== 'recommended'"
+            (click)="compressionLevel.set('recommended')">
+
+            <div class="mt-1">
+              @if (compressionLevel() === 'recommended') {
+                <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shadow-sm">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+              } @else {
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 bg-white"></div>
+              }
+            </div>
+            <div>
+              <h4 class="font-bold text-primary mb-1" [class.text-blue-700]="compressionLevel() === 'recommended'">Recommended compression</h4>
+              <p class="text-[13px] text-secondary leading-tight">Good quality, good compression.</p>
+            </div>
+          </button>
+
+          <!-- Less Compression -->
+          <button
+            class="w-full text-left p-4 rounded-xl border-2 transition-all flex items-start gap-4 relative"
+            [class.border-blue-500]="compressionLevel() === 'less'"
+            [class.bg-blue-50]="compressionLevel() === 'less'"
+            [class.border-transparent]="compressionLevel() !== 'less'"
+            [class.bg-gray-100]="compressionLevel() !== 'less'"
+            [class.hover:bg-gray-200]="compressionLevel() !== 'less'"
+            (click)="compressionLevel.set('less')">
+
+            <div class="mt-1">
+              @if (compressionLevel() === 'less') {
+                <div class="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center shadow-sm">
+                  <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+              } @else {
+                <div class="w-5 h-5 rounded-full border-2 border-gray-300 bg-white"></div>
+              }
+            </div>
+            <div>
+              <h4 class="font-bold text-primary mb-1" [class.text-blue-700]="compressionLevel() === 'less'">Less compression</h4>
+              <p class="text-[13px] text-secondary leading-tight">High quality, less compression.</p>
+            </div>
+          </button>
+
+        </div>
+
+        @if (errorMessage()) {
+          <div class="mx-4 mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <div class="p-6 mt-auto">
+          <button
+            class="w-full btn btn-primary px-6 py-4 font-bold text-lg disabled:opacity-50 flex items-center justify-center gap-2"
+            (click)="compressPdf()"
+            [disabled]="!canCompress">
+            Compress PDF
+            <span class="material-icons">arrow_circle_right</span>
+          </button>
+        </div>
+      </app-tool-sidebar>
+
     </div>
   </div>
 }
 
 <!-- Processing State -->
 @if (state() === 'processing') {
-  <div class="max-w-4xl mx-auto px-4 py-8">
-    <div class="flex justify-center items-center min-h-[400px]">
-      <div class="text-center">
-        <div class="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-4">
-          <div class="animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent"></div>
-        </div>
-        <h2 class="text-lg font-semibold text-primary mb-2">Compressing PDF...</h2>
-        <p class="text-tertiary">This may take a moment depending on file size</p>
-      </div>
+  <div class="max-w-4xl mx-auto px-4 py-16">
+    <div class="text-center">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent mb-4"></div>
+      <h2 class="text-xl font-semibold text-primary mb-2">Compressing PDF...</h2>
+      <p class="text-tertiary">Please wait while we reduce your file size.</p>
     </div>
   </div>
 }
@@ -114,95 +174,38 @@
 <!-- Complete State -->
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
-    <!-- Success Header -->
-    <div class="text-center mb-12">
-      <h2 class="text-4xl font-bold text-primary mb-2">PDFs have been compressed!</h2>
-      <p class="text-lg text-secondary">Your PDF are now {{ getCompressionPercentage() }}% smaller!</p>
-    </div>
-
-    <!-- Circular Progress Indicator + File Sizes -->
-    <div class="flex flex-col items-center justify-center mb-12">
-      <div class="flex items-center gap-8 mb-8">
-        <!-- Original Size -->
-        <div class="text-center">
-          <div class="text-lg font-semibold text-primary mb-2">{{ formatFileSize(originalSize()) }}</div>
-        </div>
-
-        <!-- Circular Indicator -->
-        <div class="relative w-40 h-40">
-          <svg class="w-full h-full" viewBox="0 0 140 140">
-            <!-- Background circle -->
-            <circle cx="70" cy="70" r="65" fill="none" stroke="#e5e7eb" stroke-width="8"/>
-            <!-- Progress circle -->
-            <circle 
-              cx="70" 
-              cy="70" 
-              r="65" 
-              fill="none" 
-              stroke="#ef4444" 
-              stroke-width="8"
-              [attr.stroke-dasharray]="(getCompressionPercentage() / 100) * 408.4 + ' ' + 408.4"
-              stroke-linecap="round"
-              transform="rotate(-90 70 70)"
-              style="transition: stroke-dasharray 0.5s ease"/>
-          </svg>
-          <!-- Center Text -->
-          <div class="absolute inset-0 flex flex-col items-center justify-center">
-            <div class="text-4xl font-bold text-red-500">{{ getCompressionPercentage() }}%</div>
-            <div class="text-sm text-secondary">Reduced</div>
-          </div>
-        </div>
-
-        <!-- Compressed Size -->
-        <div class="text-center">
-          <div class="text-lg font-semibold text-green-600 mb-2">{{ formatFileSize(compressedSize()) }}</div>
-        </div>
+    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
       </div>
 
-      <!-- File Size Text -->
-      <div class="text-center text-secondary">
-        {{ formatFileSize(originalSize()) }} → {{ formatFileSize(compressedSize()) }}
-      </div>
-    </div>
-
-    <!-- Download Button -->
-    <div class="flex gap-3 justify-center mb-12">
-      <button 
-        (click)="downloadPdf()"
-        class="btn btn-primary py-4 px-12 flex items-center gap-2">
-        <span class="material-icons">download</span>
-        Download compressed PDF
-      </button>
-    </div>
-
-    <!-- Continue To Section -->
-    <div class="mb-12">
-      <h3 class="text-center text-primary font-semibold mb-6">Continue to...</h3>
-      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-        <a href="/categories/pdf/merge-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all">
-          <span class="material-icons text-red-500 text-2xl">merge_type</span>
-          <span class="font-medium text-primary">Merge PDF</span>
-        </a>
-        <a href="/categories/pdf/split-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all">
-          <span class="material-icons text-red-500 text-2xl">cut</span>
-          <span class="font-medium text-primary">Split PDF</span>
-        </a>
-        <a href="/categories/pdf/compress-pdf" class="flex items-center gap-3 p-4 rounded-lg border border-gray-200 hover:border-red-500 hover:bg-red-50 transition-all" (click)="resetUpload()">
-          <span class="material-icons text-red-500 text-2xl">compress</span>
-          <span class="font-medium text-primary">Compress PDF</span>
-        </a>
-      </div>
-    </div>
-
-    <!-- Security Message -->
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-      <div class="flex items-center justify-center gap-2 mb-2">
-        <span class="material-icons text-blue-600">lock</span>
-        <h4 class="font-semibold text-blue-900">Secure. Private. In your control</h4>
-      </div>
-      <p class="text-sm text-blue-800">
-        Your files are processed securely without any storage or tracking. Files are automatically deleted after processing.
+      <h2 class="text-2xl font-bold text-primary mb-2">Your PDF has been compressed!</h2>
+      <p class="text-secondary mb-8">
+        @if (savedBytes() > 0) {
+          You saved <strong>{{ formatBytes(savedBytes()) }}</strong> on this file.
+        } @else {
+          Your file is ready to download.
+        }
       </p>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <button
+          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium"
+          (click)="reset()">
+          Compress Another
+        </button>
+
+        <button
+          class="btn btn-primary px-8 py-3 flex items-center justify-center gap-2"
+          (click)="downloadResult()">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          Download PDF
+        </button>
+      </div>
     </div>
   </div>
 }

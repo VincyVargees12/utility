@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
 import { SeoService } from '../../../../services/seo.service';
 
 type SplitMode = 'range' | 'fixed' | 'pages';
@@ -26,7 +27,7 @@ interface PageRange {
 @Component({
   selector: 'app-split-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
   templateUrl: './split-pdf.component.html',
   styleUrl: './split-pdf.component.scss'
 })

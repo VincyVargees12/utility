@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 /**
  * Shared "options panel" shell used by tool pages that show an image/file grid
- * next to a settings sidebar. Handles the sticky/flush-right/dark-mode/mobile-card
+ * next to a settings sidebar. Handles the fixed-to-viewport-edge/dark-mode/mobile-card
  * positioning in one place; each tool page projects its own header, controls, and
  * action button as content since those differ per tool.
  */
