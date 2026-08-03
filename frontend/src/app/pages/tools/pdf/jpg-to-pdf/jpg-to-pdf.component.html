@@ -1,6 +1,6 @@
 <app-tool-header
-  [title]="'JPG to PDF Converter'"
-  [subtitle]="'Upload multiple images to combine them into one PDF.'"
+  [title]="state() !== 'configure' ? 'JPG to PDF Converter' : ''"
+  [subtitle]="state() !== 'configure' ? 'Upload multiple images to combine them into one PDF.' : ''"
   [breadcrumbs]="[
     { label: 'Home', route: '/' },
     { label: 'PDF Tools', route: '/categories/pdf' },
@@ -24,11 +24,11 @@
 
 <!-- Configure State -->
 @if (state() === 'configure') {
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       
       <!-- Main Content Area: Image Grid -->
-      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+      <div class="flex-1 w-full min-w-0 bg-transparent">
         
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 pt-4 pb-10 custom-scrollbar">
           

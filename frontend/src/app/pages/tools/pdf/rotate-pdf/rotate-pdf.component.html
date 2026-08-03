@@ -22,10 +22,10 @@
 
 <!-- Configure State -->
 @if (state() === 'configure') {
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
-      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+      <div class="flex-1 w-full min-w-0 bg-transparent">
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           @for (file of files(); track file.id) {
             <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col">

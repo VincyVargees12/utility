@@ -22,11 +22,11 @@
 
 <!-- Configure State -->
 @if (state() === 'configure') {
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
 
       <!-- Main Content Area: File Grid -->
-      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+      <div class="flex-1 w-full min-w-0 bg-transparent">
         <p class="text-sm text-tertiary mb-4">Drag files to reorder, or use the arrows on each card.</p>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 pt-4 pb-10">

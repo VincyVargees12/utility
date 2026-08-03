@@ -1,6 +1,6 @@
 <app-tool-header
-  [title]="'PDF to JPG Converter'"
-  [subtitle]="'Convert every page of a PDF into high-quality JPG images.'"
+  [title]="state() !== 'configure' ? 'PDF to JPG Converter' : ''"
+  [subtitle]="state() !== 'configure' ? 'Convert every page of a PDF into high-quality JPG images.' : ''"
   [breadcrumbs]="[
     { label: 'Home', route: '/' },
     { label: 'PDF Tools', route: '/categories/pdf' },
@@ -20,19 +20,19 @@
 
 <!-- Configure State -->
 @if (state() === 'configure') {
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4 py-8 max-w-[1400px]">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
-      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+      <div class="flex-1 w-full min-w-0 bg-transparent">
         <div class="flex flex-col items-center justify-center pt-8">
-          <div class="relative w-56 bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col">
-            <button 
+          <div class="relative w-full max-w-xs bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col h-96">
+            <button
               class="absolute -top-3 -right-3 bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
               (click)="reset()"
               title="Remove file">
               &times;
             </button>
-            <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg h-72">
+            <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg">
               @if (pdfThumbnail()) {
                 <img [src]="pdfThumbnail()!" class="absolute inset-0 w-full h-full object-contain shadow-sm bg-white" alt="Preview" />
               } @else {

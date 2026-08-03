@@ -1,6 +1,6 @@
 <app-tool-header
-  [title]="'Protect PDF file'"
-  [subtitle]="'Encrypt your PDF with a password to keep sensitive data confidential.'"
+  [title]="state() !== 'configure' ? 'Protect PDF file' : ''"
+  [subtitle]="state() !== 'configure' ? 'Encrypt your PDF with a password to keep sensitive data confidential.' : ''"
   [breadcrumbs]="[
     { label: 'Home', route: '/' },
     { label: 'PDF Tools', route: '/categories/pdf' },
@@ -21,10 +21,10 @@
 
 <!-- Configure Password State -->
 @if (state() === 'configure') {
-  <div class="max-w-6xl mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-6 items-start relative px-4  max-w-[1400px]">
+  <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
+    <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
-      <div class="flex-1 w-full bg-transparent pr-0 lg:pr-[380px]">
+      <div class="flex-1 w-full min-w-0 bg-transparent">
         <div class="flex flex-col items-center justify-center">
           <div class="relative w-full max-w-md bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col mb-8">
             <button 
