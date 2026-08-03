@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { PDF_TO_JPG_RESOURCE_CONTENT } from './pdf-to-jpg.resource-content';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 type ImageQuality = 'normal' | 'high';
@@ -13,12 +15,14 @@ type ImageQuality = 'normal' | 'high';
 @Component({
   selector: 'app-pdf-to-jpg',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './pdf-to-jpg.component.html',
   styleUrl: './pdf-to-jpg.component.scss'
 })
 export class PdfToJpgComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = PDF_TO_JPG_RESOURCE_CONTENT;
 
   state = signal<AppState>('upload');
   quality = signal<ImageQuality>('normal');

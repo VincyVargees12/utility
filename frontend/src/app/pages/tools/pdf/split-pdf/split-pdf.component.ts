@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { SPLIT_PDF_RESOURCE_CONTENT } from './split-pdf.resource-content';
 
 type SplitMode = 'range' | 'fixed' | 'pages';
 type ExtractMode = 'all' | 'select';
@@ -27,13 +29,15 @@ interface PageRange {
 @Component({
   selector: 'app-split-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './split-pdf.component.html',
   styleUrl: './split-pdf.component.scss'
 })
 export class SplitPdfComponent implements OnInit {
   private seoService = inject(SeoService);
   private PDFDocument?: any;
+
+  resourceContent = SPLIT_PDF_RESOURCE_CONTENT;
 
   // Expose utilities for template
   readonly Array = Array;

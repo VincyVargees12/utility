@@ -6,15 +6,17 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
 import { environment } from '../../../../../environments/environment';
+import { PROTECT_PDF_RESOURCE_CONTENT } from './protect-pdf.resource-content';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 
 @Component({
   selector: 'app-protect-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './protect-pdf.component.html',
   styleUrl: './protect-pdf.component.scss'
 })
@@ -23,8 +25,10 @@ export class ProtectPdfComponent implements OnInit {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
+  resourceContent = PROTECT_PDF_RESOURCE_CONTENT;
+
   state = signal<AppState>('upload');
-  
+
   pdfFile = signal<File | null>(null);
   pdfFileName = signal<string>('');
   pdfFileSize = signal<string>('');

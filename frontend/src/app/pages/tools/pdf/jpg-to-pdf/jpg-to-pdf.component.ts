@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { JPG_TO_PDF_RESOURCE_CONTENT } from './jpg-to-pdf.resource-content';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 type PageSize = 'fit' | 'a4';
@@ -21,15 +23,17 @@ interface ImageFile {
 @Component({
   selector: 'app-jpg-to-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './jpg-to-pdf.component.html',
   styleUrl: './jpg-to-pdf.component.scss'
 })
 export class JpgToPdfComponent implements OnInit {
   private seoService = inject(SeoService);
 
+  resourceContent = JPG_TO_PDF_RESOURCE_CONTENT;
+
   state = signal<AppState>('upload');
-  
+
   pageSize = signal<PageSize>('fit');
   margin = signal<Margin>('none');
 

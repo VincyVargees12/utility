@@ -5,15 +5,17 @@ import { HttpClient } from '@angular/common/http';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
 import { environment } from '../../../../../environments/environment';
+import { UNLOCK_PDF_RESOURCE_CONTENT } from './unlock-pdf.resource-content';
 
 type AppState = 'upload' | 'password' | 'processing' | 'complete';
 
 @Component({
   selector: 'app-unlock-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './unlock-pdf.component.html',
   styleUrl: './unlock-pdf.component.scss'
 })
@@ -22,8 +24,10 @@ export class UnlockPdfComponent implements OnInit {
   private http = inject(HttpClient);
   private apiUrl = environment.apiUrl;
 
+  resourceContent = UNLOCK_PDF_RESOURCE_CONTENT;
+
   state = signal<AppState>('upload');
-  
+
   pdfFile = signal<File | null>(null);
   pdfFileName = signal<string>('');
   pdfFileSize = signal<string>('');

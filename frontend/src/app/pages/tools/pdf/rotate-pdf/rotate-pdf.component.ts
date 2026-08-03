@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { ROTATE_PDF_RESOURCE_CONTENT } from './rotate-pdf.resource-content';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 
@@ -23,13 +25,15 @@ interface PdfFile {
 @Component({
   selector: 'app-rotate-pdf',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './rotate-pdf.component.html',
   styleUrl: './rotate-pdf.component.scss'
 })
 export class RotatePdfComponent implements OnInit {
   private seoService = inject(SeoService);
   private pdfLib?: any;
+
+  resourceContent = ROTATE_PDF_RESOURCE_CONTENT;
 
   state = signal<AppState>('upload');
   
