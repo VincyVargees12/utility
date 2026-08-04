@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { ROTATE_IMAGE_RESOURCE_CONTENT } from './rotate-image.resource-content';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 type RotationAngle = 90 | 180 | 270;
@@ -23,12 +25,14 @@ interface ImageItem {
 @Component({
   selector: 'app-rotate-image',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './rotate-image.component.html',
   styleUrl: './rotate-image.component.scss'
 })
 export class RotateImageComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = ROTATE_IMAGE_RESOURCE_CONTENT;
 
   state = signal<AppState>('upload');
   errorMessage = signal<string>('');

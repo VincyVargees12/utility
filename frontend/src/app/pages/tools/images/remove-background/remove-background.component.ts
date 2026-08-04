@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { REMOVE_BACKGROUND_RESOURCE_CONTENT } from './remove-background.resource-content';
 
 type AppState = 'upload' | 'processing' | 'configure' | 'complete';
 type BackgroundType = 'transparent' | 'color' | 'blur' | 'image';
@@ -24,12 +26,14 @@ interface ImageItem {
 @Component({
   selector: 'app-remove-background',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './remove-background.component.html',
   styleUrl: './remove-background.component.scss'
 })
 export class RemoveBackgroundComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = REMOVE_BACKGROUND_RESOURCE_CONTENT;
 
   // Component state
   state = signal<AppState>('upload');
@@ -157,11 +161,28 @@ export class RemoveBackgroundComponent implements OnInit {
   private async removeBackground(file: File): Promise<Blob> {
     // Dynamic import of background removal library
     const { removeBackground } = await import('@imgly/background-removal');
-    
+
+    // The library reports progress across several distinct phases (e.g. downloading
+    // the model, then running inference), each restarting its own current/total from
+    // zero. Track every phase by key and sum them so the displayed percentage climbs
+    // instead of jumping back to 0% when a new phase starts. A later phase can still
+    // introduce a new total before it has made progress, so also clamp to the highest
+    // percentage shown so far — the number never visibly moves backward.
+    const progressByKey = new Map<string, { current: number; total: number }>();
+    let highestPercentage = 0;
+
     const blob = await removeBackground(file, {
       progress: (key, current, total) => {
-        const percentage = Math.round((current / total) * 100);
-        this.processingProgress.set(`Removing background... ${percentage}%`);
+        progressByKey.set(key, { current, total });
+        let sumCurrent = 0;
+        let sumTotal = 0;
+        for (const phase of progressByKey.values()) {
+          sumCurrent += phase.current;
+          sumTotal += phase.total;
+        }
+        const percentage = sumTotal > 0 ? Math.round((sumCurrent / sumTotal) * 100) : 0;
+        highestPercentage = Math.max(highestPercentage, percentage);
+        this.processingProgress.set(`Removing background... ${highestPercentage}%`);
       }
     });
 

@@ -65,5 +65,10 @@ export const IMAGE_TOOL_ROUTES: Routes = [
     path: 'to-webp',
     loadComponent: () => import('./to-webp/to-webp.component').then(m => m.ToWebpComponent),
     title: 'Convert to WebP - DataUtil'
+  },
+  {
+    path: 'filters',
+    loadComponent: () => import('./image-filters/image-filters.component').then(m => m.ImageFiltersComponent),
+    title: 'Image Filters - DataUtil'
   }
 ];

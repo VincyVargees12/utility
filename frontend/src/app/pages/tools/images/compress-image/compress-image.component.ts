@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { COMPRESS_IMAGE_RESOURCE_CONTENT } from './compress-image.resource-content';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 type CompressionLevel = 'extreme' | 'recommended' | 'less';
@@ -21,12 +23,14 @@ interface ImageItem {
 @Component({
   selector: 'app-compress-image',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './compress-image.component.html',
   styleUrl: './compress-image.component.scss'
 })
 export class CompressImageComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = COMPRESS_IMAGE_RESOURCE_CONTENT;
 
   state = signal<AppState>('upload');
   errorMessage = signal<string>('');

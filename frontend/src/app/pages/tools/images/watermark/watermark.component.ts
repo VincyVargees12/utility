@@ -1,15 +1,17 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.component';
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { WATERMARK_RESOURCE_CONTENT } from './watermark.resource-content';
 
-type AppState = 'upload' | 'configure' | 'processing' | 'complete';
+type AppState = 'upload' | 'configure';
 type WatermarkType = 'text' | 'image';
-type TextPosition = 'top-left' | 'top-center' | 'top-right' | 'center-left' | 'center' | 'center-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
+type Position = 'top-left' | 'top-center' | 'top-right' | 'middle-left' | 'middle-center' | 'middle-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 
 interface ImageItem {
   id: string;
@@ -20,52 +22,94 @@ interface ImageItem {
   height: number;
 }
 
+const POSITIONS: Position[] = [
+  'top-left', 'top-center', 'top-right',
+  'middle-left', 'middle-center', 'middle-right',
+  'bottom-left', 'bottom-center', 'bottom-right'
+];
+
 @Component({
   selector: 'app-watermark',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './watermark.component.html',
   styleUrl: './watermark.component.scss'
 })
 export class WatermarkComponent implements OnInit {
   private seoService = inject(SeoService);
 
+  resourceContent = WATERMARK_RESOURCE_CONTENT;
+
   state = signal<AppState>('upload');
   errorMessage = signal<string>('');
   isProcessing = signal<boolean>(false);
 
   images = signal<ImageItem[]>([]);
+  activeImageId = signal<string | null>(null);
+
   watermarkType = signal<WatermarkType>('text');
-  
+  positions = POSITIONS;
+
   // Text watermark settings
-  watermarkText = signal<string>('© 2024');
+  text = signal<string>('Your Watermark');
   textColor = signal<string>('#ffffff');
-  textSize = signal<number>(48);
-  textOpacity = signal<number>(0.8);
-  textPosition = signal<TextPosition>('bottom-right');
-  textRotation = signal<number>(0);
   fontFamily = signal<string>('Arial');
-  
+  bold = signal<boolean>(true);
+  /** Font size as a percentage of the image width, so it scales consistently across image sizes. */
+  fontSizePct = signal<number>(6);
+
   // Image watermark settings
   watermarkImageFile = signal<File | null>(null);
   watermarkImagePreview = signal<string>('');
-  imageOpacity = signal<number>(0.7);
-  imageSize = signal<number>(20);
-  imagePosition = signal<TextPosition>('bottom-right');
-  imageRotation = signal<number>(0);
+  /** Watermark image width as a percentage of the base image width. */
+  imageScalePct = signal<number>(25);
 
-  // Preview modal
-  previewImage = signal<ImageItem | null>(null);
-  previewCanvasUrl = signal<string>('');
-  isGeneratingPreview = signal<boolean>(false);
+  // Shared settings
+  opacity = signal<number>(60);
+  rotation = signal<number>(0);
+  position = signal<Position>('bottom-right');
+  /** Distance from the nearest edge(s), as a percentage of the shorter image dimension. */
+  marginPct = signal<number>(4);
+
+  activeImage = computed<ImageItem | undefined>(() => {
+    const id = this.activeImageId();
+    return this.images().find(img => img.id === id) ?? this.images()[0];
+  });
+
+  /**
+   * Rendered pixel width of the preview <img>, measured directly rather than via CSS container
+   * queries: the wrapper's width comes from the image itself (shrink-to-fit), and container-type:
+   * inline-size requires the opposite — a container whose size doesn't depend on its content —
+   * so cqw units would resolve to 0px here. Percentage-based overlay sizing (font size, watermark
+   * image width) is computed from this value instead, mirroring the canvas export math.
+   */
+  previewImgWidth = signal<number>(0);
+
+  onPreviewImgLoad(event: Event): void {
+    this.updatePreviewImgWidth(event.target as HTMLImageElement);
+  }
+
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    if (this.previewImgEl) {
+      this.updatePreviewImgWidth(this.previewImgEl);
+    }
+  }
+
+  private previewImgEl: HTMLImageElement | null = null;
+
+  private updatePreviewImgWidth(img: HTMLImageElement): void {
+    this.previewImgEl = img;
+    this.previewImgWidth.set(img.clientWidth);
+  }
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Add Watermark to Images - Free Online | DataUtil',
-      description: 'Add text or image watermarks to your images to protect your content. Customize position, size, color, and opacity. Batch process multiple images.',
-      keywords: 'watermark image, add watermark, text watermark, image protection',
-      ogTitle: 'Add Watermark to Images - Free Online',
-      ogDescription: 'Easily add text or image watermarks to protect your images online.',
+      title: 'Add Watermark to Images - Free Online Tool | DataUtil',
+      description: 'Add a text or image watermark to your photos, in bulk. Customize position, opacity, rotation, color, and size — processed entirely in your browser.',
+      keywords: 'add watermark, image watermark, text watermark, watermark photos online, logo watermark',
+      ogTitle: 'Add Watermark to Images Online',
+      ogDescription: 'Protect your photos with a custom text or logo watermark, free and private.',
       canonicalUrl: 'https://datautility.com/categories/images/watermark'
     });
   }
@@ -79,55 +123,70 @@ export class WatermarkComponent implements OnInit {
   async loadImages(files: File[]): Promise<void> {
     const validFiles = files.filter(f => f.type.startsWith('image/'));
     if (validFiles.length === 0) {
-      this.errorMessage.set('Please upload valid image files.');
+      this.errorMessage.set('Please upload valid image files (JPG, PNG, WebP).');
       return;
     }
 
     this.errorMessage.set('');
-    
+
     const newItems: ImageItem[] = [];
     for (const file of validFiles) {
-      const url = window.URL.createObjectURL(file);
+      const url = URL.createObjectURL(file);
       try {
-        const dimensions = await this.getImageDimensions(url);
+        const dims = await this.getImageDimensions(url);
         newItems.push({
-          id: Math.random().toString(36).substring(2, 9),
+          id: crypto.randomUUID(),
           file,
           name: file.name,
           previewUrl: url,
-          width: dimensions.width,
-          height: dimensions.height
+          width: dims.width,
+          height: dims.height
         });
-      } catch (error) {
-        console.error('Error loading image:', error);
+      } catch {
+        console.error('Failed to read image', file.name);
+        URL.revokeObjectURL(url);
       }
     }
 
-    this.images.set([...this.images(), ...newItems]);
-    this.state.set('configure');
+    const updated = [...this.images(), ...newItems];
+    this.images.set(updated);
+
+    if (!this.activeImageId() && updated.length > 0) {
+      this.activeImageId.set(updated[0].id);
+    }
+
+    if (updated.length > 0) {
+      this.state.set('configure');
+    }
   }
 
   private getImageDimensions(url: string): Promise<{ width: number; height: number }> {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => resolve({ width: img.width, height: img.height });
+      img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
       img.onerror = reject;
       img.src = url;
     });
   }
 
+  setActiveImage(id: string): void {
+    this.activeImageId.set(id);
+  }
+
   removeImage(id: string, event: Event): void {
     event.stopPropagation();
-    const updated = this.images().filter(img => {
-      if (img.id === id) {
-        window.URL.revokeObjectURL(img.previewUrl);
-        return false;
-      }
-      return true;
-    });
-    this.images.set(updated);
+    const img = this.images().find(i => i.id === id);
+    if (!img) return;
 
-    if (updated.length === 0) {
+    URL.revokeObjectURL(img.previewUrl);
+    const remaining = this.images().filter(i => i.id !== id);
+    this.images.set(remaining);
+
+    if (this.activeImageId() === id) {
+      this.activeImageId.set(remaining[0]?.id ?? null);
+    }
+
+    if (remaining.length === 0) {
       this.state.set('upload');
     }
   }
@@ -139,254 +198,113 @@ export class WatermarkComponent implements OnInit {
     }
   }
 
+  onFileDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer?.files && event.dataTransfer.files.length > 0) {
+      this.loadImages(Array.from(event.dataTransfer.files));
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   onWatermarkImageSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
+    const file = input.files?.[0];
+    if (file && file.type.startsWith('image/')) {
+      if (this.watermarkImagePreview()) {
+        URL.revokeObjectURL(this.watermarkImagePreview());
+      }
       this.watermarkImageFile.set(file);
-      const url = window.URL.createObjectURL(file);
-      this.watermarkImagePreview.set(url);
+      this.watermarkImagePreview.set(URL.createObjectURL(file));
     }
   }
 
   removeWatermarkImage(): void {
     if (this.watermarkImagePreview()) {
-      window.URL.revokeObjectURL(this.watermarkImagePreview());
+      URL.revokeObjectURL(this.watermarkImagePreview());
     }
     this.watermarkImageFile.set(null);
     this.watermarkImagePreview.set('');
   }
 
-  async showPreview(img: ImageItem): Promise<void> {
-    this.previewImage.set(img);
-    await this.generatePreview(img);
+  /** justify-content / align-items for the live CSS preview overlay, derived from the 3x3 position grid. */
+  previewAlignment(): { justifyContent: string; alignItems: string } {
+    const pos = this.position();
+    const [row, col] = pos.split('-') as [string, string];
+    const justifyContent = col === 'left' ? 'flex-start' : col === 'right' ? 'flex-end' : 'center';
+    const alignItems = row === 'top' ? 'flex-start' : row === 'bottom' ? 'flex-end' : 'center';
+    return { justifyContent, alignItems };
   }
 
-  closePreview(): void {
-    if (this.previewCanvasUrl()) {
-      window.URL.revokeObjectURL(this.previewCanvasUrl());
-    }
-    this.previewImage.set(null);
-    this.previewCanvasUrl.set('');
+  private loadImageEl(url: string): Promise<HTMLImageElement> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = url;
+    });
   }
 
-  async generatePreview(img: ImageItem): Promise<void> {
-    if (!img) return;
-    
-    this.isGeneratingPreview.set(true);
-    
-    try {
-      // Clean up previous preview
-      if (this.previewCanvasUrl()) {
-        window.URL.revokeObjectURL(this.previewCanvasUrl());
-      }
+  /** Anchor point + text alignment for drawing text on canvas, based on the 3x3 position grid and margin. */
+  private getTextAnchor(canvasW: number, canvasH: number, marginPx: number): { x: number; y: number; align: CanvasTextAlign; baseline: CanvasTextBaseline } {
+    const pos = this.position();
+    const [row, col] = pos.split('-') as [string, string];
 
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d')!;
+    const align: CanvasTextAlign = col === 'left' ? 'left' : col === 'right' ? 'right' : 'center';
+    const baseline: CanvasTextBaseline = row === 'top' ? 'top' : row === 'bottom' ? 'bottom' : 'middle';
 
-      // Draw original image
-      const imageEl = new Image();
-      await new Promise<void>((res, rej) => {
-        imageEl.onload = () => res();
-        imageEl.onerror = () => rej();
-        imageEl.src = img.previewUrl;
-      });
+    const x = col === 'left' ? marginPx : col === 'right' ? canvasW - marginPx : canvasW / 2;
+    const y = row === 'top' ? marginPx : row === 'bottom' ? canvasH - marginPx : canvasH / 2;
 
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = 'high';
-      ctx.drawImage(imageEl, 0, 0, img.width, img.height);
-
-      // Add watermark
-      if (this.watermarkType() === 'text') {
-        await this.addTextWatermark(canvas, ctx);
-      } else if (this.watermarkType() === 'image' && this.watermarkImageFile()) {
-        // Load watermark image
-        const watermarkImg = new Image();
-        await new Promise<void>((res, rej) => {
-          watermarkImg.onload = () => res();
-          watermarkImg.onerror = () => rej();
-          watermarkImg.src = this.watermarkImagePreview();
-        });
-        await this.addImageWatermark(canvas, ctx, watermarkImg);
-      }
-
-      // Convert canvas to blob URL
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob(
-          (b) => {
-            if (b) resolve(b);
-            else reject(new Error('Failed to create blob'));
-          },
-          'image/png',
-          1.0
-        );
-      });
-
-      const url = window.URL.createObjectURL(blob);
-      this.previewCanvasUrl.set(url);
-    } catch (error) {
-      console.error('Preview generation error:', error);
-    } finally {
-      this.isGeneratingPreview.set(false);
-    }
+    return { x, y, align, baseline };
   }
 
-  async refreshPreview(): Promise<void> {
-    const img = this.previewImage();
-    if (img) {
-      await this.generatePreview(img);
-    }
+  /** Center point for drawing the watermark image on canvas, based on the 3x3 position grid and margin. */
+  private getImageAnchorCenter(canvasW: number, canvasH: number, wmW: number, wmH: number, marginPx: number): { cx: number; cy: number } {
+    const pos = this.position();
+    const [row, col] = pos.split('-') as [string, string];
+
+    const cx = col === 'left' ? marginPx + wmW / 2 : col === 'right' ? canvasW - marginPx - wmW / 2 : canvasW / 2;
+    const cy = row === 'top' ? marginPx + wmH / 2 : row === 'bottom' ? canvasH - marginPx - wmH / 2 : canvasH / 2;
+
+    return { cx, cy };
   }
 
-  private getTextPositionCoordinates(
-    canvasWidth: number,
-    canvasHeight: number,
-    textMetrics: TextMetrics
-  ): { x: number; y: number } {
-    const padding = 20;
-    const textWidth = textMetrics.width;
-    const textHeight = this.textSize();
-
-    switch (this.textPosition()) {
-      case 'top-left':
-        return { x: padding, y: padding + textHeight };
-      case 'top-center':
-        return { x: canvasWidth / 2 - textWidth / 2, y: padding + textHeight };
-      case 'top-right':
-        return { x: canvasWidth - textWidth - padding, y: padding + textHeight };
-      case 'center-left':
-        return { x: padding, y: canvasHeight / 2 + textHeight / 2 };
-      case 'center':
-        return { x: canvasWidth / 2 - textWidth / 2, y: canvasHeight / 2 + textHeight / 2 };
-      case 'center-right':
-        return { x: canvasWidth - textWidth - padding, y: canvasHeight / 2 + textHeight / 2 };
-      case 'bottom-left':
-        return { x: padding, y: canvasHeight - padding };
-      case 'bottom-center':
-        return { x: canvasWidth / 2 - textWidth / 2, y: canvasHeight - padding };
-      case 'bottom-right':
-        return { x: canvasWidth - textWidth - padding, y: canvasHeight - padding };
-      default:
-        return { x: padding, y: canvasHeight - padding };
-    }
-  }
-
-  private getImagePositionCoordinates(
-    canvasWidth: number,
-    canvasHeight: number,
-    imgWidth: number,
-    imgHeight: number
-  ): { x: number; y: number } {
-    const padding = 20;
-
-    switch (this.imagePosition()) {
-      case 'top-left':
-        return { x: padding, y: padding };
-      case 'top-center':
-        return { x: canvasWidth / 2 - imgWidth / 2, y: padding };
-      case 'top-right':
-        return { x: canvasWidth - imgWidth - padding, y: padding };
-      case 'center-left':
-        return { x: padding, y: canvasHeight / 2 - imgHeight / 2 };
-      case 'center':
-        return { x: canvasWidth / 2 - imgWidth / 2, y: canvasHeight / 2 - imgHeight / 2 };
-      case 'center-right':
-        return { x: canvasWidth - imgWidth - padding, y: canvasHeight / 2 - imgHeight / 2 };
-      case 'bottom-left':
-        return { x: padding, y: canvasHeight - imgHeight - padding };
-      case 'bottom-center':
-        return { x: canvasWidth / 2 - imgWidth / 2, y: canvasHeight - imgHeight - padding };
-      case 'bottom-right':
-        return { x: canvasWidth - imgWidth - padding, y: canvasHeight - imgHeight - padding };
-      default:
-        return { x: padding, y: canvasHeight - imgHeight - padding };
-    }
-  }
-
-  private async addTextWatermark(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D): Promise<void> {
-    ctx.save();
-    
-    ctx.font = `${this.textSize()}px ${this.fontFamily()}`;
-    ctx.fillStyle = this.textColor();
-    ctx.globalAlpha = this.textOpacity();
-
-    const textMetrics = ctx.measureText(this.watermarkText());
-    const coords = this.getTextPositionCoordinates(canvas.width, canvas.height, textMetrics);
-
-    // Apply rotation if specified
-    if (this.textRotation() !== 0) {
-      ctx.translate(coords.x, coords.y);
-      ctx.rotate((this.textRotation() * Math.PI) / 180);
-      ctx.fillText(this.watermarkText(), 0, 0);
-    } else {
-      ctx.fillText(this.watermarkText(), coords.x, coords.y);
-    }
-    
-    ctx.restore();
-  }
-
-  private async addImageWatermark(
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D,
-    watermarkImg: HTMLImageElement
-  ): Promise<void> {
-    ctx.save();
-    
-    const maxSize = Math.min(canvas.width, canvas.height) * (this.imageSize() / 100);
-    const ratio = watermarkImg.width / watermarkImg.height;
-    const imgWidth = maxSize;
-    const imgHeight = maxSize / ratio;
-
-    const coords = this.getImagePositionCoordinates(canvas.width, canvas.height, imgWidth, imgHeight);
-
-    ctx.globalAlpha = this.imageOpacity();
-    
-    // Apply rotation if specified
-    if (this.imageRotation() !== 0) {
-      ctx.translate(coords.x + imgWidth / 2, coords.y + imgHeight / 2);
-      ctx.rotate((this.imageRotation() * Math.PI) / 180);
-      ctx.drawImage(watermarkImg, -imgWidth / 2, -imgHeight / 2, imgWidth, imgHeight);
-    } else {
-      ctx.drawImage(watermarkImg, coords.x, coords.y, imgWidth, imgHeight);
-    }
-    
-    ctx.restore();
-  }
-
-  async processImages(): Promise<void> {
+  async processWatermark(): Promise<void> {
     if (this.images().length === 0) return;
 
-    this.state.set('processing');
-    this.errorMessage.set('');
+    if (this.watermarkType() === 'text' && !this.text().trim()) {
+      this.errorMessage.set('Please enter watermark text.');
+      return;
+    }
+    if (this.watermarkType() === 'image' && !this.watermarkImageFile()) {
+      this.errorMessage.set('Please upload a watermark image.');
+      return;
+    }
+
     this.isProcessing.set(true);
+    this.errorMessage.set('');
 
     try {
       if (typeof window === 'undefined') throw new Error('Browser only');
 
-      let JSZip;
-      let zip: any;
-      const multiple = this.images().length > 1;
+      const watermarkImgEl = this.watermarkType() === 'image'
+        ? await this.loadImageEl(this.watermarkImagePreview())
+        : null;
 
+      const multiple = this.images().length > 1;
+      let zip: any;
       if (multiple) {
-        JSZip = (await import('jszip')).default;
+        const JSZip = (await import('jszip')).default;
         zip = new JSZip();
       }
 
       let singleBlobUrl: string | null = null;
       let singleFileName: string | null = null;
-
-      // Load watermark image if using image watermark
-      let watermarkImg: HTMLImageElement | null = null;
-      if (this.watermarkType() === 'image' && this.watermarkImageFile()) {
-        watermarkImg = new Image();
-        await new Promise<void>((res, rej) => {
-          watermarkImg!.onload = () => res();
-          watermarkImg!.onerror = () => rej();
-          watermarkImg!.src = this.watermarkImagePreview();
-        });
-      }
 
       for (const img of this.images()) {
         const canvas = document.createElement('canvas');
@@ -394,41 +312,49 @@ export class WatermarkComponent implements OnInit {
         canvas.height = img.height;
         const ctx = canvas.getContext('2d')!;
 
-        // Draw original image
-        const imageEl = new Image();
-        await new Promise<void>((res, rej) => {
-          imageEl.onload = () => res();
-          imageEl.onerror = () => rej();
-          imageEl.src = img.previewUrl;
-        });
+        const baseImageEl = await this.loadImageEl(img.previewUrl);
+        ctx.drawImage(baseImageEl, 0, 0, img.width, img.height);
 
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-        ctx.drawImage(imageEl, 0, 0, img.width, img.height);
+        const marginPx = (this.marginPct() / 100) * Math.min(img.width, img.height);
 
-        // Add watermark
+        ctx.save();
+        ctx.globalAlpha = this.opacity() / 100;
+
         if (this.watermarkType() === 'text') {
-          await this.addTextWatermark(canvas, ctx);
-        } else if (this.watermarkType() === 'image' && watermarkImg) {
-          await this.addImageWatermark(canvas, ctx, watermarkImg);
+          const fontPx = Math.max(8, Math.round((this.fontSizePct() / 100) * img.width));
+          const { x, y, align, baseline } = this.getTextAnchor(img.width, img.height, marginPx);
+
+          ctx.fillStyle = this.textColor();
+          ctx.font = `${this.bold() ? 'bold' : 'normal'} ${fontPx}px ${this.fontFamily()}`;
+          ctx.textAlign = align;
+          ctx.textBaseline = baseline;
+
+          ctx.translate(x, y);
+          ctx.rotate((this.rotation() * Math.PI) / 180);
+          ctx.fillText(this.text(), 0, 0);
+        } else if (watermarkImgEl) {
+          const wmW = img.width * (this.imageScalePct() / 100);
+          const wmH = wmW * (watermarkImgEl.height / watermarkImgEl.width);
+          const { cx, cy } = this.getImageAnchorCenter(img.width, img.height, wmW, wmH, marginPx);
+
+          ctx.translate(cx, cy);
+          ctx.rotate((this.rotation() * Math.PI) / 180);
+          ctx.drawImage(watermarkImgEl, -wmW / 2, -wmH / 2, wmW, wmH);
         }
 
-        // Convert to blob with high quality
-        const blob = await new Promise<Blob>((resolve, reject) => {
-          canvas.toBlob(
-            (b) => {
-              if (b) resolve(b);
-              else reject(new Error('Failed to create blob'));
-            },
-            'image/png',
-            1.0
-          );
-        });
+        ctx.restore();
+
+        const format = img.file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+        const quality = format === 'image/jpeg' ? 0.92 : undefined;
+        const dataUrl = canvas.toDataURL(format, quality);
+        const base64Data = dataUrl.split(',')[1];
+        const bytes = Uint8Array.from(atob(base64Data), c => c.charCodeAt(0));
 
         if (multiple) {
-          zip.file(img.name, blob);
+          zip.file(img.name, bytes);
         } else {
-          singleBlobUrl = window.URL.createObjectURL(blob);
+          const blob = new Blob([bytes], { type: format });
+          singleBlobUrl = URL.createObjectURL(blob);
           singleFileName = img.name;
         }
       }
@@ -438,7 +364,7 @@ export class WatermarkComponent implements OnInit {
 
       if (multiple && zip) {
         const content = await zip.generateAsync({ type: 'blob' });
-        dlUrl = window.URL.createObjectURL(content);
+        dlUrl = URL.createObjectURL(content);
         dlName = 'watermarked_images.zip';
       } else {
         dlUrl = singleBlobUrl!;
@@ -453,33 +379,33 @@ export class WatermarkComponent implements OnInit {
 
       setTimeout(() => {
         document.body.removeChild(a);
-        window.URL.revokeObjectURL(dlUrl);
+        URL.revokeObjectURL(dlUrl);
       }, 100);
-
-      this.state.set('complete');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Watermark error:', error);
-      this.errorMessage.set('Failed to add watermark. Please try again.');
-      this.state.set('configure');
+      this.errorMessage.set('Failed to apply watermark. Please try again.');
     } finally {
       this.isProcessing.set(false);
     }
   }
 
   reset(): void {
-    this.images().forEach(img => window.URL.revokeObjectURL(img.previewUrl));
+    this.images().forEach(img => URL.revokeObjectURL(img.previewUrl));
+    if (this.watermarkImagePreview()) {
+      URL.revokeObjectURL(this.watermarkImagePreview());
+    }
+
     this.images.set([]);
+    this.activeImageId.set(null);
+    this.watermarkImageFile.set(null);
+    this.watermarkImagePreview.set('');
     this.errorMessage.set('');
     this.watermarkType.set('text');
-    this.watermarkText.set('© 2024');
-    this.textColor.set('#ffffff');
-    this.textSize.set(48);
-    this.textOpacity.set(0.8);
-    this.textPosition.set('bottom-right');
-    this.textRotation.set(0);
-    this.fontFamily.set('Arial');
-    this.imageRotation.set(0);
-    this.removeWatermarkImage();
+    this.text.set('Your Watermark');
+    this.opacity.set(60);
+    this.rotation.set(0);
+    this.position.set('bottom-right');
+    this.marginPct.set(4);
     this.state.set('upload');
   }
 }

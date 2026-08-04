@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { CONVERT_IMAGE_RESOURCE_CONTENT } from './convert-image.resource-content';
 
 // Type for heic2any
 type Heic2Any = (options: { blob: Blob }) => Promise<Blob | Blob[]>;
@@ -27,12 +29,14 @@ interface ImageItem {
 @Component({
   selector: 'app-convert-image',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './convert-image.component.html',
   styleUrl: './convert-image.component.scss'
 })
 export class ConvertImageComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = CONVERT_IMAGE_RESOURCE_CONTENT;
 
   state = signal<AppState>('upload');
   errorMessage = signal<string>('');

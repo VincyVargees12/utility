@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { JPG_TO_PNG_RESOURCE_CONTENT } from './jpg-to-png.resource-content';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 type ImageQuality = 'low' | 'medium' | 'high';
@@ -22,12 +24,14 @@ interface ImageItem {
 @Component({
   selector: 'app-jpg-to-png',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './jpg-to-png.component.html',
   styleUrl: './jpg-to-png.component.scss'
 })
 export class JpgToPngComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = JPG_TO_PNG_RESOURCE_CONTENT;
 
   state = signal<AppState>('upload');
   errorMessage = signal<string>('');

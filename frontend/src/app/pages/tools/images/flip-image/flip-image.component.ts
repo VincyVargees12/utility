@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { FLIP_IMAGE_RESOURCE_CONTENT } from './flip-image.resource-content';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
 type FlipDirection = 'horizontal' | 'vertical';
@@ -26,12 +28,14 @@ interface ImageItem {
 @Component({
   selector: 'app-flip-image',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './flip-image.component.html',
   styleUrl: './flip-image.component.scss'
 })
 export class FlipImageComponent implements OnInit {
   private seoService = inject(SeoService);
+
+  resourceContent = FLIP_IMAGE_RESOURCE_CONTENT;
 
   state = signal<AppState>('upload');
   errorMessage = signal<string>('');

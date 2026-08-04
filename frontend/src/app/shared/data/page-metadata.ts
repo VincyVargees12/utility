@@ -144,6 +144,11 @@ export const PAGE_METADATA: Record<string, PageMetadata> = {
     lastModified: '2026-07-10',
     priority: 0.7
   },
+  '/categories/images/filters': {
+    route: '/categories/images/filters',
+    lastModified: '2026-08-04',
+    priority: 0.7
+  },
 
   // Text Tools - Popular ones marked
   '/categories/text/word-counter': {

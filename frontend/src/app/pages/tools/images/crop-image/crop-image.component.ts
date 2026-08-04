@@ -5,7 +5,9 @@ import { ToolHeaderComponent } from '../../shared/tool-header/tool-header.compon
 import { FileUploaderComponent } from '../../../../shared/components/file-uploader/file-uploader.component';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolSidebarComponent } from '../../../../shared/components/tool-sidebar/tool-sidebar.component';
+import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
+import { CROP_IMAGE_RESOURCE_CONTENT } from './crop-image.resource-content';
 import Cropper from 'cropperjs';
 
 type AppState = 'upload' | 'configure' | 'processing' | 'complete';
@@ -37,7 +39,7 @@ interface ImageItem {
 @Component({
   selector: 'app-crop-image',
   standalone: true,
-  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent],
+  imports: [CommonModule, FormsModule, ToolHeaderComponent, FileUploaderComponent, RelatedToolsComponent, ToolSidebarComponent, ToolResourceContentComponent],
   templateUrl: './crop-image.component.html',
   styleUrl: './crop-image.component.scss'
 })
@@ -45,6 +47,8 @@ export class CropImageComponent implements OnInit, OnDestroy {
   private seoService = inject(SeoService);
 
   @ViewChild('cropperImage') cropperImageRef!: ElementRef<HTMLImageElement>;
+
+  resourceContent = CROP_IMAGE_RESOURCE_CONTENT;
 
   aspectPresets = ASPECT_PRESETS;
 
