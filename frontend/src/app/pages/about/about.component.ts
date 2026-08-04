@@ -1,34 +1,38 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { FooterComponent } from '../../components/footer/footer.component';
+import { SeoService } from '../../services/seo.service';
 
 @Component({
   selector: 'app-about',
-  imports: [NavbarComponent, FooterComponent],
-  template: `
-    <app-navbar />
-    <main class="page-content">
-      <div class="container">
-        <h1>About DataUtil</h1>
-        <p>Learn more about our mission and vision - Coming soon</p>
-      </div>
-    </main>
-    <app-footer />
-  `,
-  styles: [`
-    .page-content {
-      min-height: 80vh;
-      padding: 8rem 0 4rem;
-    }
-    h1 {
-      font-size: 3rem;
-      font-weight: 800;
-      color: #111827;
-      margin-bottom: 1rem;
-    }
-    :host-context(.dark) h1 {
-      color: #f1f5f9;
-    }
-  `]
+  standalone: true,
+  imports: [RouterLink, NavbarComponent, FooterComponent],
+  templateUrl: './about.component.html',
+  styleUrl: './about.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AboutComponent {}
+export class AboutComponent implements OnInit {
+  private readonly seoService = inject(SeoService);
+
+  ngOnInit(): void {
+    this.seoService.setPageMeta({
+      title: 'About DataUtil - Free Online Utility Platform',
+      description: 'DataUtil provides hundreds of free PDF, image, text, and developer tools that run in your browser. Learn about our mission and privacy-first approach.',
+      keywords: 'about datautil, free online tools, privacy-first utilities',
+      ogTitle: 'About DataUtil',
+      ogDescription: 'Free, fast, privacy-first online tools for PDFs, images, text, and development.',
+      ogImage: 'https://www.data-util.com/ogImage.png',
+      ogUrl: 'https://www.data-util.com/about',
+      canonicalUrl: 'https://www.data-util.com/about'
+    });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'AboutPage',
+      'name': 'About DataUtil',
+      'description': 'DataUtil provides hundreds of free PDF, image, text, and developer tools that run in your browser.',
+      'url': 'https://www.data-util.com/about'
+    });
+  }
+}

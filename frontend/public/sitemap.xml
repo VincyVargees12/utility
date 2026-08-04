@@ -12,6 +12,20 @@
     <priority>1.0</priority>
   </url>
 
+  <!-- Company Pages -->
+  <url>
+    <loc>https://www.data-util.com/about</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://www.data-util.com/contact</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
   <!-- Category Pages -->
   <url>
     <loc>https://www.data-util.com/categories/pdf</loc>

@@ -28,6 +28,16 @@ export const routes: Routes = [
     title: 'Tools - DataUtil'
   },
   {
+    path: 'about',
+    loadComponent: () => import('./pages/about/about.component').then(m => m.AboutComponent),
+    title: 'About DataUtil - DataUtil'
+  },
+  {
+    path: 'contact',
+    loadComponent: () => import('./pages/contact/contact.component').then(m => m.ContactComponent),
+    title: 'Contact DataUtil - DataUtil'
+  },
+  {
     path: '**',
     redirectTo: ''
   }

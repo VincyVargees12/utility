@@ -1,6 +1,6 @@
-import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
-import { isPlatformBrowser } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 
 export interface PageMeta {
   title: string;
@@ -20,8 +20,7 @@ export interface PageMeta {
 export class SeoService {
   private readonly meta = inject(Meta);
   private readonly titleService = inject(Title);
-  private readonly platformId = inject(PLATFORM_ID);
-  private readonly isBrowser = isPlatformBrowser(this.platformId);
+  private readonly document = inject(DOCUMENT);
 
   setPageMeta(pageMeta: PageMeta): void {
     // Set title
@@ -63,30 +62,26 @@ export class SeoService {
   }
 
   private updateCanonicalUrl(url: string): void {
-    if (!this.isBrowser) return;
-    
-    let link: HTMLLinkElement | null = document.querySelector('link[rel="canonical"]');
-    
+    let link: HTMLLinkElement | null = this.document.querySelector('link[rel="canonical"]');
+
     if (!link) {
-      link = document.createElement('link');
+      link = this.document.createElement('link');
       link.setAttribute('rel', 'canonical');
-      document.head.appendChild(link);
+      this.document.head.appendChild(link);
     }
-    
+
     link.setAttribute('href', url);
   }
 
   addStructuredData(data: any): void {
-    if (!this.isBrowser) return;
-    
-    let script: HTMLScriptElement | null = document.querySelector('script[type="application/ld+json"]');
-    
+    let script: HTMLScriptElement | null = this.document.querySelector('script[type="application/ld+json"]');
+
     if (!script) {
-      script = document.createElement('script');
+      script = this.document.createElement('script');
       script.type = 'application/ld+json';
-      document.head.appendChild(script);
+      this.document.head.appendChild(script);
     }
-    
+
     script.textContent = JSON.stringify(data);
   }
 }

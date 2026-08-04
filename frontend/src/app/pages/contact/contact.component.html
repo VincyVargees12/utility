@@ -1,0 +1,45 @@
+<app-navbar />
+
+<main class="w-full">
+  <div class="max-w-2xl mx-auto px-4 py-16">
+    <div class="mb-10">
+      <h1 class="text-4xl font-bold text-primary mb-4">Contact Us</h1>
+      <p class="text-lg text-secondary leading-relaxed">
+        Found a bug, have a feature request, or just want to say hello? We'd like to hear from you — we read every
+        message that comes in.
+      </p>
+    </div>
+
+    <div class="bg-white rounded-lg border-2 border-gray-200 p-6 mb-8">
+      <h2 class="text-sm font-semibold text-tertiary uppercase tracking-wide mb-2">Email us</h2>
+      <div class="flex items-center gap-3 flex-wrap">
+        <a href="mailto:{{ contactEmail }}" class="text-2xl font-bold text-blue-600 hover:underline">
+          {{ contactEmail }}
+        </a>
+        <button
+          (click)="copyEmail()"
+          class="px-3 py-1.5 text-xs font-medium rounded-md transition-colors inline-flex items-center gap-1"
+          [ngClass]="copied() ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'"
+        >
+          <mat-icon class="text-sm align-middle">{{ copied() ? 'check' : 'content_copy' }}</mat-icon>
+          {{ copied() ? 'Copied' : 'Copy' }}
+        </button>
+      </div>
+    </div>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-bold text-primary">What to include</h2>
+      <ul class="text-secondary leading-relaxed space-y-2 list-disc list-inside">
+        <li><strong>Bug reports:</strong> the tool you were using, what you expected, and what happened instead.</li>
+        <li><strong>Feature requests:</strong> the tool you'd like added, or an improvement to an existing one.</li>
+        <li><strong>Everything else:</strong> general feedback, partnership inquiries, or anything else on your mind.</li>
+      </ul>
+      <p class="text-sm text-tertiary pt-2">
+        We aim to respond within a few business days. For urgent issues affecting a specific tool, mention the tool
+        name and URL so we can look into it faster.
+      </p>
+    </section>
+  </div>
+</main>
+
+<app-footer />

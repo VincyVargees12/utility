@@ -1,0 +1,70 @@
+<app-navbar />
+
+<main class="w-full">
+  <div class="max-w-4xl mx-auto px-4 py-16">
+    <div class="mb-12">
+      <h1 class="text-4xl font-bold text-primary mb-4">About DataUtil</h1>
+      <p class="text-lg text-secondary leading-relaxed">
+        DataUtil is a free online utility platform built around a simple idea: everyday tasks like merging a PDF,
+        resizing an image, or formatting some JSON shouldn't require installing software, creating an account, or
+        paying a subscription.
+      </p>
+    </div>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-primary mb-3">What we offer</h2>
+      <p class="text-secondary leading-relaxed mb-4">
+        DataUtil brings together dozens of tools across four categories — PDF, Images, Text, and Developer utilities —
+        in one consistent, ad-light interface. Every tool is designed to do one job well, with no sign-up wall and no
+        artificial limits on how many times you can use it.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <a routerLink="/categories/pdf" class="block p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-sm transition-all">
+          <h3 class="font-semibold text-primary mb-1">PDF Tools</h3>
+          <p class="text-sm text-tertiary">Merge, split, compress, rotate, protect, and convert PDFs.</p>
+        </a>
+        <a routerLink="/categories/images" class="block p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-sm transition-all">
+          <h3 class="font-semibold text-primary mb-1">Image Tools</h3>
+          <p class="text-sm text-tertiary">Resize, crop, compress, convert, and edit images.</p>
+        </a>
+        <a routerLink="/categories/text" class="block p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-sm transition-all">
+          <h3 class="font-semibold text-primary mb-1">Text Tools</h3>
+          <p class="text-sm text-tertiary">Count, format, convert, and compare text.</p>
+        </a>
+        <a routerLink="/categories/developer" class="block p-4 rounded-lg border border-gray-200 hover:border-blue-400 hover:shadow-sm transition-all">
+          <h3 class="font-semibold text-primary mb-1">Developer Tools</h3>
+          <p class="text-sm text-tertiary">Format, validate, encode, hash, and decode data.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-primary mb-3">Privacy-first by design</h2>
+      <p class="text-secondary leading-relaxed">
+        Most tools on DataUtil process your files directly in your browser — nothing is uploaded to a server, and
+        your content never leaves your device. A small number of PDF operations (like password protection and
+        removal) use a secure backend API to perform the encryption, and those files are processed transiently and
+        not stored afterward.
+      </p>
+    </section>
+
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-primary mb-3">Free, and staying free</h2>
+      <p class="text-secondary leading-relaxed">
+        Every tool on this site is free to use, with no account required. We intend to keep it that way. If we ever
+        introduce optional paid features, the core tools you rely on today will remain free.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-bold text-primary mb-3">Get in touch</h2>
+      <p class="text-secondary leading-relaxed">
+        Found a bug, have a feature request, or just want to say hello? Visit our
+        <a routerLink="/contact" class="text-blue-600 hover:underline font-medium">Contact page</a>
+        — we read every message.
+      </p>
+    </section>
+  </div>
+</main>
+
+<app-footer />

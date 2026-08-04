@@ -18,6 +18,18 @@ export const PAGE_METADATA: Record<string, PageMetadata> = {
     priority: 1.0
   },
 
+  // Company Pages
+  '/about': {
+    route: '/about',
+    lastModified: '2026-08-04',
+    priority: 0.6
+  },
+  '/contact': {
+    route: '/contact',
+    lastModified: '2026-08-04',
+    priority: 0.5
+  },
+
   // Category Pages
   '/categories/pdf': {
     route: '/categories/pdf',
