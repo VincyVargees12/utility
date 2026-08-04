@@ -22,7 +22,11 @@
       "*.woff",
       "*.woff2",
       "*.ttf",
-      "*.eot"
+      "*.eot",
+      "*.js",
+      "*.mjs",
+      "*.css",
+      "*.map"
     ]
   },
   "routes": [
