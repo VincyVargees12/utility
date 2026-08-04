@@ -49,6 +49,21 @@ export class JpgToPdfComponent implements OnInit {
       ogDescription: 'Convert JPG, PNG, and other images to PDF quickly and easily.',
       canonicalUrl: 'https://www.data-util.com/categories/pdf/jpg-to-pdf'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'JPG to PDF Converter',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Convert JPG, PNG, and other image formats into a PDF document with adjustable page size and margins.',
+      'url': 'https://www.data-util.com/categories/pdf/jpg-to-pdf',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

@@ -88,7 +88,7 @@ export class UuidGeneratorComponent implements OnInit {
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'UUID/GUID Generator & Decoder - Version 1, 4 | DataUtil',
-      description: 'Generate UUID/GUID instantly, or decode and analyze any UUID to inspect its version, variant, embedded timestamp, and field structure. Supports version 1 (timestamp-based) and version 4 (random) generation.',
+      description: 'Generate UUID/GUID instantly, or decode any UUID to inspect its version, variant, timestamp, and field structure. Supports v1 and v4.',
       keywords: 'uuid generator, guid generator, uuid decoder, uuid analyzer, uuid v4, uuid v1, generate uuid, decode uuid, parse uuid',
       ogTitle: 'UUID/GUID Generator & Decoder',
       ogDescription: 'Generate version 1 and 4 UUIDs, or decode and analyze any UUID/GUID to inspect its structure.',

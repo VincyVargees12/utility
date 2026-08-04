@@ -48,6 +48,21 @@ export class ReverseTextComponent implements OnInit {
       ogDescription: 'Reverse text, words, or paragraphs instantly with multiple reverse modes.',
       canonicalUrl: 'https://www.data-util.com/categories/text/reverse-text'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Reverse Text',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Reverse text, words, or paragraphs instantly, with mode previews.',
+      'url': 'https://www.data-util.com/categories/text/reverse-text',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onTextInput(value: string): void {

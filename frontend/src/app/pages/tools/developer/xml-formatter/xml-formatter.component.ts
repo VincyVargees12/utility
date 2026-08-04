@@ -51,7 +51,7 @@ export class XmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'XML Formatter - Beautify and Validate XML | DataUtil',
-      description: 'Format, validate, and minify XML instantly. Beautify XML with custom indentation and copy or download the result.',
+      description: 'Format, validate, and minify XML instantly. Fix indentation, check well-formedness, and copy or download the result.',
       keywords: 'xml formatter, xml beautifier, xml validator, format xml, minify xml, xml pretty print',
       ogTitle: 'XML Formatter - Beautify and Validate XML',
       ogDescription: 'Format and validate XML instantly with custom indentation.',

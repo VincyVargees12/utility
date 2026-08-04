@@ -49,6 +49,21 @@ export class CompressImageComponent implements OnInit {
       ogDescription: 'Reduce image file size while maintaining quality. Perfect for web optimization.',
       canonicalUrl: 'https://www.data-util.com/categories/images/compress-image'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Compress Image',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Reduce image file size for JPG, PNG, SVG, and GIF while preserving quality.',
+      'url': 'https://www.data-util.com/categories/images/compress-image',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   formatBytes(bytes: number, decimals = 2): string {

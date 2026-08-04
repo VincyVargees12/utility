@@ -64,6 +64,21 @@ export class SortLinesComponent implements OnInit {
       ogDescription: 'Sort your text lines alphabetically, numerically, by length, or in reverse. Fast and easy text sorting online.',
       canonicalUrl: 'https://www.data-util.com/categories/text/sort-lines'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Sort Lines',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Sort text lines alphabetically, numerically, by length, or in reverse order.',
+      'url': 'https://www.data-util.com/categories/text/sort-lines',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onTextChange(): void {

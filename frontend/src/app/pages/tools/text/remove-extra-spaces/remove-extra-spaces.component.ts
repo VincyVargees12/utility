@@ -73,6 +73,21 @@ export class RemoveExtraSpacesComponent implements OnInit {
       ogDescription: 'Clean up messy text by collapsing repeated spaces and removing blank lines.',
       canonicalUrl: 'https://www.data-util.com/categories/text/remove-extra-spaces'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Remove Extra Spaces',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Collapse repeated spaces, trim whitespace, and remove blank lines from text.',
+      'url': 'https://www.data-util.com/categories/text/remove-extra-spaces',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onTextInput(value: string): void {

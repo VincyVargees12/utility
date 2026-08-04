@@ -49,6 +49,21 @@ export class JpgToPngComponent implements OnInit {
       ogDescription: 'Convert JPG images to PNG format instantly with full transparency support.',
       canonicalUrl: 'https://www.data-util.com/categories/images/jpg-to-png'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'JPG to PNG Converter',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Convert JPG images to PNG format with transparency support.',
+      'url': 'https://www.data-util.com/categories/images/jpg-to-png',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

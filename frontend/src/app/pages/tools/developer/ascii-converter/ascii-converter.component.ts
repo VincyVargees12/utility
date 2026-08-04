@@ -135,10 +135,10 @@ export class AsciiConverterComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'ASCII Converter - Text to Binary, Hex, Base64, Decimal, ROT13 | DataUtil',
+      title: 'ASCII Converter - Text to Binary, Hex & Base64 | DataUtil',
       description: 'Convert text to binary, hexadecimal, Base64, decimal, ROT13, URL encoding, and HTML entities all at once. Edit any format and convert it back to sync the rest.',
       keywords: 'ascii to hex, ascii to binary, text to binary, text to decimal, rot13, ascii converter, base64 encode, url encode, html entities',
-      ogTitle: 'ASCII Converter - Text to Binary, Hex, Base64, Decimal, ROT13',
+      ogTitle: 'ASCII Converter - Text to Binary, Hex & Base64',
       ogDescription: 'Convert text to binary, hexadecimal, Base64, decimal, ROT13, URL encoding, and HTML entities instantly.',
       canonicalUrl: 'https://www.data-util.com/categories/developer/ascii-converter'
     });

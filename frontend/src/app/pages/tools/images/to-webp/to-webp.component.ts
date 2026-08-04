@@ -49,6 +49,21 @@ export class ToWebpComponent implements OnInit {
       ogDescription: 'Convert any image format to WebP instantly with quality control. Compress images up to 80% smaller.',
       canonicalUrl: 'https://www.data-util.com/categories/images/to-webp'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Convert to WebP',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Convert JPG, PNG, GIF, and BMP images to WebP for better compression and web performance.',
+      'url': 'https://www.data-util.com/categories/images/to-webp',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

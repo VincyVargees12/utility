@@ -87,6 +87,21 @@ export class CropImageComponent implements OnInit, OnDestroy {
       ogDescription: 'Crop images by defining a perfect rectangle to cut out unwanted bounds.',
       canonicalUrl: 'https://www.data-util.com/categories/images/crop-image'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Crop Image',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Crop JPG, PNG, or GIF images with a free-form selection or fixed aspect ratio presets.',
+      'url': 'https://www.data-util.com/categories/images/crop-image',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   ngOnDestroy(): void {

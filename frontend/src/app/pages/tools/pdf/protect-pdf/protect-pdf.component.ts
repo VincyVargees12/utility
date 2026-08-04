@@ -49,6 +49,21 @@ export class ProtectPdfComponent implements OnInit {
       ogDescription: 'Secure your PDF documents by encrypting them with a password easily and safely.',
       canonicalUrl: 'https://www.data-util.com/categories/pdf/protect-pdf'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Protect PDF',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Add password protection to a PDF to keep sensitive documents secure.',
+      'url': 'https://www.data-util.com/categories/pdf/protect-pdf',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

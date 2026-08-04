@@ -116,11 +116,26 @@ export class ImageFiltersComponent implements OnInit {
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'Image Filters - Free Online Photo Editor | DataUtil',
-      description: 'Apply filters and effects to your photos: grayscale, sepia, vintage, cool, warm, vivid, and more. Fine-tune brightness, contrast, saturation, and blur — free and processed entirely in your browser.',
+      description: 'Apply filters and effects to your photos: grayscale, sepia, vintage, and more. Fine-tune brightness, contrast, saturation, and blur in your browser.',
       keywords: 'image filters, photo filters online, grayscale image, sepia effect, vintage filter, adjust brightness contrast',
       ogTitle: 'Image Filters - Apply Photo Effects Online',
       ogDescription: 'Enhance your photos with one-click filters and fine-grained adjustments.',
       canonicalUrl: 'https://www.data-util.com/categories/images/filters'
+    });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Image Filters',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Apply filters and adjustments — grayscale, sepia, brightness, contrast, saturation, and blur — to photos in your browser.',
+      'url': 'https://www.data-util.com/categories/images/filters',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

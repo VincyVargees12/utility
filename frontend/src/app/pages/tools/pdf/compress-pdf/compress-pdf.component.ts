@@ -51,6 +51,21 @@ export class CompressPdfComponent implements OnInit {
       ogDescription: 'Reduce PDF file size while keeping quality. 100% free and secure.',
       canonicalUrl: 'https://www.data-util.com/categories/pdf/compress-pdf'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Compress PDF',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Reduce PDF file size while optimizing for maximal quality.',
+      'url': 'https://www.data-util.com/categories/pdf/compress-pdf',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   private async loadPdfLib(): Promise<any> {

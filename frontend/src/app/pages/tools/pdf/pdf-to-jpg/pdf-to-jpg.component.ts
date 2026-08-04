@@ -41,6 +41,21 @@ export class PdfToJpgComponent implements OnInit {
       ogDescription: 'Convert every page of a PDF into high-quality JPG images instantly.',
       canonicalUrl: 'https://www.data-util.com/categories/pdf/pdf-to-jpg'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'PDF to JPG Converter',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Convert every page of a PDF into a JPG image, or extract the images embedded in a PDF.',
+      'url': 'https://www.data-util.com/categories/pdf/pdf-to-jpg',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

@@ -48,6 +48,21 @@ export class RotateImageComponent implements OnInit {
       ogDescription: 'Rotate images by any angle. Quick 90° rotation or custom angles. 100% free.',
       canonicalUrl: 'https://www.data-util.com/categories/images/rotate-image'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Rotate Image',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Rotate images by 90°, 180°, 270°, or any custom angle.',
+      'url': 'https://www.data-util.com/categories/images/rotate-image',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

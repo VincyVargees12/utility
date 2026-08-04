@@ -53,6 +53,21 @@ export class RotatePdfComponent implements OnInit {
       ogDescription: 'Rotate your PDFs the way you need them. You can even rotate multiple PDFs at once!',
       canonicalUrl: 'https://www.data-util.com/categories/pdf/rotate-pdf'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Rotate PDF',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Rotate PDF pages to the orientation you need, one file or several at once.',
+      'url': 'https://www.data-util.com/categories/pdf/rotate-pdf',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   private async loadPdfLib(): Promise<any> {

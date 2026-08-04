@@ -48,6 +48,21 @@ export class UnlockPdfComponent implements OnInit {
       ogDescription: 'Remove PDF password security quickly and safely.',
       canonicalUrl: 'https://www.data-util.com/categories/pdf/unlock-pdf'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Unlock PDF',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Remove password protection from a PDF so it can be opened, edited, or shared freely.',
+      'url': 'https://www.data-util.com/categories/pdf/unlock-pdf',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

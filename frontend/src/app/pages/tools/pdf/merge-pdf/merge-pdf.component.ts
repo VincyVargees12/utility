@@ -48,6 +48,21 @@ export class MergePdfComponent implements OnInit {
       ogDescription: 'Combine PDFs in the order you want. 100% free and secure.',
       canonicalUrl: 'https://www.data-util.com/categories/pdf/merge-pdf'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Merge PDF',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Combine multiple PDF files into a single document in the order you choose.',
+      'url': 'https://www.data-util.com/categories/pdf/merge-pdf',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   private async loadPdfLib(): Promise<any> {

@@ -110,10 +110,10 @@ export class TextDifferenceComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Text Difference - Professional Text Comparison Tool | DataUtil',
+      title: 'Text Difference - Compare Text Files Online | DataUtil',
       description: 'Compare two text files or snippets side by side. Highlights all additions, deletions, and modifications. Supports JSON, XML, HTML, JS, TS and more.',
       keywords: 'text diff, text compare, file compare, diff checker, code compare, json diff',
-      ogTitle: 'Text Difference - Professional Text Comparison Tool',
+      ogTitle: 'Text Difference - Compare Text Files Online',
       ogDescription: 'Compare two text files side by side with professional diff highlighting.',
       canonicalUrl: 'https://www.data-util.com/categories/text/text-difference'
     });

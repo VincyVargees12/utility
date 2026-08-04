@@ -58,6 +58,21 @@ export class DuplicateRemoverComponent implements OnInit {
       ogDescription: 'Remove duplicate lines from your text. Works with case-sensitive and case-insensitive options.',
       canonicalUrl: 'https://www.data-util.com/categories/text/duplicate-remover'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Remove Duplicates',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Remove duplicate lines from text, with case-sensitive and case-insensitive detection.',
+      'url': 'https://www.data-util.com/categories/text/duplicate-remover',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onTextChange(): void {

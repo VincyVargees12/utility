@@ -54,7 +54,7 @@ export class JsonFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'JSON Formatter - Beautify and Validate JSON | DataUtil',
-      description: 'Format, validate, and minify JSON instantly. Beautify JSON with custom indentation and copy or download the result.',
+      description: 'Format, validate, and minify JSON instantly. Catch syntax errors, pretty-print nested data, and copy or download the result.',
       keywords: 'json formatter, json beautifier, json validator, minify json, format json',
       ogTitle: 'JSON Formatter - Beautify and Validate JSON',
       ogDescription: 'Format and validate JSON instantly with custom indentation.',

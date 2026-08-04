@@ -49,6 +49,21 @@ export class PngToJpgComponent implements OnInit {
       ogDescription: 'Convert PNG images to JPG format instantly with customizable quality.',
       canonicalUrl: 'https://www.data-util.com/categories/images/png-to-jpg'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'PNG to JPG Converter',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Convert PNG images to JPG format with adjustable quality.',
+      'url': 'https://www.data-util.com/categories/images/png-to-jpg',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

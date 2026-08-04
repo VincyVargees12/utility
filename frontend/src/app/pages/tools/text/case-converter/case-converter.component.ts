@@ -56,6 +56,21 @@ export class CaseConverterComponent implements OnInit {
       ogDescription: 'Convert text to any case format instantly. Supports uppercase, lowercase, title case, camelCase, snake_case, and more.',
       canonicalUrl: 'https://www.data-util.com/categories/text/case-converter'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Case Converter',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Convert text to uppercase, lowercase, title case, sentence case, camelCase, snake_case, kebab-case, and more.',
+      'url': 'https://www.data-util.com/categories/text/case-converter',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onTextChange(): void {

@@ -62,9 +62,27 @@ export class RemoveBackgroundComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Remove Background from Image - Free Online Tool | Utility',
+      title: 'Remove Background from Image - Free Online Tool | DataUtil',
       description: 'Remove background from images instantly. Add blur, solid color, or custom image backgrounds. Easy-to-use online background remover.',
-      keywords: 'remove background, background remover, transparent background, blur background, change background'
+      keywords: 'remove background, background remover, transparent background, blur background, change background',
+      ogTitle: 'Remove Background from Image - Free Online Tool',
+      ogDescription: 'Remove background from images instantly with blur, solid color, or custom backgrounds.',
+      canonicalUrl: 'https://www.data-util.com/categories/images/remove-bg'
+    });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Background Remover',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Remove background from images instantly and replace it with a transparent, solid color, blurred, or custom background.',
+      'url': 'https://www.data-util.com/categories/images/remove-bg',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

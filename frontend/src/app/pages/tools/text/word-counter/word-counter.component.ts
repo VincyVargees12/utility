@@ -60,12 +60,27 @@ export class WordCounterComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Word Counter - Free Online Word & Character Count Tool | DataUtil',
-      description: 'Count words, characters, sentences, and paragraphs instantly. See reading time, speaking time, and keyword density. Upload text files or paste content — free and private.',
+      title: 'Word Counter - Word & Character Count Tool | DataUtil',
+      description: 'Count words, characters, sentences, and paragraphs instantly. See reading time, speaking time, and keyword density. Free and private.',
       keywords: 'word counter, word count, count words online, character counter, keyword density, reading time calculator',
       ogTitle: 'Word Counter - Free Online Word Count Tool',
       ogDescription: 'Instantly count words, characters, sentences, paragraphs, and see keyword density.',
       canonicalUrl: 'https://www.data-util.com/categories/text/word-counter'
+    });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Word Counter',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Count words, characters, sentences, and paragraphs, with reading time and keyword density.',
+      'url': 'https://www.data-util.com/categories/text/word-counter',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

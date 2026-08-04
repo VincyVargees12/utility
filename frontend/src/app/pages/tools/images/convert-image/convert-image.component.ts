@@ -48,12 +48,27 @@ export class ConvertImageComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Convert Image - Image Format Converter (JPG, PNG, WebP, GIF, BMP, TIFF, SVG, ICO, HEIC) | DataUtil',
+      title: 'Convert Image - JPG, PNG, WebP & More | DataUtil',
       description: 'Convert images between 15+ formats: JPG, PNG, WebP, GIF, BMP, TIFF, SVG, ICO, EPS, PDF, AVIF, HEIC, JFIF. Batch convert with quality control. Free online tool.',
       keywords: 'convert image, image format converter, jpg to png, png to jpg, webp converter, gif converter, bmp to jpg, heic to jpg, heic converter',
       ogTitle: 'Convert Image - 15+ Image Format Converter',
       ogDescription: 'Convert images between JPG, PNG, WebP, GIF, BMP, TIFF, SVG, ICO, HEIC, and more formats instantly.',
       canonicalUrl: 'https://www.data-util.com/categories/images/convert-image'
+    });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Image Format Converter',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Convert images between JPG, PNG, WebP, GIF, and other formats, individually or in batches.',
+      'url': 'https://www.data-util.com/categories/images/convert-image',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

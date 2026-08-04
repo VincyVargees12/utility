@@ -95,6 +95,21 @@ export class ResizeImageComponent implements OnInit {
       ogDescription: 'Resize multiple images at once by defining new pixels or percentages.',
       canonicalUrl: 'https://www.data-util.com/categories/images/resize-image'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Resize Image',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Resize images to exact pixel dimensions or a percentage, in bulk, with aspect ratio locking.',
+      'url': 'https://www.data-util.com/categories/images/resize-image',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {

@@ -45,12 +45,27 @@ export class FlipImageComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Flip Image - Mirror images horizontally or vertically | DataUtil',
+      title: 'Flip Image - Mirror Horizontally or Vertically | DataUtil',
       description: 'Flip images horizontally or vertically. Mirror effect tool for JPG, PNG, GIF and WebP. 100% free.',
       keywords: 'flip image, mirror image, flip horizontally, flip vertically, flip photo',
       ogTitle: 'Flip Image - Free Online Image Flipper',
       ogDescription: 'Flip images horizontally or vertically. Create mirror effects instantly.',
       canonicalUrl: 'https://www.data-util.com/categories/images/flip-image'
+    });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Flip Image',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Flip images horizontally or vertically for a mirror effect.',
+      'url': 'https://www.data-util.com/categories/images/flip-image',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

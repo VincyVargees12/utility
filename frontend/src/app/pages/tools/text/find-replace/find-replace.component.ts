@@ -136,12 +136,27 @@ export class FindReplaceComponent implements OnInit {
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Find and Replace - Free Text Search & Replace Tool | DataUtil',
+      title: 'Find and Replace - Search & Replace Text | DataUtil',
       description: 'Find and replace text instantly with support for match case, whole word, and regular expressions. Free and private, runs entirely in your browser.',
       keywords: 'find and replace, search and replace, text replace tool, regex replace, find text online',
-      ogTitle: 'Find and Replace - Free Text Search & Replace Tool',
+      ogTitle: 'Find and Replace - Search & Replace Text',
       ogDescription: 'Search and replace text with match case, whole word, and regex support.',
       canonicalUrl: 'https://www.data-util.com/categories/text/find-replace'
+    });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Find and Replace',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Search and replace text with support for match case, whole word, and regular expressions.',
+      'url': 'https://www.data-util.com/categories/text/find-replace',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
     });
   }
 

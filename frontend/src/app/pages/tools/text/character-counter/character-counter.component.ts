@@ -49,6 +49,21 @@ export class CharacterCounterComponent implements OnInit {
       ogDescription: 'Instantly count characters, words, sentences, paragraphs, and calculate reading time.',
       canonicalUrl: 'https://www.data-util.com/categories/text/character-counter'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Character Counter',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Count characters, words, sentences, and paragraphs, and calculate reading time.',
+      'url': 'https://www.data-util.com/categories/text/character-counter',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onTextChange(): void {

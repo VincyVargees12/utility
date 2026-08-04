@@ -52,7 +52,7 @@ export class HtmlFormatterComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'HTML Formatter - Beautify and Minify HTML | DataUtil',
-      description: 'Format, beautify, and minify HTML instantly. Beautify HTML with custom indentation and copy or download the result.',
+      description: 'Format, beautify, and minify HTML instantly. Fix indentation, validate structure, and copy or download the result.',
       keywords: 'html formatter, html beautifier, html minifier, format html, minify html, html pretty print',
       ogTitle: 'HTML Formatter - Beautify and Minify HTML',
       ogDescription: 'Format and beautify HTML instantly with custom indentation.',

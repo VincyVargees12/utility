@@ -68,6 +68,21 @@ export class SplitPdfComponent implements OnInit {
       ogDescription: 'Split PDF files into multiple documents. 100% free and secure.',
       canonicalUrl: 'https://www.data-util.com/categories/pdf/split-pdf'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Split PDF',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Split a PDF into multiple documents by page ranges, fixed intervals, or specific pages.',
+      'url': 'https://www.data-util.com/categories/pdf/split-pdf',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   private async loadPdfLib(): Promise<any> {

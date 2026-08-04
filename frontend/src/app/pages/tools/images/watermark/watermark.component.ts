@@ -112,6 +112,21 @@ export class WatermarkComponent implements OnInit {
       ogDescription: 'Protect your photos with a custom text or logo watermark, free and private.',
       canonicalUrl: 'https://www.data-util.com/categories/images/watermark'
     });
+
+    this.seoService.addStructuredData({
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      'name': 'Add Watermark',
+      'applicationCategory': 'UtilitiesApplication',
+      'description': 'Add a text or image watermark to photos in bulk, with control over position, opacity, rotation, and size.',
+      'url': 'https://www.data-util.com/categories/images/watermark',
+      'operatingSystem': 'Any',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD'
+      }
+    });
   }
 
   onFileSelected(files: FileList): void {
