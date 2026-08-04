@@ -276,6 +276,12 @@ export const PAGE_METADATA: Record<string, PageMetadata> = {
     priority: 0.8,
     isPopular: true
   },
+  '/categories/developer/ascii-converter': {
+    route: '/categories/developer/ascii-converter',
+    lastModified: '2026-08-04',
+    priority: 0.8,
+    isPopular: true
+  },
 };
 
 /**

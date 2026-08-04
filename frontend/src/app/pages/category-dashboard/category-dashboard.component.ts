@@ -2,6 +2,7 @@ import { TOOLS_REGISTRY } from '../../shared/data/tools.data';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { SeoService } from '../../services/seo.service';
 
 interface Tool {
@@ -25,7 +26,7 @@ interface Category {
 @Component({
   selector: 'app-category-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './category-dashboard.component.html',
   styleUrl: './category-dashboard.component.scss'
 })

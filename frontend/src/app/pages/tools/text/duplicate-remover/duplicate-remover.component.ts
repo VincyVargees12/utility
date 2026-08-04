@@ -47,6 +47,8 @@ export class DuplicateRemoverComponent implements OnInit {
 
   resourceContent = DUPLICATE_REMOVER_RESOURCE_CONTENT;
 
+  private readonly SAMPLE_TEXT = 'Apple\nBanana\nCherry\napple\nBanana\nDate\nCherry\nElderberry\nBanana';
+
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'Remove Duplicates - Free Duplicate Line Remover | DataUtil',
@@ -140,6 +142,11 @@ export class DuplicateRemoverComponent implements OnInit {
       };
       reader.readAsText(file);
     }
+  }
+
+  loadSample(): void {
+    this.text.set(this.SAMPLE_TEXT);
+    this.updateResults();
   }
 
   clearText(): void {

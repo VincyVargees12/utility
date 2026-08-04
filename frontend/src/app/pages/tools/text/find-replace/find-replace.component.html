@@ -6,29 +6,51 @@
         <!-- Title and Subtitle -->
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">Find and Replace</h1>
-          <p class="text-lg text-secondary">Find text patterns and replace them throughout your content instantly. Perfect for bulk text editing and data cleanup.</p>
+          <p class="text-lg text-secondary">Search your text and replace matches instantly, with support for match case, whole word, and regular expressions.</p>
         </div>
 
         <!-- Text Input Area -->
         <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
           <!-- Input Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
             <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
+            <div class="flex items-center gap-2">
+              @if (lastReplacedCount() !== null) {
+                <span class="text-xs font-semibold px-2.5 py-1 bg-green-100 text-green-700 rounded-full">
+                  ✓ {{ lastReplacedCount() }} replacement{{ lastReplacedCount() === 1 ? '' : 's' }} made
+                </span>
+              }
+              <button
+                (click)="loadSample()"
+                class="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors font-medium text-xs"
+              >
+                ✨ Load Sample
+              </button>
+            </div>
           </div>
 
-          <!-- Textarea -->
+          <!-- Textarea with highlight overlay: a styled div shows the matches, a transparent textarea sits on top for editing/caret -->
           <div class="p-6">
-            <textarea
-              [value]="text()"
-              (input)="text.set($event.target.value); onTextChange()"
-              placeholder="Start typing or paste your content here... You can also upload a file below."
-              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
-            ></textarea>
+            <div class="relative">
+              <div
+                #highlightLayer
+                class="fr-highlight-layer w-full h-72 p-4 border border-transparent rounded-lg font-mono text-sm whitespace-pre-wrap break-words overflow-auto"
+                [innerHTML]="highlightedHtml()"
+              ></div>
+              <textarea
+                #textArea
+                [value]="text()"
+                (input)="onTextInput($any($event.target).value)"
+                (scroll)="onTextareaScroll()"
+                placeholder="Start typing or paste your content here... You can also upload a file below."
+                class="fr-textarea absolute inset-0 w-full h-72 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+              ></textarea>
+            </div>
           </div>
 
           <!-- File Upload Area -->
           <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
               <label class="flex-1">
                 <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
                   <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
@@ -41,156 +63,209 @@
                   >
                 </div>
               </label>
-              <div class="flex gap-2">
-                <button
-                  (click)="clearText()"
-                  class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium text-sm"
-                >
-                  🗑️ Clear
-                </button>
-                @if (isReplaced()) {
-                  <button
-                    (click)="restoreOriginal()"
-                    class="px-6 py-3 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors font-medium text-sm"
-                  >
-                    ↶ Restore
-                  </button>
-                  <button
-                    (click)="copyToClipboard()"
-                    class="px-6 py-3 text-white font-medium text-sm rounded-lg transition-colors"
-                    [ngClass]="copiedToClipboard()
-                      ? 'bg-green-600 hover:bg-green-700'
-                      : 'bg-purple-700 hover:bg-purple-800'"
-                  >
-                    <mat-icon class="text-sm">content_copy</mat-icon>
-                  </button>
-                }
-              </div>
+              <button
+                (click)="clearText()"
+                class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium text-sm"
+              >
+                🗑️ Clear
+              </button>
             </div>
           </div>
+
+          @if (text()) {
+            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end">
+              <button
+                (click)="copyToClipboard()"
+                class="px-4 py-2 text-sm bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-medium flex items-center gap-2"
+                [title]="copied() ? 'Copied!' : 'Copy'"
+              >
+                <mat-icon class="text-lg">content_copy</mat-icon>
+                {{ copied() ? 'Copied!' : 'Copy Text' }}
+              </button>
+            </div>
+          }
         </div>
-
-        <!-- Remove Empty Lines Option -->
-        @if (text()) {
-          <div class="mt-6 flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
-            <input
-              type="checkbox"
-              [checked]="removeEmpty()"
-              (change)="toggleRemoveEmpty()"
-              class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
-            >
-            <label class="flex-1 cursor-pointer">
-              <p class="text-sm font-semibold text-primary">Remove Empty Lines</p>
-              <p class="text-xs text-tertiary">Exclude blank lines before processing</p>
-            </label>
-          </div>
-        }
-
-        <!-- Statistics -->
-        @if (text()) {
-          <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <p class="text-xs text-blue-600 font-medium mb-1">Matches Found</p>
-              <p class="text-2xl font-bold text-blue-700">{{ stats().matchesFound }}</p>
-            </div>
-            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-              <p class="text-xs text-green-600 font-medium mb-1">Replacements Made</p>
-              <p class="text-2xl font-bold text-green-700">{{ stats().replacementsMade }}</p>
-            </div>
-            <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-              <p class="text-xs text-orange-600 font-medium mb-1">Original Length</p>
-              <p class="text-2xl font-bold text-orange-700">{{ stats().originalLength }}</p>
-            </div>
-            <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
-              <p class="text-xs text-purple-600 font-medium mb-1">New Length</p>
-              <p class="text-2xl font-bold text-purple-700">{{ stats().newLength }}</p>
-            </div>
-          </div>
-        }
       </div>
 
-      <!-- Right Sidebar - Tools -->
+      <!-- Sidebar -->
       <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
-        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Tools</h3>
-        
-        <div class="px-4 pb-6 space-y-4 mt-4">
-          <!-- Find Input -->
-          <div>
-            <label class="block text-sm font-semibold text-primary mb-2">Find</label>
+        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Find &amp; Replace</h3>
+
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-200">
+          <button
+            (click)="setTab('find')"
+            [class.text-blue-600]="activeTab() === 'find'"
+            [class.border-blue-600]="activeTab() === 'find'"
+            [class.text-secondary]="activeTab() !== 'find'"
+            [class.border-transparent]="activeTab() !== 'find'"
+            class="flex-1 py-3 text-sm font-semibold border-b-2 transition-colors"
+          >
+            Find
+          </button>
+          <button
+            (click)="setTab('replace')"
+            [class.text-blue-600]="activeTab() === 'replace'"
+            [class.border-blue-600]="activeTab() === 'replace'"
+            [class.text-secondary]="activeTab() !== 'replace'"
+            [class.border-transparent]="activeTab() !== 'replace'"
+            class="flex-1 py-3 text-sm font-semibold border-b-2 transition-colors"
+          >
+            Replace
+          </button>
+        </div>
+
+        <div class="px-6 pb-6">
+          <!-- Find what -->
+          <div class="mt-4">
+            <label class="block text-sm font-semibold text-secondary mb-1.5">Find what</label>
             <input
               type="text"
-              [value]="findText()"
-              (input)="findText.set($event.target.value); onFindChange()"
-              placeholder="Text to find..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-            />
+              [ngModel]="findText()"
+              (ngModelChange)="setFindText($event)"
+              placeholder="Text to search for"
+              class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+            >
           </div>
 
-          <!-- Replace Input -->
-          <div>
-            <label class="block text-sm font-semibold text-primary mb-2">Replace With</label>
-            <input
-              type="text"
-              [value]="replaceText()"
-              (input)="replaceText.set($event.target.value); onReplaceChange()"
-              placeholder="Replacement text..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
-            />
-          </div>
+          @if (activeTab() === 'replace') {
+            <!-- Swap Find/Replace -->
+            <div class="flex justify-center my-1">
+              <button
+                (click)="swapFindReplace()"
+                title="Swap Find what and Replace with"
+                class="p-1.5 text-tertiary hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+              >
+                <mat-icon class="text-lg">swap_vert</mat-icon>
+              </button>
+            </div>
+
+            <!-- Replace with -->
+            <div>
+              <label class="block text-sm font-semibold text-secondary mb-1.5">Replace with</label>
+              <input
+                type="text"
+                [ngModel]="replaceText()"
+                (ngModelChange)="setReplaceText($event)"
+                placeholder="Replacement text"
+                class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+              >
+            </div>
+          }
 
           <!-- Options -->
-          <div class="space-y-2 pt-2 border-t border-gray-200">
-            <div class="flex items-center gap-2">
+          <div class="mt-4 space-y-2.5">
+            <label class="flex items-center gap-2.5 cursor-pointer">
               <input
                 type="checkbox"
-                [checked]="caseSensitive()"
-                (change)="toggleCaseSensitive()"
+                [checked]="matchCase()"
+                (change)="setMatchCase($any($event.target).checked)"
                 class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
               >
-              <label class="text-sm text-gray-700 cursor-pointer">Case Sensitive</label>
-            </div>
-            <div class="flex items-center gap-2">
+              <span class="text-sm text-secondary">Match case</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input
+                type="checkbox"
+                [checked]="wholeWord()"
+                (change)="setWholeWord($any($event.target).checked)"
+                class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
+              >
+              <span class="text-sm text-secondary">Match whole word</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
               <input
                 type="checkbox"
                 [checked]="useRegex()"
-                (change)="toggleUseRegex()"
+                (change)="setUseRegex($any($event.target).checked)"
                 class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
               >
-              <label class="text-sm text-gray-700 cursor-pointer">Use Regex Pattern</label>
+              <span class="text-sm text-secondary">Use regular expression</span>
+            </label>
+          </div>
+
+          <!-- Match count / error / find feedback -->
+          <div class="mt-4">
+            @if (regexError()) {
+              <p class="text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                {{ regexError() }}
+              </p>
+            } @else if (findText()) {
+              <div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+                <span class="text-xs font-medium text-secondary">
+                  {{ currentMatchPosition() }} of {{ matchCount() }} match{{ matchCount() === 1 ? '' : 'es' }}
+                </span>
+                <div class="flex items-center">
+                  <button
+                    (click)="findPrevious()"
+                    [disabled]="matchCount() === 0"
+                    title="Previous match"
+                    class="p-1 text-tertiary hover:text-blue-600 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <mat-icon class="text-lg">expand_less</mat-icon>
+                  </button>
+                  <button
+                    (click)="findNext()"
+                    [disabled]="matchCount() === 0"
+                    title="Next match"
+                    class="p-1 text-tertiary hover:text-blue-600 disabled:opacity-40 disabled:cursor-not-allowed"
+                  >
+                    <mat-icon class="text-lg">expand_more</mat-icon>
+                  </button>
+                </div>
+              </div>
+              @if (findMessage()) {
+                <p class="text-xs text-amber-600 mt-1.5">{{ findMessage() }}</p>
+              }
+            }
+          </div>
+
+          @if (activeTab() === 'find') {
+            <!-- Previous / Next Buttons -->
+            <div class="flex gap-2 mt-4">
+              <button
+                (click)="findPrevious()"
+                [disabled]="!findText() || !!regexError()"
+                class="flex-1 px-4 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                ◀ Previous
+              </button>
+              <button
+                (click)="findNext()"
+                [disabled]="!findText() || !!regexError()"
+                class="flex-1 btn btn-primary px-4 py-3 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next ▶
+              </button>
             </div>
-          </div>
+          } @else {
+            <!-- Replace / Replace All Buttons -->
+            <div class="flex gap-2 mt-4">
+              <button
+                (click)="replaceOne()"
+                [disabled]="!findText() || !!regexError()"
+                class="flex-1 px-4 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Replace
+              </button>
+              <button
+                (click)="replaceAll()"
+                [disabled]="!findText() || matchCount() === 0 || !!regexError()"
+                class="flex-1 btn btn-primary px-4 py-3 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Replace All
+              </button>
+            </div>
+          }
 
-          <!-- Replace Button -->
-          <div class="pt-4">
-            <button
-              (click)="performReplace()"
-              [disabled]="!text() || !findText()"
-              class="w-full px-6 py-3 bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
-            >
-              🔄 Replace All
-            </button>
-          </div>
-
-          <!-- Action Buttons -->
+          <!-- Download Button -->
           @if (text()) {
-            <div class="pt-4 border-t border-gray-200 space-y-3">
-              <button
-                (click)="copyToClipboard()"
-                class="w-full px-6 py-3 font-semibold text-sm rounded-lg transition-colors"
-                [ngClass]="copiedToClipboard()
-                  ? 'bg-green-600 hover:bg-green-700 text-white'
-                  : 'bg-purple-700 hover:bg-purple-800 text-white'"
-              >
-                <mat-icon class="text-lg">content_copy</mat-icon>
-                Copy All Text
-              </button>
-              <button
-                (click)="downloadText()"
-                class="w-full px-6 py-3 bg-purple-100 text-black font-semibold text-sm rounded-lg hover:bg-purple-200 transition-colors"
-              >
-                <mat-icon class="text-lg">download</mat-icon> Download
-              </button>
-            </div>
+            <button
+              (click)="downloadText()"
+              class="w-full px-6 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold flex items-center justify-center gap-2 mt-3"
+            >
+              <span>📥 Download</span>
+            </button>
           }
         </div>
       </div>
@@ -198,9 +273,8 @@
   </div>
 </main>
 
-<!-- SEO / Educational Resource Content -->
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/text/find-replace'" [maxTools]="6"></app-related-tools>
 
+<!-- Full resource content: What is Find and Replace, features, how-to, errors, examples, FAQ -->
 <app-tool-resource-content [data]="resourceContent"></app-tool-resource-content>
-

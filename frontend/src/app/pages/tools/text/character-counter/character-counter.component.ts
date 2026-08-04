@@ -38,6 +38,8 @@ export class CharacterCounterComponent implements OnInit {
 
   resourceContent = CHARACTER_COUNTER_RESOURCE_CONTENT;
 
+  private readonly SAMPLE_TEXT = 'The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs. This pangram sentence is often used to test typefaces and keyboards because it contains every letter of the alphabet at least once.';
+
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'Character Counter - Free Text Character Counter | DataUtil',
@@ -107,6 +109,11 @@ export class CharacterCounterComponent implements OnInit {
 
       reader.readAsText(file);
     }
+  }
+
+  loadSample(): void {
+    this.text.set(this.SAMPLE_TEXT);
+    this.onTextChange();
   }
 
   clearText(): void {

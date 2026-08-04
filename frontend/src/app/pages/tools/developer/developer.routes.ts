@@ -70,5 +70,10 @@ export const DEVELOPER_TOOL_ROUTES: Routes = [
     path: 'jwt',
     loadComponent: () => import('./jwt-decoder/jwt-decoder.component').then(m => m.JwtDecoderComponent),
     title: 'JWT Decoder - DataUtil'
+  },
+  {
+    path: 'ascii-converter',
+    loadComponent: () => import('./ascii-converter/ascii-converter.component').then(m => m.AsciiConverterComponent),
+    title: 'ASCII Converter - DataUtil'
   }
 ];

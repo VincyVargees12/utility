@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,14 +7,22 @@ import { ToolResourceContentComponent } from '../../../../shared/components/tool
 import { SeoService } from '../../../../services/seo.service';
 import { REMOVE_EXTRA_SPACES_RESOURCE_CONTENT } from './remove-extra-spaces.resource-content';
 
-interface SpaceStats {
-  originalLength: number;
-  cleanedLength: number;
-  spacesRemoved: number;
-  blankLinesRemoved: number;
+type RemovalMode = 'all' | 'single' | 'blank';
+
+interface CleanupStats {
+  originalCharacters: number;
+  cleanedCharacters: number;
+  charactersRemoved: number;
   originalLines: number;
   cleanedLines: number;
+  linesRemoved: number;
 }
+
+const MODE_LABELS: Record<RemovalMode, string> = {
+  all: 'Remove All',
+  single: 'Single Spaces',
+  blank: 'Remove Blank Lines'
+};
 
 @Component({
   selector: 'app-remove-extra-spaces',
@@ -26,81 +34,124 @@ interface SpaceStats {
 export class RemoveExtraSpacesComponent implements OnInit {
   private seoService = inject(SeoService);
 
+  /** Text currently shown in the textarea — either raw input or, after applying a mode, the cleaned result. */
   text = signal<string>('');
-  cleanedText = signal<string>('');
-  stats = signal<SpaceStats>({
-    originalLength: 0,
-    cleanedLength: 0,
-    spacesRemoved: 0,
-    blankLinesRemoved: 0,
-    originalLines: 0,
-    cleanedLines: 0
+  /** Snapshot of `text` taken right before the active mode was applied, so "Reset" can restore it. Null when nothing is applied. */
+  private preCleanText = signal<string | null>(null);
+  /** Which mode (if any) is currently reflected in `text`. */
+  activeMode = signal<RemovalMode | null>(null);
+
+  copied = signal<boolean>(false);
+  previewMode = signal<RemovalMode | null>(null);
+
+  stats = computed<CleanupStats>(() => {
+    const original = this.preCleanText() ?? this.text();
+    const cleaned = this.text();
+    const originalLines = original ? original.split('\n').length : 0;
+    const cleanedLines = cleaned ? cleaned.split('\n').length : 0;
+
+    return {
+      originalCharacters: original.length,
+      cleanedCharacters: cleaned.length,
+      charactersRemoved: Math.max(0, original.length - cleaned.length),
+      originalLines,
+      cleanedLines,
+      linesRemoved: Math.max(0, originalLines - cleanedLines)
+    };
   });
-  copiedResult = signal<boolean>(false);
-  removalMode = signal<'all' | 'single' | 'lines'>('all');
 
   resourceContent = REMOVE_EXTRA_SPACES_RESOURCE_CONTENT;
 
+  private readonly SAMPLE_TEXT = '  Hello   world!  \n\n\n   This  is    a   test   with     extra   spaces.   \n\n\nAnd   some   more   text   here.  ';
+
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'Remove Extra Spaces - Free Text Cleaner | DataUtil',
-      description: 'Remove extra spaces, trailing whitespace, and blank lines from your text instantly. Clean and trim your text with multiple removal modes.',
-      keywords: 'remove spaces, remove whitespace, text cleaner, trim text, remove blank lines',
-      ogTitle: 'Remove Extra Spaces - Free Text Cleaner',
-      ogDescription: 'Remove extra spaces and whitespace from your text instantly. Supports multiple cleaning modes.',
+      title: 'Remove Extra Spaces - Free Whitespace Cleaner | DataUtil',
+      description: 'Remove extra spaces, tabs, and blank lines from your text instantly. Three cleanup modes with instant preview, and statistics. Free and private.',
+      keywords: 'remove extra spaces, remove whitespace, collapse spaces, remove blank lines, trim text, whitespace cleaner',
+      ogTitle: 'Remove Extra Spaces - Free Whitespace Cleaner',
+      ogDescription: 'Clean up messy text by collapsing repeated spaces and removing blank lines.',
       canonicalUrl: 'https://datautility.com/categories/text/remove-extra-spaces'
     });
   }
 
-  onTextChange(): void {
-    this.updateCleanedText();
+  onTextInput(value: string): void {
+    // A direct edit invalidates any applied mode — the box is raw/user-owned again.
+    this.text.set(value);
+    this.activeMode.set(null);
+    this.preCleanText.set(null);
   }
 
-  private updateCleanedText(): void {
-    const original = this.text();
-    const originalLines = original.split('\n').length;
-    
-    let cleaned = '';
-    
-    if (this.removalMode() === 'all') {
-      // Remove all extra spaces: leading/trailing per line, multiple spaces to single
-      cleaned = original
-        .split('\n')
-        .map(line => line.trim().replace(/\s+/g, ' '))
-        .filter(line => line.length > 0)
-        .join('\n');
-    } else if (this.removalMode() === 'single') {
-      // Replace multiple spaces with single space, keep lines
-      cleaned = original
-        .split('\n')
-        .map(line => line.trim().replace(/\s+/g, ' '))
-        .join('\n');
-    } else {
-      // Remove blank lines only
-      cleaned = original
-        .split('\n')
-        .filter(line => line.trim().length > 0)
-        .join('\n');
+  loadSample(): void {
+    this.onTextInput(this.SAMPLE_TEXT);
+  }
+
+  private collapseSpaces(line: string): string {
+    return line.trim().replace(/[ \t]+/g, ' ');
+  }
+
+  private transform(content: string, mode: RemovalMode): string {
+    switch (mode) {
+      case 'single':
+        return content
+          .split('\n')
+          .map(line => this.collapseSpaces(line))
+          .join('\n');
+      case 'blank':
+        return content
+          .split('\n')
+          .filter(line => line.trim().length > 0)
+          .join('\n');
+      default:
+        return content
+          .split('\n')
+          .map(line => this.collapseSpaces(line))
+          .filter(line => line.length > 0)
+          .join('\n');
     }
-
-    const cleanedLines = cleaned.split('\n').length;
-    const spacesRemoved = original.length - cleaned.length;
-    const blankLinesRemoved = originalLines - cleanedLines;
-
-    this.cleanedText.set(cleaned);
-    this.stats.set({
-      originalLength: original.length,
-      cleanedLength: cleaned.length,
-      spacesRemoved: Math.max(0, spacesRemoved),
-      blankLinesRemoved: Math.max(0, blankLinesRemoved),
-      originalLines,
-      cleanedLines
-    });
   }
 
-  setRemovalMode(mode: 'all' | 'single' | 'lines'): void {
-    this.removalMode.set(mode);
-    this.updateCleanedText();
+  setMode(mode: RemovalMode): void {
+    // Always transform from the true pre-clean baseline, not from an already-cleaned result,
+    // so switching between modes never compounds a previous transform.
+    const baseline = this.preCleanText() ?? this.text();
+    this.preCleanText.set(baseline);
+    this.text.set(this.transform(baseline, mode));
+    this.activeMode.set(mode);
+  }
+
+  resetToOriginal(): void {
+    const original = this.preCleanText();
+    if (original === null) return;
+    this.text.set(original);
+    this.activeMode.set(null);
+    this.preCleanText.set(null);
+  }
+
+  openPreview(mode: RemovalMode): void {
+    this.previewMode.set(mode);
+  }
+
+  closePreview(): void {
+    this.previewMode.set(null);
+  }
+
+  getPreviewText(): string {
+    const mode = this.previewMode();
+    if (!mode) return '';
+    const baseline = this.preCleanText() ?? this.text();
+    return this.transform(baseline, mode);
+  }
+
+  getPreviewTitle(): string {
+    const mode = this.previewMode();
+    return mode ? `Preview: ${MODE_LABELS[mode]}` : '';
+  }
+
+  applyPreviewedMode(): void {
+    const mode = this.previewMode();
+    if (mode) this.setMode(mode);
+    this.closePreview();
   }
 
   onFileSelected(event: Event): void {
@@ -112,7 +163,8 @@ export class RemoveExtraSpacesComponent implements OnInit {
       reader.onload = (e) => {
         const content = e.target?.result as string;
         this.text.set(content);
-        this.onTextChange();
+        this.activeMode.set(null);
+        this.preCleanText.set(null);
       };
 
       reader.readAsText(file);
@@ -121,26 +173,25 @@ export class RemoveExtraSpacesComponent implements OnInit {
 
   clearText(): void {
     this.text.set('');
-    this.cleanedText.set('');
-    this.copiedResult.set(false);
-    this.onTextChange();
+    this.activeMode.set(null);
+    this.preCleanText.set(null);
+    this.copied.set(false);
   }
 
   copyToClipboard(): void {
-    navigator.clipboard.writeText(this.cleanedText()).then(() => {
-      this.copiedResult.set(true);
-      setTimeout(() => this.copiedResult.set(false), 2000);
+    navigator.clipboard.writeText(this.text()).then(() => {
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 2000);
     });
   }
 
   downloadCleaned(): void {
-    const element = document.createElement('a');
-    const file = new Blob([this.cleanedText()], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = 'cleaned-text.txt';
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-    URL.revokeObjectURL(element.href);
+    const blob = new Blob([this.text()], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'cleaned-text.txt';
+    link.click();
+    window.URL.revokeObjectURL(url);
   }
 }

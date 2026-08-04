@@ -6,29 +6,49 @@
         <!-- Title and Subtitle -->
         <div class="mb-8">
           <h1 class="text-4xl font-bold text-primary mb-3">Remove Extra Spaces</h1>
-          <p class="text-lg text-secondary">Remove leading/trailing whitespace, extra spaces between words, and blank lines from your text instantly.</p>
+          <p class="text-lg text-secondary">Collapse repeated spaces, trim stray whitespace, and remove blank lines from your text instantly.</p>
         </div>
 
         <!-- Text Input Area -->
         <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
           <!-- Input Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
             <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
+            <div class="flex items-center gap-2">
+              @if (activeMode()) {
+                <span class="text-xs font-semibold px-2.5 py-1 bg-green-100 text-green-700 rounded-full">
+                  ✓ {{ activeMode() === 'all' ? 'Remove All' : activeMode() === 'single' ? 'Single Spaces' : 'Remove Blank Lines' }} applied
+                </span>
+                <button
+                  (click)="resetToOriginal()"
+                  class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full hover:bg-blue-200 transition-colors font-medium text-xs"
+                  title="Restore the text as it was before the applied mode"
+                >
+                  ↺ Reset to Original
+                </button>
+              }
+              <button
+                (click)="loadSample()"
+                class="px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors font-medium text-xs"
+              >
+                ✨ Load Sample
+              </button>
+            </div>
           </div>
 
-          <!-- Textarea -->
+          <!-- Textarea (shows the cleaned result in place once a mode is applied) -->
           <div class="p-6">
             <textarea
               [value]="text()"
-              (input)="text.set($event.target.value); onTextChange()"
+              (input)="onTextInput($any($event.target).value)"
               placeholder="Start typing or paste your content here... You can also upload a file below."
-              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+              class="w-full h-72 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
             ></textarea>
           </div>
 
           <!-- File Upload Area -->
           <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3">
               <label class="flex-1">
                 <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
                   <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
@@ -49,23 +69,52 @@
               </button>
             </div>
           </div>
-        </div>
 
-        <!-- Cleaned Result Preview -->
-        @if (cleanedText()) {
-          <div class="mt-8 bg-white rounded-lg border border-gray-200 p-6 shadow-sm">
-            <div class="flex items-center justify-between mb-3">
-              <h3 class="text-lg font-bold text-primary">Cleaned Text Preview</h3>
+          @if (text()) {
+            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end">
               <button
                 (click)="copyToClipboard()"
-                class="px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium"
+                class="px-4 py-2 text-sm bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-medium flex items-center gap-2"
+                [title]="copied() ? 'Copied!' : 'Copy'"
               >
                 <mat-icon class="text-lg">content_copy</mat-icon>
-                Copy
+                {{ copied() ? 'Copied!' : 'Copy Text' }}
               </button>
             </div>
-            <div class="bg-gray-50 p-4 rounded text-sm font-mono text-gray-700 break-words min-h-[100px] max-h-[300px] overflow-y-auto border border-gray-200">
-              {{ cleanedText() }}
+          }
+        </div>
+
+        <!-- Statistics -->
+        @if (text()) {
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-6 text-center">
+              <p class="text-xs font-semibold text-blue-600 mb-2">ORIGINAL CHARACTERS</p>
+              <p class="text-3xl font-bold text-blue-900">{{ stats().originalCharacters }}</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-6 text-center">
+              <p class="text-xs font-semibold text-green-600 mb-2">CLEANED CHARACTERS</p>
+              <p class="text-3xl font-bold text-green-900">{{ stats().cleanedCharacters }}</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg border border-red-200 p-6 text-center">
+              <p class="text-xs font-semibold text-red-600 mb-2">CHARACTERS REMOVED</p>
+              <p class="text-3xl font-bold text-red-900">{{ stats().charactersRemoved }}</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg border border-indigo-200 p-6 text-center">
+              <p class="text-xs font-semibold text-indigo-600 mb-2">ORIGINAL LINES</p>
+              <p class="text-3xl font-bold text-indigo-900">{{ stats().originalLines }}</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-6 text-center">
+              <p class="text-xs font-semibold text-purple-600 mb-2">CLEANED LINES</p>
+              <p class="text-3xl font-bold text-purple-900">{{ stats().cleanedLines }}</p>
+            </div>
+
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200 p-6 text-center">
+              <p class="text-xs font-semibold text-orange-600 mb-2">LINES REMOVED</p>
+              <p class="text-3xl font-bold text-orange-900">{{ stats().linesRemoved }}</p>
             </div>
           </div>
         }
@@ -74,111 +123,88 @@
       <!-- Sidebar -->
       <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Removal Options</h3>
-        
+
         <div class="px-6 pb-6">
           <div class="space-y-3 mt-4">
-            <!-- Remove All Option -->
-            <button
-              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
-              [class.bg-blue-50]="removalMode() === 'all'"
-              [class.border-blue-500]="removalMode() === 'all'"
-              [class.hover:bg-gray-50]="removalMode() !== 'all'"
-              [class.border-gray-200]="removalMode() !== 'all'"
-              (click)="setRemovalMode('all')">
-              <div class="flex-1">
+            <!-- Remove All -->
+            <div
+              class="w-full flex items-start p-3 border rounded-lg transition-colors"
+              [class.bg-blue-50]="activeMode() === 'all'"
+              [class.border-blue-500]="activeMode() === 'all'"
+              [class.border-gray-200]="activeMode() !== 'all'">
+              <button class="flex-1 text-left" (click)="setMode('all')">
                 <div class="flex items-center gap-2">
-                  <span class="text-sm font-semibold" [class.text-blue-600]="removalMode() === 'all'" [class.text-secondary]="removalMode() !== 'all'">Remove All</span>
+                  <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'all'" [class.text-secondary]="activeMode() !== 'all'">Remove All</span>
                   <span class="text-xs px-2 py-0.5 bg-green-100 text-green-700 rounded">Recommended</span>
                 </div>
-                <p class="text-xs text-tertiary mt-1">Remove extra spaces, trim lines & delete blank lines</p>
-              </div>
-              @if (removalMode() === 'all') {
-                <div class="ml-2 flex-shrink-0 text-blue-500">
+                <p class="text-xs text-tertiary mt-1">Trim spacing, collapse repeated spaces, and delete blank lines</p>
+              </button>
+              <button
+                (click)="openPreview('all')"
+                class="ml-2 p-1.5 text-tertiary hover:text-blue-600 hover:bg-blue-50 rounded transition-colors flex-shrink-0"
+                title="Preview this mode">
+                <mat-icon class="text-lg">visibility</mat-icon>
+              </button>
+              @if (activeMode() === 'all') {
+                <div class="ml-1 flex-shrink-0 text-blue-500 self-center">
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                 </div>
               }
-            </button>
+            </div>
 
-            <!-- Single Spaces Option -->
-            <button
-              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
-              [class.bg-blue-50]="removalMode() === 'single'"
-              [class.border-blue-500]="removalMode() === 'single'"
-              [class.hover:bg-gray-50]="removalMode() !== 'single'"
-              [class.border-gray-200]="removalMode() !== 'single'"
-              (click)="setRemovalMode('single')">
-              <div class="flex-1">
+            <!-- Single Spaces -->
+            <div
+              class="w-full flex items-start p-3 border rounded-lg transition-colors"
+              [class.bg-blue-50]="activeMode() === 'single'"
+              [class.border-blue-500]="activeMode() === 'single'"
+              [class.border-gray-200]="activeMode() !== 'single'">
+              <button class="flex-1 text-left" (click)="setMode('single')">
                 <div class="flex items-center gap-2">
-                  <span class="text-sm font-semibold" [class.text-blue-600]="removalMode() === 'single'" [class.text-secondary]="removalMode() !== 'single'">Single Spaces</span>
+                  <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'single'" [class.text-secondary]="activeMode() !== 'single'">Single Spaces</span>
                 </div>
-                <p class="text-xs text-tertiary mt-1">Replace multiple spaces with single space, keep all lines</p>
-              </div>
-              @if (removalMode() === 'single') {
-                <div class="ml-2 flex-shrink-0 text-blue-500">
+                <p class="text-xs text-tertiary mt-1">Collapse repeated spaces, but keep every line and paragraph break</p>
+              </button>
+              <button
+                (click)="openPreview('single')"
+                class="ml-2 p-1.5 text-tertiary hover:text-blue-600 hover:bg-blue-50 rounded transition-colors flex-shrink-0"
+                title="Preview this mode">
+                <mat-icon class="text-lg">visibility</mat-icon>
+              </button>
+              @if (activeMode() === 'single') {
+                <div class="ml-1 flex-shrink-0 text-blue-500 self-center">
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                 </div>
               }
-            </button>
+            </div>
 
-            <!-- Remove Blank Lines Option -->
-            <button
-              class="w-full flex items-start p-3 border rounded-lg transition-colors text-left"
-              [class.bg-blue-50]="removalMode() === 'lines'"
-              [class.border-blue-500]="removalMode() === 'lines'"
-              [class.hover:bg-gray-50]="removalMode() !== 'lines'"
-              [class.border-gray-200]="removalMode() !== 'lines'"
-              (click)="setRemovalMode('lines')">
-              <div class="flex-1">
+            <!-- Remove Blank Lines -->
+            <div
+              class="w-full flex items-start p-3 border rounded-lg transition-colors"
+              [class.bg-blue-50]="activeMode() === 'blank'"
+              [class.border-blue-500]="activeMode() === 'blank'"
+              [class.border-gray-200]="activeMode() !== 'blank'">
+              <button class="flex-1 text-left" (click)="setMode('blank')">
                 <div class="flex items-center gap-2">
-                  <span class="text-sm font-semibold" [class.text-blue-600]="removalMode() === 'lines'" [class.text-secondary]="removalMode() !== 'lines'">Remove Blank Lines</span>
+                  <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'blank'" [class.text-secondary]="activeMode() !== 'blank'">Remove Blank Lines</span>
                 </div>
-                <p class="text-xs text-tertiary mt-1">Only remove empty/blank lines, preserve spaces</p>
-              </div>
-              @if (removalMode() === 'lines') {
-                <div class="ml-2 flex-shrink-0 text-blue-500">
+                <p class="text-xs text-tertiary mt-1">Only delete empty lines, leave spacing untouched</p>
+              </button>
+              <button
+                (click)="openPreview('blank')"
+                class="ml-2 p-1.5 text-tertiary hover:text-blue-600 hover:bg-blue-50 rounded transition-colors flex-shrink-0"
+                title="Preview this mode">
+                <mat-icon class="text-lg">visibility</mat-icon>
+              </button>
+              @if (activeMode() === 'blank') {
+                <div class="ml-1 flex-shrink-0 text-blue-500 self-center">
                   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
                 </div>
               }
-            </button>
+            </div>
           </div>
 
-          <!-- Stats Section -->
-          @if (cleanedText()) {
-            <div class="mt-6 border-t pt-4">
-              <h4 class="text-sm font-bold text-primary mb-3">Statistics</h4>
-              <div class="space-y-2 text-xs">
-                <div class="flex justify-between">
-                  <span class="text-secondary">Original Characters:</span>
-                  <span class="font-semibold text-primary">{{ stats().originalLength }}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-secondary">Cleaned Characters:</span>
-                  <span class="font-semibold text-green-600">{{ stats().cleanedLength }}</span>
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-secondary">Characters Removed:</span>
-                  <span class="font-semibold text-red-600">{{ stats().spacesRemoved }}</span>
-                </div>
-                <div class="border-t pt-2 mt-2">
-                  <div class="flex justify-between">
-                    <span class="text-secondary">Original Lines:</span>
-                    <span class="font-semibold text-primary">{{ stats().originalLines }}</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-secondary">Cleaned Lines:</span>
-                    <span class="font-semibold text-green-600">{{ stats().cleanedLines }}</span>
-                  </div>
-                  <div class="flex justify-between">
-                    <span class="text-secondary">Blank Lines Removed:</span>
-                    <span class="font-semibold text-red-600">{{ stats().blankLinesRemoved }}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          }
-
           <!-- Download Button -->
-          @if (cleanedText()) {
+          @if (text()) {
             <button
               (click)="downloadCleaned()"
               class="w-full btn btn-primary px-6 py-3 font-bold flex items-center justify-center gap-2 mt-6">
@@ -188,12 +214,58 @@
         </div>
       </div>
     </div>
+
+    <!-- Preview Modal -->
+    @if (previewMode()) {
+      <div
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4"
+        (click)="closePreview()"
+      >
+        <div
+          class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col animate-in fade-in zoom-in-95"
+          (click)="$event.stopPropagation()"
+        >
+          <!-- Modal Header -->
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+            <h2 class="text-xl font-bold text-primary">{{ getPreviewTitle() }}</h2>
+            <button
+              (click)="closePreview()"
+              class="text-gray-700 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center"
+            >
+              ✕
+            </button>
+          </div>
+
+          <!-- Modal Content -->
+          <div class="flex-1 overflow-y-auto p-6">
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+              <p class="font-mono text-sm text-gray-700 whitespace-pre-wrap break-words">{{ getPreviewText() || '(empty)' }}</p>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex gap-2 justify-end">
+            <button
+              (click)="closePreview()"
+              class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+            >
+              Close
+            </button>
+            <button
+              (click)="applyPreviewedMode()"
+              class="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+            >
+              Apply This Mode
+            </button>
+          </div>
+        </div>
+      </div>
+    }
   </div>
 </main>
 
-<!-- Resource Content Section -->
 <!-- Related Tools Section -->
 <app-related-tools [currentRoute]="'/categories/text/remove-extra-spaces'" [maxTools]="6"></app-related-tools>
 
+<!-- Full resource content: What is Extra Whitespace, features, how-to, errors, examples, FAQ -->
 <app-tool-resource-content [data]="resourceContent"></app-tool-resource-content>
-

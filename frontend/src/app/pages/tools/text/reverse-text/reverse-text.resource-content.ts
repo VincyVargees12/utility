@@ -11,8 +11,8 @@ export const REVERSE_TEXT_RESOURCE_CONTENT: ToolResourceContent = {
 
   whatIsToolTitle: 'What is the Reverse Text Tool?',
   whatIsToolBody: [
-    'This Reverse Text tool takes any text you paste, type, or upload and instantly generates three reversed versions of it side by side: the full text reversed character-by-character, the words reversed in order, and the paragraphs reversed in order (split on blank lines / double line breaks).',
-    'A sidebar lets you pick which mode is "active" for downloading, while all three results are always computed and shown at once so you can compare them directly. Everything runs locally in your browser — nothing is uploaded to a server.'
+    'This Reverse Text tool takes any text you paste, type, or upload and reverses it right in the same box — character-by-character, by word order, or by paragraph order, depending on the mode you choose from the sidebar.',
+    'A preview icon on each mode lets you see its result first without committing to it. Once you apply a mode, a "Reset to Original" button appears so you can instantly get back the text as it was before, then try a different mode from the same starting point. Everything runs locally in your browser — nothing is uploaded to a server.'
   ],
 
   whyUseTitle: 'Why Reverse Text?',
@@ -26,23 +26,25 @@ export const REVERSE_TEXT_RESOURCE_CONTENT: ToolResourceContent = {
 
   featuresTitle: 'Features of This Tool',
   features: [
-    'Three simultaneous reverse modes: full character reversal, word-order reversal, and paragraph-order reversal',
-    'Live results — reversed output updates instantly as you type or paste',
+    'Three reverse modes: full character reversal, word-order reversal, and paragraph-order reversal',
+    'The reversed result replaces the text directly in the same input box — no separate output panel to check',
+    'A preview icon on every mode shows exactly what it would produce before you apply it',
+    '"Reset to Original" restores the text exactly as it was before the applied mode',
     'Upload a .txt or .md file directly instead of pasting text',
-    'One-click copy to clipboard for each of the three results independently',
-    'Download the currently selected mode\'s result as a .txt file',
-    'Clear button to reset the input and all results at once',
+    'One-click copy to clipboard for the current result',
+    'Download the current result as a .txt file',
+    'Clear button to empty the input entirely',
     'Runs entirely in your browser — your text is never sent to a server'
   ],
 
   howToTitle: 'How to Use the Reverse Text Tool',
   howTo: [
     { title: 'Add your text', description: 'Paste or type text into the main input box, or click "Upload File" to load a .txt or .md file from your device.' },
-    { title: 'View the results', description: 'As soon as you have text, all three reversed outputs — Reversed Text, Words Reversed, and Paragraphs Reversed — appear automatically below the input.' },
-    { title: 'Pick a mode in the sidebar', description: 'Select "Reverse Text," "Reverse Words," or "Reverse Paragraphs" in the sidebar to mark which result you want to download.' },
-    { title: 'Copy what you need', description: 'Click the copy icon on any individual result card to copy just that version to your clipboard, regardless of which mode is selected in the sidebar.' },
-    { title: 'Download the result', description: 'Click "Download" to save the result for the currently selected mode as a .txt file (e.g. reversed-words.txt).' },
-    { title: 'Start over', description: 'Click "Clear" to empty the input box and reset all three results.' }
+    { title: 'Preview a mode (optional)', description: 'Click the eye icon next to any mode in the "Reverse Mode" panel to see what it would produce, without changing your text yet.' },
+    { title: 'Apply a mode', description: 'Click "Reverse Text," "Reverse Words," or "Reverse Paragraphs" — the box updates in place with the reversed result.' },
+    { title: 'Reset if needed', description: 'Click "Reset to Original" to bring back the text exactly as it was before the mode was applied, and try a different mode.' },
+    { title: 'Copy or download', description: 'Click "Copy Text" to copy the current result to your clipboard, or "Download" in the sidebar to save it as a .txt file.' },
+    { title: 'Start over', description: 'Click "Clear" to empty the input box entirely.' }
   ],
 
   commonErrorsTitle: 'Common Pitfalls with Reversed Text',
@@ -84,6 +86,7 @@ export const REVERSE_TEXT_RESOURCE_CONTENT: ToolResourceContent = {
     { question: 'Why doesn\'t "Reverse Paragraphs" change my text?', answer: 'Paragraph reversal splits on double line breaks (a fully blank line between paragraphs). If your text only has single line breaks with no blank line separating sections, it\'s treated as one paragraph, so there\'s nothing to reorder.' },
     { question: 'Will reversing text break emoji or accented characters?', answer: 'It can. Character-by-character reversal works on individual text units, and some emoji or accented characters are built from multiple units. Reversing can occasionally split these apart, so complex emoji sequences may not look identical when reversed.' },
     { question: 'What file types can I upload?', answer: 'You can upload .txt or .md files. The contents load directly into the input box, and all three reversed results are generated immediately.' },
-    { question: 'Which mode gets downloaded when I click Download?', answer: 'The download uses whichever mode is currently selected in the sidebar (Reverse Text, Reverse Words, or Reverse Paragraphs). The other two results are still visible on the page and can be copied individually regardless of the selected mode.' }
+    { question: 'Which mode gets downloaded when I click Download?', answer: 'Download saves whatever is currently shown in the text box. If a mode is applied, that\'s the reversed result; use "Reset to Original" first if you want to download the unreversed text instead.' },
+    { question: 'Can I undo a reversal?', answer: 'Yes — click "Reset to Original" to restore the text exactly as it was before the applied mode. This works until you either apply a different mode (which always transforms from the same pre-reverse baseline) or manually edit the text yourself, at which point the current text becomes the new baseline.' }
   ]
 };

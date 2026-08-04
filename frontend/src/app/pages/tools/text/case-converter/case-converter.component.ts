@@ -45,6 +45,8 @@ export class CaseConverterComponent implements OnInit {
 
   resourceContent = CASE_CONVERTER_RESOURCE_CONTENT;
 
+  private readonly SAMPLE_TEXT = 'The Quick Brown Fox Jumps Over The Lazy Dog. This SAMPLE text mixes UPPERCASE, lowercase, and Title Case words together.';
+
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'Case Converter - Free Text Case Converter | DataUtil',
@@ -142,6 +144,11 @@ export class CaseConverterComponent implements OnInit {
 
       reader.readAsText(file);
     }
+  }
+
+  loadSample(): void {
+    this.text.set(this.SAMPLE_TEXT);
+    this.onTextChange();
   }
 
   clearText(): void {

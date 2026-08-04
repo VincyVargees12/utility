@@ -7,11 +7,13 @@ import { ToolResourceContentComponent } from '../../../../shared/components/tool
 import { SeoService } from '../../../../services/seo.service';
 import { REVERSE_TEXT_RESOURCE_CONTENT } from './reverse-text.resource-content';
 
-interface ReverseResult {
-  text: string;
-  words: string;
-  paragraphs: string;
-}
+type ReverseMode = 'text' | 'words' | 'paragraphs';
+
+const MODE_LABELS: Record<ReverseMode, string> = {
+  text: 'Reverse Text',
+  words: 'Reverse Words',
+  paragraphs: 'Reverse Paragraphs'
+};
 
 @Component({
   selector: 'app-reverse-text',
@@ -23,21 +25,24 @@ interface ReverseResult {
 export class ReverseTextComponent implements OnInit {
   private seoService = inject(SeoService);
 
+  /** Text currently shown in the textarea — either raw input or, after applying a mode, the reversed result. */
   text = signal<string>('');
-  results = signal<ReverseResult>({
-    text: '',
-    words: '',
-    paragraphs: ''
-  });
-  copiedMode = signal<string | null>(null);
-  reverseMode = signal<'text' | 'words' | 'paragraphs'>('text');
+  /** Snapshot of `text` taken right before the active mode was applied, so "Reset" can restore it. Null when nothing is applied. */
+  private preOriginalText = signal<string | null>(null);
+  /** Which mode (if any) is currently reflected in `text`. */
+  activeMode = signal<ReverseMode | null>(null);
+
+  copied = signal<boolean>(false);
+  previewMode = signal<ReverseMode | null>(null);
 
   resourceContent = REVERSE_TEXT_RESOURCE_CONTENT;
+
+  private readonly SAMPLE_TEXT = 'The quick brown fox jumps over the lazy dog.\n\nThis is a second paragraph for testing paragraph reversal.';
 
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'Reverse Text - Free Text Reverser Tool | DataUtil',
-      description: 'Reverse text, words, or paragraphs instantly. Multiple reverse modes for different text manipulation needs.',
+      description: 'Reverse text, words, or paragraphs instantly. Preview each mode before applying, then reset back to your original text any time.',
       keywords: 'reverse text, reverse words, reverse paragraphs, text reverser, backwards text',
       ogTitle: 'Reverse Text - Free Text Reverser Tool',
       ogDescription: 'Reverse text, words, or paragraphs instantly with multiple reverse modes.',
@@ -45,42 +50,77 @@ export class ReverseTextComponent implements OnInit {
     });
   }
 
-  onTextChange(): void {
-    this.updateResults();
+  onTextInput(value: string): void {
+    // A direct edit invalidates any applied mode — the box is raw/user-owned again.
+    this.text.set(value);
+    this.activeMode.set(null);
+    this.preOriginalText.set(null);
   }
 
-  private updateResults(): void {
-    const content = this.text();
-
-    this.results.set({
-      text: this.reverseFullText(content),
-      words: this.reverseWordsOrder(content),
-      paragraphs: this.reverseParagraphsOrder(content)
-    });
+  loadSample(): void {
+    this.onTextInput(this.SAMPLE_TEXT);
   }
 
-  private reverseFullText(str: string): string {
-    return str.split('').reverse().join('');
+  private transform(content: string, mode: ReverseMode): string {
+    switch (mode) {
+      case 'words':
+        return content
+          .split(/\s+/)
+          .filter(word => word.length > 0)
+          .reverse()
+          .join(' ');
+      case 'paragraphs':
+        return content
+          .split('\n\n')
+          .filter(para => para.trim().length > 0)
+          .reverse()
+          .join('\n\n');
+      default:
+        return content.split('').reverse().join('');
+    }
   }
 
-  private reverseWordsOrder(str: string): string {
-    return str
-      .split(/\s+/)
-      .filter(word => word.length > 0)
-      .reverse()
-      .join(' ');
+  setMode(mode: ReverseMode): void {
+    // Always transform from the true pre-reverse baseline, not from an already-reversed result,
+    // so switching between modes never compounds a previous transform.
+    const baseline = this.preOriginalText() ?? this.text();
+    this.preOriginalText.set(baseline);
+    this.text.set(this.transform(baseline, mode));
+    this.activeMode.set(mode);
   }
 
-  private reverseParagraphsOrder(str: string): string {
-    return str
-      .split('\n\n')
-      .filter(para => para.trim().length > 0)
-      .reverse()
-      .join('\n\n');
+  resetToOriginal(): void {
+    const original = this.preOriginalText();
+    if (original === null) return;
+    this.text.set(original);
+    this.activeMode.set(null);
+    this.preOriginalText.set(null);
   }
 
-  setReverseMode(mode: 'text' | 'words' | 'paragraphs'): void {
-    this.reverseMode.set(mode);
+  openPreview(mode: ReverseMode): void {
+    this.previewMode.set(mode);
+  }
+
+  closePreview(): void {
+    this.previewMode.set(null);
+  }
+
+  getPreviewText(): string {
+    const mode = this.previewMode();
+    if (!mode) return '';
+    const baseline = this.preOriginalText() ?? this.text();
+    return this.transform(baseline, mode);
+  }
+
+  getPreviewTitle(): string {
+    const mode = this.previewMode();
+    return mode ? `Preview: ${MODE_LABELS[mode]}` : '';
+  }
+
+  applyPreviewedMode(): void {
+    const mode = this.previewMode();
+    if (mode) this.setMode(mode);
+    this.closePreview();
   }
 
   onFileSelected(event: Event): void {
@@ -92,7 +132,8 @@ export class ReverseTextComponent implements OnInit {
       reader.onload = (e) => {
         const content = e.target?.result as string;
         this.text.set(content);
-        this.onTextChange();
+        this.activeMode.set(null);
+        this.preOriginalText.set(null);
       };
 
       reader.readAsText(file);
@@ -101,25 +142,24 @@ export class ReverseTextComponent implements OnInit {
 
   clearText(): void {
     this.text.set('');
-    this.onTextChange();
-    this.copiedMode.set(null);
+    this.activeMode.set(null);
+    this.preOriginalText.set(null);
+    this.copied.set(false);
   }
 
-  copyToClipboard(mode: 'text' | 'words' | 'paragraphs'): void {
-    const textToCopy = this.results()[mode];
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      this.copiedMode.set(mode);
-      setTimeout(() => this.copiedMode.set(null), 2000);
+  copyToClipboard(): void {
+    navigator.clipboard.writeText(this.text()).then(() => {
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 2000);
     });
   }
 
   downloadReversed(): void {
-    const currentMode = this.reverseMode();
-    const textToDownload = this.results()[currentMode];
-    const fileName = `reversed-${currentMode}.txt`;
+    const mode = this.activeMode() ?? 'text';
+    const fileName = `reversed-${mode}.txt`;
 
     const element = document.createElement('a');
-    const file = new Blob([textToDownload], { type: 'text/plain' });
+    const file = new Blob([this.text()], { type: 'text/plain' });
     element.href = URL.createObjectURL(file);
     element.download = fileName;
     document.body.appendChild(element);

@@ -29,14 +29,14 @@
                 <div class="dropdown-content">
                   @for (dropItem of getDropdownItems(item); track dropItem.route) {
                     <a [routerLink]="dropItem.route" class="dropdown-item" (click)="closeDropdown()">
-                      <span class="dropdown-icon">{{ dropItem.icon }}</span>
+                      <mat-icon class="dropdown-icon">{{ dropItem.icon }}</mat-icon>
                       <span class="dropdown-label">{{ dropItem.label }}</span>
                     </a>
                   }
                 </div>
                 @if (item.categoryRoute && item.label !== 'ALL TOOLS') {
                   <a [routerLink]="item.categoryRoute" class="dropdown-item dropdown-more" (click)="closeDropdown()">
-                    <span class="dropdown-icon">➕</span>
+                    <mat-icon class="dropdown-icon">add</mat-icon>
                     <span class="dropdown-label">More...</span>
                   </a>
                 }
@@ -89,13 +89,13 @@
             <div class="mobile-category-title">{{ item.label }}</div>
             @for (dropItem of getDropdownItems(item); track dropItem.route) {
               <a [routerLink]="dropItem.route" class="mobile-link" (click)="closeMobileMenu()">
-                <span class="mobile-icon">{{ dropItem.icon }}</span>
+                <mat-icon class="mobile-icon">{{ dropItem.icon }}</mat-icon>
                 {{ dropItem.label }}
               </a>
             }
             @if (item.categoryRoute) {
               <a [routerLink]="item.categoryRoute" class="mobile-link mobile-link-more" (click)="closeMobileMenu()">
-                <span class="mobile-icon">➕</span>
+                <mat-icon class="mobile-icon">add</mat-icon>
                 More...
               </a>
             }

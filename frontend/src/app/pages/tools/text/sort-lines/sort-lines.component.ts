@@ -53,6 +53,8 @@ export class SortLinesComponent implements OnInit {
 
   resourceContent = SORT_LINES_RESOURCE_CONTENT;
 
+  private readonly SAMPLE_TEXT = 'banana\nApple\ncherry\n10\n2\nMango\n1\norange';
+
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'Sort Lines - Free Text Sorting Tool | DataUtil',
@@ -157,6 +159,11 @@ export class SortLinesComponent implements OnInit {
       };
       reader.readAsText(file);
     }
+  }
+
+  loadSample(): void {
+    this.text.set(this.SAMPLE_TEXT);
+    this.updateSortedText();
   }
 
   clearText(): void {

@@ -31,7 +31,7 @@
           @for (tool of filterTools(selectedFilter()); track tool.id) {
             <div class="tool-card" (click)="navigateToTool(tool.route)">
               <div class="tool-icon" [style.background-color]="cat.color + '20'">
-                <span class="icon-emoji">{{ tool.icon }}</span>
+                <mat-icon class="icon-emoji" [style.color]="cat.color">{{ tool.icon }}</mat-icon>
               </div>
               <h3 class="tool-name">{{ tool.name }}</h3>
               <p class="tool-description">{{ tool.description }}</p>

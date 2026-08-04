@@ -1,3 +1,23 @@
 :host {
   display: block;
 }
+
+/* Highlight overlay: the div underneath renders the colored matches, the textarea on top is transparent
+   except for its caret/selection, so the two must share identical font metrics and box sizing. */
+.fr-highlight-layer {
+  color: #111827;
+  pointer-events: none;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.fr-textarea {
+  background: transparent;
+  color: transparent;
+  caret-color: #111827;
+  line-height: 1.5;
+}
+
+.fr-textarea::selection {
+  background: rgba(59, 130, 246, 0.35);
+}

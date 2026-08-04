@@ -105,6 +105,9 @@ export class TextDifferenceComponent implements OnInit, AfterViewInit, OnDestroy
 
   resourceContent = TEXT_DIFFERENCE_RESOURCE_CONTENT;
 
+  private readonly SAMPLE_ORIGINAL = "function greet(name) {\n  console.log('Hello ' + name);\n}\n\ngreet('World');";
+  private readonly SAMPLE_MODIFIED = "function greet(name, greeting) {\n  greeting = greeting || 'Hello';\n  console.log(greeting + ', ' + name + '!');\n}\n\ngreet('World');\ngreet('Angular', 'Hi');";
+
   ngOnInit(): void {
     this.seoService.setPageMeta({
       title: 'Text Difference - Professional Text Comparison Tool | DataUtil',
@@ -302,6 +305,14 @@ export class TextDifferenceComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     this.refreshDiffOptions();
+  }
+
+  loadSample(): void {
+    this.originalFileName.set('original-sample.js');
+    this.modifiedFileName.set('modified-sample.js');
+    this.setOriginalValue(this.SAMPLE_ORIGINAL, 'javascript');
+    this.setModifiedValue(this.SAMPLE_MODIFIED, 'javascript');
+    this.contentChange$.next();
   }
 
   clearAll(): void {

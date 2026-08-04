@@ -1,12 +1,13 @@
 import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
 import { TOOLS_REGISTRY, ToolItem } from '../../data/tools.data';
 
 @Component({
   selector: 'app-related-tools',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatIconModule],
   templateUrl: './related-tools.component.html',
   styleUrl: './related-tools.component.scss'
 })

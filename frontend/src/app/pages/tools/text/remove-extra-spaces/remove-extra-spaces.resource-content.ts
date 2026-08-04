@@ -12,7 +12,7 @@ export const REMOVE_EXTRA_SPACES_RESOURCE_CONTENT: ToolResourceContent = {
   whatIsToolTitle: 'What is a Remove Extra Spaces Tool?',
   whatIsToolBody: [
     'A Remove Extra Spaces tool cleans up messy text by collapsing repeated spaces into a single space, trimming leading and trailing whitespace from each line, and/or deleting blank lines — without touching the actual words in your content.',
-    'This tool offers three distinct cleanup modes so you can choose exactly how aggressive the cleanup is: fully normalize the text (trim, collapse spaces, and drop blank lines), collapse spaces while keeping every line and paragraph break intact, or only strip out empty lines while leaving spacing untouched. The cleaned result updates live as you type, along with a statistics panel showing exactly how many characters and lines were removed.'
+    'This tool offers three distinct cleanup modes so you can choose exactly how aggressive the cleanup is: fully normalize the text (trim, collapse spaces, and drop blank lines), collapse spaces while keeping every line and paragraph break intact, or only strip out empty lines while leaving spacing untouched. Clicking a mode replaces the text right in the same box, a "Reset to Original" button brings back exactly what was there before, and a preview icon on each mode lets you see its result first without committing to it.'
   ],
 
   whyUseTitle: 'Why Clean Up Extra Spaces?',
@@ -27,10 +27,12 @@ export const REMOVE_EXTRA_SPACES_RESOURCE_CONTENT: ToolResourceContent = {
   featuresTitle: 'Features of This Tool',
   features: [
     'Three cleanup modes: Remove All (trim + collapse spaces + delete blank lines), Single Spaces (collapse spaces but keep every line), and Remove Blank Lines (only strip empty lines)',
-    'Live preview — the cleaned text updates automatically as you type or switch modes, no button click required',
+    'The cleaned result replaces the text directly in the same input box — no separate output panel to check',
+    'A preview icon on every mode shows exactly what it would produce before you apply it',
+    '"Reset to Original" restores the text exactly as it was before the applied mode',
     'Upload a .txt or .md file directly instead of pasting',
-    'Real-time statistics: original vs. cleaned character count, total characters removed, original vs. cleaned line count, and blank lines removed',
-    'One-click "Clear" to reset both the input and the cleaned result',
+    'Real-time statistics: original vs. cleaned character count, total characters removed, original vs. cleaned line count, and lines removed',
+    'One-click "Clear" to empty the input entirely',
     'Copy the cleaned text to your clipboard in one click',
     'Download the cleaned text as a .txt file',
     'Runs entirely in your browser — your text is never uploaded to a server'
@@ -39,10 +41,11 @@ export const REMOVE_EXTRA_SPACES_RESOURCE_CONTENT: ToolResourceContent = {
   howToTitle: 'How to Remove Extra Spaces',
   howTo: [
     { title: 'Add your text', description: 'Paste or type your text into the input box, or click "Upload File" to load a .txt or .md file from your computer.' },
-    { title: 'Pick a removal mode', description: 'In the "Removal Options" panel, choose "Remove All" to fully normalize the text, "Single Spaces" to collapse repeated spaces while keeping every line, or "Remove Blank Lines" to only delete empty lines.' },
-    { title: 'Watch the live preview', description: 'The "Cleaned Text Preview" panel updates instantly as you type or change modes — no separate processing step needed.' },
-    { title: 'Check the statistics', description: 'Review the Statistics section to see how many characters and blank lines were removed, and compare original vs. cleaned line counts.' },
-    { title: 'Copy or download', description: 'Click the "Copy" button on the preview panel to copy the cleaned text to your clipboard, or use "Download" in the sidebar to save it as a .txt file.' }
+    { title: 'Preview a mode (optional)', description: 'Click the eye icon next to any mode in the "Removal Options" panel to see what it would produce, without changing your text yet.' },
+    { title: 'Apply a removal mode', description: 'Click "Remove All" to fully normalize the text, "Single Spaces" to collapse repeated spaces while keeping every line, or "Remove Blank Lines" to only delete empty lines — the box updates in place with the result.' },
+    { title: 'Check the statistics', description: 'Review the Statistics section to see how many characters and lines were removed compared to the original.' },
+    { title: 'Reset if needed', description: 'Click "Reset to Original" to bring back the text exactly as it was before the mode was applied, and try a different mode.' },
+    { title: 'Copy or download', description: 'Click "Copy Text" to copy the current result to your clipboard, or use "Download" in the sidebar to save it as a .txt file.' }
   ],
 
   commonErrorsTitle: 'Common Pitfalls',
@@ -83,7 +86,7 @@ export const REMOVE_EXTRA_SPACES_RESOURCE_CONTENT: ToolResourceContent = {
     { question: 'Is my text uploaded to a server?', answer: 'No. All cleanup happens locally in your browser. Your text is never sent to a server, so it\'s safe to paste sensitive or private content.' },
     { question: 'What file types can I upload?', answer: 'You can upload .txt or .md files. For Word documents or PDFs, open the file and copy the text as plain text into the input box instead.' },
     { question: 'What counts as a "blank line"?', answer: 'A line is considered blank if it contains nothing, or only whitespace (spaces or tabs), after trimming. Lines with any visible character are always kept.' },
-    { question: 'Can I undo the cleanup after downloading?', answer: 'There\'s no undo built into the tool — clicking "Clear" resets both the input and the result. Keep a copy of your original text elsewhere before cleaning it if you might need it again.' },
+    { question: 'Can I undo the cleanup?', answer: 'Yes — click "Reset to Original" to restore the text exactly as it was before the applied mode. This works until you either apply a different mode (which always transforms from the same pre-clean baseline) or manually edit the text yourself, at which point the current text becomes the new baseline.' },
     { question: 'Does this tool change the words in my text?', answer: 'No, it only affects whitespace — spaces, tabs, and blank lines. The words, punctuation, and casing of your text are never altered.' }
   ]
 };

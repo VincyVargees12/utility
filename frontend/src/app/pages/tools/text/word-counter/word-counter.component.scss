@@ -2,7 +2,22 @@
   display: block;
 }
 
-textarea::placeholder {
-  color: #9ca3af;
-  font-style: italic;
+// Custom scrollbar for sidebar
+.overflow-y-auto {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.2);
+    }
+  }
 }
