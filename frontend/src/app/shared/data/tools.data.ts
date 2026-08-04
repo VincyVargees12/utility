@@ -90,7 +90,7 @@ export const TOOLS_REGISTRY: Record<string, ToolCategory> = {
       { id: 'des-encrypt', name: 'DES Encrypt/Decrypt', description: 'Encrypt and decrypt text with DES-CBC and PBKDF2 key derivation.', icon: 'verified_user', route: '/categories/developer/des-encrypt', category: 'security' },
       { id: 'url-encode', name: 'URL Encode/Decode', description: 'Encode URL parameters or decode URL-encoded strings.', icon: 'link', route: '/categories/developer/url-encode', category: 'encode' },
       { id: 'hash-generator', name: 'Hash Generator', description: 'Generate MD5, SHA-1, SHA-256, and other cryptographic hashes.', icon: 'fingerprint', route: '/categories/developer/hash', category: 'security' },
-      { id: 'uuid-generator', name: 'UUID/GUID Generator', description: 'Generate version 1, 3, 4, and 5 UUIDs instantly.', icon: 'badge', route: '/categories/developer/uuid', category: 'generate' },
+      { id: 'uuid-generator', name: 'UUID/GUID Generator', description: 'Generate version 1 and 4 UUIDs, or decode any UUID to inspect its version, variant, and timestamp.', icon: 'badge', route: '/categories/developer/uuid', category: 'generate' },
       { id: 'jwt-decoder', name: 'JWT Decoder', description: 'Decode JSON Web Tokens and inspect their payload.', icon: 'confirmation_number', route: '/categories/developer/jwt', category: 'decode' },
       { id: 'ascii-converter', name: 'ASCII Converter', description: 'Convert text to binary, hex, Base64, decimal, ROT13, URL encoding, and HTML entities all at once.', icon: 'translate', route: '/categories/developer/ascii-converter', category: 'convert' }
     ]

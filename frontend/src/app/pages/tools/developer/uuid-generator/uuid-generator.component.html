@@ -2,196 +2,446 @@
   <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <div class="flex-1 w-full min-w-0">
-        <div class="mb-8">
-          <h1 class="text-4xl font-bold text-primary mb-3">UUID / GUID Generator</h1>
-          <p class="text-lg text-secondary dark:text-white">Generate version 1, 4 UUIDs instantly. Supports bulk generation with customizable formatting options.</p>
+        <div class="mb-6">
+          <h1 class="text-4xl font-bold text-primary mb-3">UUID / GUID Generator &amp; Decoder</h1>
+          <p class="text-lg text-secondary dark:text-white">Generate version 1 and 4 UUIDs, or decode any UUID/GUID to inspect its version, variant, embedded timestamp, and field structure.</p>
         </div>
 
-        <!-- Generated UUIDs Section -->
-        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
-            <h2 class="text-lg font-bold text-primary">
-              Generated UUIDs
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-200 mb-6">
+          <button
+            (click)="setTab('generate')"
+            [class.text-blue-600]="activeTab() === 'generate'"
+            [class.border-blue-600]="activeTab() === 'generate'"
+            [class.text-secondary]="activeTab() !== 'generate'"
+            [class.border-transparent]="activeTab() !== 'generate'"
+            class="px-4 py-3 text-sm font-semibold border-b-2 transition-colors"
+          >
+            Generate
+          </button>
+          <button
+            (click)="setTab('analyze')"
+            [class.text-blue-600]="activeTab() === 'analyze'"
+            [class.border-blue-600]="activeTab() === 'analyze'"
+            [class.text-secondary]="activeTab() !== 'analyze'"
+            [class.border-transparent]="activeTab() !== 'analyze'"
+            class="px-4 py-3 text-sm font-semibold border-b-2 transition-colors"
+          >
+            Decode / Analyze
+          </button>
+        </div>
+
+        @if (activeTab() === 'generate') {
+          <!-- Generated UUIDs Section -->
+          <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+            <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+              <h2 class="text-lg font-bold text-primary">
+                Generated UUIDs
+                @if (generatedUuids().length > 0) {
+                  <span class="text-sm font-normal text-gray-600">({{ generatedUuids().length }})</span>
+                }
+              </h2>
+              <div class="flex items-center gap-2">
+                @if (generatedUuids().length > 0) {
+                  <button (click)="copyAll()"
+                    class="px-3 py-1 text-xs font-medium rounded-md transition-colors inline-flex items-center gap-1"
+                    [ngClass]="copied() ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'"
+                  >
+                    <mat-icon class="text-sm align-middle">{{ copied() ? 'check' : 'content_copy' }}</mat-icon>
+                    {{ copied() ? 'Copied' : 'Copy All' }}
+                  </button>
+                  <button (click)="downloadUuids()"
+                    class="px-3 py-1 bg-purple-100 text-black rounded-md hover:bg-purple-200 transition-colors text-xs font-medium">
+                    <mat-icon class="text-lg">download</mat-icon> Download
+                  </button>
+                  <button (click)="regenerate()"
+                    class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors text-xs font-medium">
+                    🔄 Regenerate
+                  </button>
+                  <button (click)="clear()"
+                    class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors text-xs font-medium">
+                    Clear
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="p-6 overflow-y-auto" style="max-height: calc(100vh - 280px);">
               @if (generatedUuids().length > 0) {
-                <span class="text-sm font-normal text-gray-600">({{ generatedUuids().length }})</span>
-              }
-            </h2>
-            <div class="flex items-center gap-2">
-              @if (generatedUuids().length > 0) {
-                <button (click)="copyAll()"
-                  class="px-3 py-1 text-xs font-medium rounded-md transition-colors"
-                  [ngClass]="copied() ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'"
-                >
-                  {{ copied() ? '✓ Copied' : '📋 Copy All' }}
-                </button>
-                <button (click)="downloadUuids()"
-                  class="px-3 py-1 bg-purple-100 text-black rounded-md hover:bg-purple-200 transition-colors text-xs font-medium">
-                  <mat-icon class="text-lg">download</mat-icon> Download
-                </button>
-                <button (click)="regenerate()"
-                  class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-md hover:bg-indigo-200 transition-colors text-xs font-medium">
-                  🔄 Regenerate
-                </button>
-                <button (click)="clear()"
-                  class="px-3 py-1 bg-red-100 text-red-700 rounded-md hover:bg-red-200 transition-colors text-xs font-medium">
-                  Clear
-                </button>
+                <div class="space-y-2">
+                  @for (uuid of generatedUuids(); track $index) {
+                    <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
+                      <span class="flex-1 font-mono text-sm text-gray-700 break-all">{{ uuid }}</span>
+                      <button (click)="copyOne(uuid, $index)"
+                        class="px-3 py-1 text-xs font-medium rounded-md transition-colors flex-shrink-0"
+                        [ngClass]="copiedIndex() === $index ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
+                        <mat-icon class="text-sm align-middle">{{ copiedIndex() === $index ? 'check' : 'content_copy' }}</mat-icon>
+                      </button>
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="py-20 text-center">
+                  <div class="text-6xl mb-4">🆔</div>
+                  <p class="text-gray-600 mb-4">No UUIDs generated yet</p>
+                  <p class="text-sm text-gray-600">Click "Generate UUIDs" to create unique identifiers</p>
+                </div>
               }
             </div>
           </div>
-          
-          <div class="p-6 overflow-y-auto" style="max-height: calc(100vh - 280px);">
-            @if (generatedUuids().length > 0) {
-              <div class="space-y-2">
-                @for (uuid of generatedUuids(); track $index) {
-                  <div class="flex items-center gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
-                    <span class="flex-1 font-mono text-sm text-gray-700 break-all">{{ uuid }}</span>
-                    <button (click)="copyOne(uuid, $index)"
-                      class="px-3 py-1 text-xs font-medium rounded-md transition-colors flex-shrink-0"
-                      [ngClass]="copiedIndex() === $index ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
-                      {{ copiedIndex() === $index ? '✓' : '📋' }}
-                    </button>
+        } @else {
+          <!-- Decode / Analyze Section -->
+          <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+            <div class="border-b border-gray-200 px-6 py-4 bg-gray-50">
+              <h2 class="text-lg font-bold text-primary">Decode a UUID</h2>
+            </div>
+            <div class="p-6">
+              <label for="uuidInput" class="block text-sm font-semibold text-primary mb-2">UUID / GUID</label>
+              <div class="flex gap-2">
+                <input
+                  id="uuidInput"
+                  type="text"
+                  [ngModel]="uuidToAnalyze()"
+                  (ngModelChange)="setUuidToAnalyze($event)"
+                  (keydown.enter)="analyzeUuid()"
+                  placeholder="e.g. 550e8400-e29b-41d4-a716-446655440000"
+                  class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                  spellcheck="false"
+                >
+                <button (click)="analyzeUuid()"
+                  [disabled]="!uuidToAnalyze().trim()"
+                  class="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors font-semibold text-sm shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+                  Decode
+                </button>
+              </div>
+
+              @if (analyzeError()) {
+                <p class="mt-3 text-sm font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                  {{ analyzeError() }}
+                </p>
+              }
+            </div>
+
+            @if (analysis(); as a) {
+              <div class="border-t border-gray-200 p-6 space-y-6">
+                <!-- Summary -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <p class="text-xs font-semibold text-blue-600 mb-1">VERSION</p>
+                    <p class="text-sm font-bold text-blue-900">{{ a.versionLabel }}</p>
+                  </div>
+                  <div class="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <p class="text-xs font-semibold text-purple-600 mb-1">VARIANT</p>
+                    <p class="text-sm font-bold text-purple-900">{{ a.variant }}</p>
+                    <p class="text-xs text-purple-700 mt-1">{{ a.variantDescription }}</p>
+                  </div>
+                </div>
+
+                @if (a.isNil) {
+                  <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p class="text-sm text-gray-700">This is the <strong>Nil UUID</strong> — all 128 bits are zero. It conventionally represents "no value" or the absence of a UUID (RFC 4122 §4.1.7).</p>
+                  </div>
+                } @else if (a.isMax) {
+                  <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p class="text-sm text-gray-700">This is the <strong>Max UUID</strong> — all 128 bits are one. It represents the highest possible UUID value, used as a sentinel/boundary value (RFC 9562 §5.10).</p>
                   </div>
                 }
-              </div>
-            } @else {
-              <div class="py-20 text-center">
-                <div class="text-6xl mb-4">🆔</div>
-                <p class="text-gray-600 mb-4">No UUIDs generated yet</p>
-                <p class="text-sm text-gray-600">Click "Generate UUIDs" to create unique identifiers</p>
+
+                <!-- Version-specific details -->
+                @if (a.version === 1) {
+                  <div class="border border-gray-200 rounded-lg overflow-hidden">
+                    <div class="bg-gray-50 px-4 py-2 border-b border-gray-200">
+                      <h3 class="text-sm font-bold text-primary">Embedded Timestamp (Version 1)</h3>
+                    </div>
+                    <div class="p-4 space-y-2 text-sm">
+                      <div class="flex justify-between">
+                        <span class="text-gray-600">UTC time:</span>
+                        <span class="font-mono text-gray-800">{{ a.timestamp?.toUTCString() }}</span>
+                      </div>
+                      <div class="flex justify-between">
+                        <span class="text-gray-600">ISO 8601:</span>
+                        <span class="font-mono text-gray-800">{{ a.timestamp?.toISOString() }}</span>
+                      </div>
+                      <div class="flex justify-between">
+                        <span class="text-gray-600">Clock sequence:</span>
+                        <span class="font-mono text-gray-800">{{ a.clockSequence }}</span>
+                      </div>
+                      <div class="flex justify-between">
+                        <span class="text-gray-600">Node ID:</span>
+                        <span class="font-mono text-gray-800">{{ a.nodeId }}</span>
+                      </div>
+                      <p class="text-xs text-gray-600 pt-1">
+                        @if (a.isRandomNode) {
+                          The node's multicast bit is set — this node ID is a randomly generated value, not a real MAC address.
+                        } @else {
+                          The node's multicast bit is clear — this node ID may be a real MAC address from the generating machine.
+                        }
+                      </p>
+                    </div>
+                  </div>
+                } @else if (a.hashAlgorithm) {
+                  <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                    <p class="text-sm text-amber-900">
+                      This UUID encodes an <strong>{{ a.hashAlgorithm }}</strong> hash of a namespace UUID and a name string.
+                      Because hashing is one-way, the original namespace and name <strong>cannot be recovered</strong> from the UUID alone.
+                    </p>
+                  </div>
+                } @else if (a.version === 4) {
+                  <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <p class="text-sm text-gray-700">Randomly generated — 122 bits of randomness, no embedded timestamp or identifying metadata.</p>
+                  </div>
+                }
+
+                <!-- Field breakdown -->
+                <div class="border border-gray-200 rounded-lg overflow-hidden">
+                  <div class="bg-gray-50 px-4 py-2 border-b border-gray-200 flex items-center justify-between">
+                    <h3 class="text-sm font-bold text-primary">Field Breakdown</h3>
+                    <button (click)="copyNormalized()"
+                      class="px-2 py-1 text-xs font-medium rounded transition-colors inline-flex items-center gap-1"
+                      [ngClass]="copiedNormalized() ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
+                      <mat-icon class="text-sm align-middle">{{ copiedNormalized() ? 'check' : 'content_copy' }}</mat-icon>
+                      {{ copiedNormalized() ? 'Copied' : 'Copy normalized' }}
+                    </button>
+                  </div>
+                  <div class="p-4 overflow-x-auto">
+                    <table class="w-full text-sm">
+                      <thead>
+                        <tr class="text-left text-xs text-gray-600">
+                          <th class="pb-2 pr-4">Field</th>
+                          <th class="pb-2">Hex Value</th>
+                        </tr>
+                      </thead>
+                      <tbody class="font-mono">
+                        <tr class="border-t border-gray-100">
+                          <td class="py-1.5 pr-4 text-gray-600 font-sans">time_low</td>
+                          <td class="py-1.5 text-gray-800">{{ a.fields.timeLow }}</td>
+                        </tr>
+                        <tr class="border-t border-gray-100">
+                          <td class="py-1.5 pr-4 text-gray-600 font-sans">time_mid</td>
+                          <td class="py-1.5 text-gray-800">{{ a.fields.timeMid }}</td>
+                        </tr>
+                        <tr class="border-t border-gray-100">
+                          <td class="py-1.5 pr-4 text-gray-600 font-sans">time_hi_and_version</td>
+                          <td class="py-1.5 text-gray-800">{{ a.fields.timeHiAndVersion }}</td>
+                        </tr>
+                        <tr class="border-t border-gray-100">
+                          <td class="py-1.5 pr-4 text-gray-600 font-sans">clock_seq_hi_and_reserved</td>
+                          <td class="py-1.5 text-gray-800">{{ a.fields.clockSeqHiAndReserved }}</td>
+                        </tr>
+                        <tr class="border-t border-gray-100">
+                          <td class="py-1.5 pr-4 text-gray-600 font-sans">clock_seq_low</td>
+                          <td class="py-1.5 text-gray-800">{{ a.fields.clockSeqLow }}</td>
+                        </tr>
+                        <tr class="border-t border-gray-100">
+                          <td class="py-1.5 pr-4 text-gray-600 font-sans">node</td>
+                          <td class="py-1.5 text-gray-800">{{ a.fields.node }}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <p class="text-xs text-gray-600 font-mono">Normalized: {{ a.normalized }}</p>
               </div>
             }
           </div>
-        </div>
-
+        }
       </div>
 
-      <!-- Right Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
-        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Generator Options</h3>
+      @if (activeTab() === 'generate') {
+        <!-- Right Sidebar: Generator Options -->
+        <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
+          <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Generator Options</h3>
 
-        <div class="px-4 pb-6 space-y-4 mt-4">
+          <div class="px-4 pb-6 space-y-4 mt-4">
 
-          <!-- UUID Version -->
-          <div class="space-y-2">
-            <label for="uuidVersion" class="block text-sm font-semibold text-primary">UUID Version</label>
-            <select id="uuidVersion" [(ngModel)]="uuidVersion"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-              <option value="v4">Version 4 (Random)</option>
-              <option value="v1">Version 1 (Timestamp)</option>
-            </select>
-            <div class="text-xs text-gray-700 mt-1">
-              @if (uuidVersion() === 'v4') {
-                <p>Completely random, most commonly used.</p>
-              } @else {
-                <p>Time-based, includes timestamp and node ID.</p>
-              }
-            </div>
-          </div>
-
-          <!-- Quantity -->
-          <div class="space-y-2">
-            <label for="quantity" class="block text-sm font-semibold text-primary">Quantity</label>
-            <input 
-              id="quantity"
-              type="number" 
-              [(ngModel)]="quantity"
-              min="1" 
-              max="1000"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-            <p class="text-xs text-gray-700">Generate 1-1000 UUIDs at once</p>
-          </div>
-
-          <!-- Case -->
-          <div class="space-y-2">
-            <label for="uuidCase" class="block text-sm font-semibold text-primary">Case</label>
-            <select id="uuidCase" [(ngModel)]="uuidCase"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
-              <option value="lowercase">Lowercase</option>
-              <option value="uppercase">Uppercase</option>
-            </select>
-          </div>
-
-          <!-- Formatting Options -->
-          <div class="space-y-3">
-            <label class="block text-sm font-semibold text-primary">Formatting</label>
-            
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="withHyphens"
-                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-              <span class="text-sm text-gray-700">Include hyphens (-)</span>
-            </label>
-
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input 
-                type="checkbox" 
-                [(ngModel)]="withBraces"
-                class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-              <span class="text-sm text-gray-700">Include braces ({{ '{' }}{{ '}' }})</span>
-            </label>
-          </div>
-
-          <!-- Generate Button -->
-          <div class="pt-2 border-t border-gray-200">
-            <button (click)="generateUuids()"
-              class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors font-semibold text-sm shadow-md">
-              🆔 Generate UUIDs
-            </button>
-          </div>
-
-          <!-- Format Examples -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">Format Examples</h4>
-            <div class="text-xs text-gray-700 space-y-2 font-mono">
-              <div class="p-2 bg-gray-50 rounded border border-gray-200">
-                <p class="text-gray-600 mb-1">Standard:</p>
-                <p>550e8400-e29b-41d4-a716-446655440000</p>
-              </div>
-              <div class="p-2 bg-gray-50 rounded border border-gray-200">
-                <p class="text-gray-600 mb-1">No hyphens:</p>
-                <p>550e8400e29b41d4a716446655440000</p>
-              </div>
-              <div class="p-2 bg-gray-50 rounded border border-gray-200">
-                <p class="text-gray-600 mb-1">With braces:</p>
-                <p>{{ '{' }}550e8400-e29b-41d4-a716-446655440000{{ '}' }}</p>
+            <!-- UUID Version -->
+            <div class="space-y-2">
+              <label for="uuidVersion" class="block text-sm font-semibold text-primary">UUID Version</label>
+              <select id="uuidVersion" [(ngModel)]="uuidVersion"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                <option value="v4">Version 4 (Random)</option>
+                <option value="v1">Version 1 (Timestamp)</option>
+              </select>
+              <div class="text-xs text-gray-700 mt-1">
+                @if (uuidVersion() === 'v4') {
+                  <p>Completely random, most commonly used.</p>
+                } @else {
+                  <p>Time-based, includes timestamp and node ID.</p>
+                }
               </div>
             </div>
-          </div>
 
-          <!-- Info -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">What is UUID?</h4>
-            <p class="text-xs text-gray-700 leading-relaxed">
-              UUID (Universally Unique Identifier) or GUID (Globally Unique Identifier) is a 128-bit number 
-              used to uniquely identify information. UUIDs are used in databases, distributed systems, and APIs.
-            </p>
-          </div>
+            <!-- Quantity -->
+            <div class="space-y-2">
+              <label for="quantity" class="block text-sm font-semibold text-primary">Quantity</label>
+              <input
+                id="quantity"
+                type="number"
+                [(ngModel)]="quantity"
+                min="1"
+                max="1000"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+              <p class="text-xs text-gray-700">Generate 1-1000 UUIDs at once</p>
+            </div>
 
-          <!-- Version Info -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">UUID Versions</h4>
-            <ul class="text-xs text-gray-700 space-y-1">
-              <li><strong>v1:</strong> Time-based with MAC address</li>
-              <li><strong>v4:</strong> Random (most common)</li>
-            </ul>
-          </div>
+            <!-- Case -->
+            <div class="space-y-2">
+              <label for="uuidCase" class="block text-sm font-semibold text-primary">Case</label>
+              <select id="uuidCase" [(ngModel)]="uuidCase"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+                <option value="lowercase">Lowercase</option>
+                <option value="uppercase">Uppercase</option>
+              </select>
+            </div>
 
-          <!-- Use Cases -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">Common Use Cases</h4>
-            <ul class="text-xs text-gray-700 space-y-1">
-              <li>• Database primary keys</li>
-              <li>• Session identifiers</li>
-              <li>• File naming</li>
-              <li>• API request tracking</li>
-              <li>• Distributed system IDs</li>
-            </ul>
-          </div>
+            <!-- Formatting Options -->
+            <div class="space-y-3">
+              <label class="block text-sm font-semibold text-primary">Formatting</label>
 
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="withHyphens"
+                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                <span class="text-sm text-gray-700">Include hyphens (-)</span>
+              </label>
+
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="withBraces"
+                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                <span class="text-sm text-gray-700">Include braces ({{ '{' }}{{ '}' }})</span>
+              </label>
+            </div>
+
+            <!-- Generate Button -->
+            <div class="pt-2 border-t border-gray-200">
+              <button (click)="generateUuids()"
+                class="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-colors font-semibold text-sm shadow-md">
+                🆔 Generate UUIDs
+              </button>
+            </div>
+
+            <!-- Format Examples -->
+            <div class="pt-2 border-t border-gray-200">
+              <h4 class="text-sm font-semibold text-gray-900 mb-2">Format Examples</h4>
+              <div class="text-xs text-gray-700 space-y-2 font-mono">
+                <div class="p-2 bg-gray-50 rounded border border-gray-200">
+                  <p class="text-gray-600 mb-1">Standard:</p>
+                  <p>550e8400-e29b-41d4-a716-446655440000</p>
+                </div>
+                <div class="p-2 bg-gray-50 rounded border border-gray-200">
+                  <p class="text-gray-600 mb-1">No hyphens:</p>
+                  <p>550e8400e29b41d4a716446655440000</p>
+                </div>
+                <div class="p-2 bg-gray-50 rounded border border-gray-200">
+                  <p class="text-gray-600 mb-1">With braces:</p>
+                  <p>{{ '{' }}550e8400-e29b-41d4-a716-446655440000{{ '}' }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Info -->
+            <div class="pt-2 border-t border-gray-200">
+              <h4 class="text-sm font-semibold text-gray-900 mb-2">What is UUID?</h4>
+              <p class="text-xs text-gray-700 leading-relaxed">
+                UUID (Universally Unique Identifier) or GUID (Globally Unique Identifier) is a 128-bit number
+                used to uniquely identify information. UUIDs are used in databases, distributed systems, and APIs.
+              </p>
+            </div>
+
+            <!-- Version Info -->
+            <div class="pt-2 border-t border-gray-200">
+              <h4 class="text-sm font-semibold text-gray-900 mb-2">UUID Versions</h4>
+              <ul class="text-xs text-gray-700 space-y-1">
+                <li><strong>v1:</strong> Time-based with MAC address</li>
+                <li><strong>v4:</strong> Random (most common)</li>
+              </ul>
+            </div>
+
+            <!-- Use Cases -->
+            <div class="pt-2 border-t border-gray-200">
+              <h4 class="text-sm font-semibold text-gray-900 mb-2">Common Use Cases</h4>
+              <ul class="text-xs text-gray-700 space-y-1">
+                <li>• Database primary keys</li>
+                <li>• Session identifiers</li>
+                <li>• File naming</li>
+                <li>• API request tracking</li>
+                <li>• Distributed system IDs</li>
+              </ul>
+            </div>
+
+          </div>
         </div>
-      </div>
+      } @else {
+        <!-- Right Sidebar: Analyze/Decode help -->
+        <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
+          <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Try a Sample</h3>
+
+          <div class="px-4 pb-6 space-y-4 mt-4">
+            <div class="space-y-2">
+              <button (click)="loadAnalyzeSample('v1')"
+                class="w-full text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
+                <p class="text-sm font-semibold text-primary">Version 1 (timestamp-based)</p>
+                <p class="text-xs font-mono text-gray-600 truncate">6ba7b810-9dad-11d1-80b4-00c04fd430c8</p>
+              </button>
+              <button (click)="loadAnalyzeSample('v3')"
+                class="w-full text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
+                <p class="text-sm font-semibold text-primary">Version 3 (MD5 name-based)</p>
+                <p class="text-xs font-mono text-gray-600 truncate">6fa459ea-ee8a-3ca4-894e-db77e160355e</p>
+              </button>
+              <button (click)="loadAnalyzeSample('v4')"
+                class="w-full text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
+                <p class="text-sm font-semibold text-primary">Version 4 (random)</p>
+                <p class="text-xs font-mono text-gray-600 truncate">3f2a9c1e-7b4d-4a6f-9c2e-1d8f5b3a7e6c</p>
+              </button>
+              <button (click)="loadAnalyzeSample('v5')"
+                class="w-full text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
+                <p class="text-sm font-semibold text-primary">Version 5 (SHA-1 name-based)</p>
+                <p class="text-xs font-mono text-gray-600 truncate">886313e1-3b8a-5372-9b90-0c9aee199e5d</p>
+              </button>
+              <button (click)="loadAnalyzeSample('nil')"
+                class="w-full text-left px-3 py-2 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg transition-colors">
+                <p class="text-sm font-semibold text-primary">Nil UUID</p>
+                <p class="text-xs font-mono text-gray-600 truncate">00000000-0000-0000-0000-000000000000</p>
+              </button>
+            </div>
+
+            @if (uuidToAnalyze() || analysis()) {
+              <div class="pt-2 border-t border-gray-200">
+                <button (click)="clearAnalysis()"
+                  class="w-full px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium text-sm">
+                  🗑️ Clear
+                </button>
+              </div>
+            }
+
+            <!-- Info -->
+            <div class="pt-2 border-t border-gray-200">
+              <h4 class="text-sm font-semibold text-gray-900 mb-2">What does decoding show?</h4>
+              <p class="text-xs text-gray-700 leading-relaxed">
+                Every UUID reserves a few bits to encode its version and variant, regardless of how it was generated.
+                For version 1, the remaining bits are a real timestamp, clock sequence, and node ID that this tool
+                reconstructs. Versions 3 and 5 embed a one-way hash, so their source data can't be recovered — only
+                the version and variant are meaningful. Version 4 is pure randomness with nothing else to extract.
+              </p>
+            </div>
+
+            <!-- Variant reference -->
+            <div class="pt-2 border-t border-gray-200">
+              <h4 class="text-sm font-semibold text-gray-900 mb-2">Variant Reference</h4>
+              <ul class="text-xs text-gray-700 space-y-1">
+                <li><strong>RFC 4122:</strong> The standard variant almost all UUIDs use</li>
+                <li><strong>NCS:</strong> Legacy, reserved for backward compatibility</li>
+                <li><strong>Microsoft:</strong> Legacy COM/OLE GUIDs</li>
+                <li><strong>Future:</strong> Reserved, not yet defined</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      }
     </div>
   </div>
 </main>

@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
@@ -12,7 +13,7 @@ type OutputFormat = 'standard' | 'url-safe' | 'mime';
 @Component({
   selector: 'app-base64',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './base64.component.html',
   styleUrl: './base64.component.scss'
 })

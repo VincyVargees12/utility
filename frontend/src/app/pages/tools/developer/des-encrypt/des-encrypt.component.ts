@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
@@ -19,7 +20,7 @@ interface DesEncryptedPayload {
 @Component({
   selector: 'app-des-encrypt',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './des-encrypt.component.html',
   styleUrl: './des-encrypt.component.scss'
 })

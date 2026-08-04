@@ -9,7 +9,51 @@ import { UUID_GENERATOR_RESOURCE_CONTENT } from './uuid-generator.resource-conte
 
 type UUIDVersion = 'v1' | 'v4';
 type UUIDCase = 'lowercase' | 'uppercase';
+type ActiveTab = 'generate' | 'analyze';
 
+interface UuidFields {
+  timeLow: string;
+  timeMid: string;
+  timeHiAndVersion: string;
+  clockSeqHiAndReserved: string;
+  clockSeqLow: string;
+  node: string;
+}
+
+interface UuidAnalysis {
+  normalized: string;
+  isNil: boolean;
+  isMax: boolean;
+  version: number | null;
+  versionLabel: string;
+  variant: string;
+  variantDescription: string;
+  fields: UuidFields;
+  timestamp: Date | null;
+  clockSequence: number | null;
+  nodeId: string | null;
+  isRandomNode: boolean | null;
+  hashAlgorithm: string | null;
+}
+
+const VERSION_LABELS: Record<number, string> = {
+  1: 'Version 1 — Time-based (MAC/timestamp)',
+  2: 'Version 2 — DCE Security (rarely used)',
+  3: 'Version 3 — Name-based (MD5 hash)',
+  4: 'Version 4 — Random',
+  5: 'Version 5 — Name-based (SHA-1 hash)'
+};
+
+// 100-ns intervals between the UUID epoch (1582-10-15) and the Unix epoch (1970-01-01).
+const GREGORIAN_TO_UNIX_100NS_OFFSET = 122192928000000000n;
+
+const SAMPLE_UUIDS: Record<string, string> = {
+  v1: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+  v3: '6fa459ea-ee8a-3ca4-894e-db77e160355e',
+  v4: '3f2a9c1e-7b4d-4a6f-9c2e-1d8f5b3a7e6c',
+  v5: '886313e1-3b8a-5372-9b90-0c9aee199e5d',
+  nil: '00000000-0000-0000-0000-000000000000'
+};
 
 @Component({
   selector: 'app-uuid-generator',
@@ -23,6 +67,9 @@ export class UuidGeneratorComponent implements OnInit {
 
   resourceContent = UUID_GENERATOR_RESOURCE_CONTENT;
 
+  activeTab = signal<ActiveTab>('generate');
+
+  // ── Generate state ──────────────────────────────────────────────
   generatedUuids = signal<string[]>([]);
   uuidVersion = signal<UUIDVersion>('v4');
   uuidCase = signal<UUIDCase>('lowercase');
@@ -32,22 +79,28 @@ export class UuidGeneratorComponent implements OnInit {
   copied = signal<boolean>(false);
   copiedIndex = signal<number>(-1);
 
+  // ── Analyze/Decode state ────────────────────────────────────────
+  uuidToAnalyze = signal<string>('');
+  analysis = signal<UuidAnalysis | null>(null);
+  analyzeError = signal<string | null>(null);
+  copiedNormalized = signal<boolean>(false);
+
   ngOnInit(): void {
     this.seoService.setPageMeta({
-      title: 'UUID/GUID Generator - Version 1, 4 | DataUtil',
-      description: 'Generate UUID/GUID instantly. Supports version 1 (timestamp-based) and version 4 (random). Bulk generation, uppercase/lowercase options.',
-      keywords: 'uuid generator, guid generator, uuid v4, uuid v1, generate uuid, random uuid, bulk uuid generator',
-      ogTitle: 'UUID/GUID Generator - Generate Unique Identifiers',
-      ogDescription: 'Generate version 1, 4 UUIDs instantly with bulk generation support.',
+      title: 'UUID/GUID Generator & Decoder - Version 1, 4 | DataUtil',
+      description: 'Generate UUID/GUID instantly, or decode and analyze any UUID to inspect its version, variant, embedded timestamp, and field structure. Supports version 1 (timestamp-based) and version 4 (random) generation.',
+      keywords: 'uuid generator, guid generator, uuid decoder, uuid analyzer, uuid v4, uuid v1, generate uuid, decode uuid, parse uuid',
+      ogTitle: 'UUID/GUID Generator & Decoder',
+      ogDescription: 'Generate version 1 and 4 UUIDs, or decode and analyze any UUID/GUID to inspect its structure.',
       canonicalUrl: 'https://www.data-util.com/categories/developer/uuid'
     });
 
     this.seoService.addStructuredData({
       '@context': 'https://schema.org',
       '@type': 'SoftwareApplication',
-      'name': 'UUID/GUID Generator',
+      'name': 'UUID/GUID Generator & Decoder',
       'applicationCategory': 'DeveloperApplication',
-      'description': 'Generate version 1 and version 4 UUIDs (GUIDs) with customizable formatting options.',
+      'description': 'Generate version 1 and version 4 UUIDs (GUIDs), or decode and analyze any UUID to inspect its version, variant, timestamp, and structure.',
       'url': 'https://www.data-util.com/categories/developer/uuid',
       'operatingSystem': 'Any',
       'offers': {
@@ -56,6 +109,10 @@ export class UuidGeneratorComponent implements OnInit {
         'priceCurrency': 'USD'
       }
     });
+  }
+
+  setTab(tab: ActiveTab): void {
+    this.activeTab.set(tab);
   }
 
   // ── UUID Generation ──────────────────────────────────────────────
@@ -89,11 +146,11 @@ export class UuidGeneratorComponent implements OnInit {
     const now = Date.now();
     const timeHigh = ((now / 0x100000000) * 10000) & 0xfffffff;
     const timeLow = (now * 10000) & 0xffffffff;
-    const timeHex = timeLow.toString(16).padStart(8, '0') + 
+    const timeHex = timeLow.toString(16).padStart(8, '0') +
                     (timeHigh & 0xffff).toString(16).padStart(4, '0');
-    
+
     const clockSeq = (Math.random() * 0x3fff) | 0x8000;
-    const node = Array.from({length: 6}, () => 
+    const node = Array.from({length: 6}, () =>
       Math.floor(Math.random() * 256).toString(16).padStart(2, '0')
     ).join('');
 
@@ -117,7 +174,7 @@ export class UuidGeneratorComponent implements OnInit {
     return uuid;
   }
 
-  // ── Actions ──────────────────────────────────────────────
+  // ── Generate Actions ──────────────────────────────────────────────
 
   clear(): void {
     this.generatedUuids.set([]);
@@ -159,5 +216,123 @@ export class UuidGeneratorComponent implements OnInit {
     if (this.generatedUuids().length > 0) {
       this.generateUuids();
     }
+  }
+
+  // ── Analyze / Decode ──────────────────────────────────────────────
+
+  setUuidToAnalyze(value: string): void {
+    this.uuidToAnalyze.set(value);
+    this.analysis.set(null);
+    this.analyzeError.set(null);
+  }
+
+  loadAnalyzeSample(kind: keyof typeof SAMPLE_UUIDS): void {
+    this.uuidToAnalyze.set(SAMPLE_UUIDS[kind]);
+    this.analyzeUuid();
+  }
+
+  analyzeUuid(): void {
+    const raw = this.uuidToAnalyze().trim();
+
+    // Strip an optional urn:uuid: prefix and surrounding braces, then require exactly 32 hex digits.
+    const cleaned = raw.replace(/^urn:uuid:/i, '').replace(/^\{|\}$/g, '');
+    const hex = cleaned.replace(/-/g, '').toLowerCase();
+
+    if (!/^[0-9a-f]{32}$/.test(hex)) {
+      this.analysis.set(null);
+      this.analyzeError.set('Not a valid UUID — expected 32 hex characters, with or without hyphens/braces (e.g. 550e8400-e29b-41d4-a716-446655440000).');
+      return;
+    }
+
+    this.analyzeError.set(null);
+
+    const fields: UuidFields = {
+      timeLow: hex.slice(0, 8),
+      timeMid: hex.slice(8, 12),
+      timeHiAndVersion: hex.slice(12, 16),
+      clockSeqHiAndReserved: hex.slice(16, 18),
+      clockSeqLow: hex.slice(18, 20),
+      node: hex.slice(20, 32)
+    };
+
+    const normalized = `${fields.timeLow}-${fields.timeMid}-${fields.timeHiAndVersion}-${fields.clockSeqHiAndReserved}${fields.clockSeqLow}-${fields.node}`;
+
+    const isNil = hex === '0'.repeat(32);
+    const isMax = hex === 'f'.repeat(32);
+
+    const version = parseInt(fields.timeHiAndVersion[0], 16);
+    const clockSeqHiByte = parseInt(fields.clockSeqHiAndReserved, 16);
+
+    let variant: string;
+    let variantDescription: string;
+    if ((clockSeqHiByte & 0x80) === 0x00) {
+      variant = 'NCS';
+      variantDescription = 'Reserved for NCS backward compatibility';
+    } else if ((clockSeqHiByte & 0xc0) === 0x80) {
+      variant = 'RFC 4122';
+      variantDescription = 'Standard variant defined by RFC 4122 / RFC 9562';
+    } else if ((clockSeqHiByte & 0xe0) === 0xc0) {
+      variant = 'Microsoft';
+      variantDescription = 'Reserved for Microsoft backward compatibility (legacy COM/OLE GUIDs)';
+    } else {
+      variant = 'Future';
+      variantDescription = 'Reserved for future definition';
+    }
+
+    let timestamp: Date | null = null;
+    let clockSequence: number | null = null;
+    let nodeId: string | null = null;
+    let isRandomNode: boolean | null = null;
+    let hashAlgorithm: string | null = null;
+
+    if (version === 1) {
+      const timeHiBits = fields.timeHiAndVersion.slice(1); // drop the version nibble — 12 bits remain
+      const intervalsHex = timeHiBits + fields.timeMid + fields.timeLow; // 60-bit count of 100ns intervals
+      const intervals = BigInt('0x' + intervalsHex);
+      const unixMs = Number((intervals - GREGORIAN_TO_UNIX_100NS_OFFSET) / 10000n);
+      timestamp = new Date(unixMs);
+
+      clockSequence = ((clockSeqHiByte & 0x3f) << 8) | parseInt(fields.clockSeqLow, 16);
+
+      const nodeFirstByte = parseInt(fields.node.slice(0, 2), 16);
+      isRandomNode = (nodeFirstByte & 0x01) === 1;
+      nodeId = fields.node.match(/.{2}/g)!.join(':');
+    } else if (version === 3) {
+      hashAlgorithm = 'MD5';
+    } else if (version === 5) {
+      hashAlgorithm = 'SHA-1';
+    }
+
+    this.analysis.set({
+      normalized,
+      isNil,
+      isMax,
+      version: isNil || isMax ? null : version,
+      versionLabel: isNil ? 'Nil UUID' : isMax ? 'Max UUID' : (VERSION_LABELS[version] ?? `Unrecognized version nibble (${version})`),
+      variant,
+      variantDescription,
+      fields,
+      timestamp,
+      clockSequence,
+      nodeId,
+      isRandomNode,
+      hashAlgorithm
+    });
+  }
+
+  clearAnalysis(): void {
+    this.uuidToAnalyze.set('');
+    this.analysis.set(null);
+    this.analyzeError.set(null);
+  }
+
+  copyNormalized(): void {
+    const value = this.analysis()?.normalized;
+    if (!value) return;
+
+    navigator.clipboard.writeText(value).then(() => {
+      this.copiedNormalized.set(true);
+      setTimeout(() => this.copiedNormalized.set(false), 1500);
+    });
   }
 }

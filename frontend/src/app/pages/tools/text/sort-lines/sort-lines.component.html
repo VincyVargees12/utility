@@ -117,9 +117,10 @@
                   </button>
                   <button
                     (click)="copyToClipboard('asc')"
-                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium"
+                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium inline-flex items-center gap-1"
                   >
-                    {{ copiedMode() === 'asc' ? '✓ Copied' : '📋 Copy' }}
+                    <mat-icon class="text-sm align-middle">{{ copiedMode() === 'asc' ? 'check' : 'content_copy' }}</mat-icon>
+                    {{ copiedMode() === 'asc' ? 'Copied' : 'Copy' }}
                   </button>
                 </div>
               </div>
@@ -140,9 +141,10 @@
                   </button>
                   <button
                     (click)="copyToClipboard('desc')"
-                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium"
+                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium inline-flex items-center gap-1"
                   >
-                    {{ copiedMode() === 'desc' ? '✓ Copied' : '📋 Copy' }}
+                    <mat-icon class="text-sm align-middle">{{ copiedMode() === 'desc' ? 'check' : 'content_copy' }}</mat-icon>
+                    {{ copiedMode() === 'desc' ? 'Copied' : 'Copy' }}
                   </button>
                 </div>
               </div>
@@ -163,9 +165,10 @@
                   </button>
                   <button
                     (click)="copyToClipboard('case-insensitive')"
-                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium"
+                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium inline-flex items-center gap-1"
                   >
-                    {{ copiedMode() === 'case-insensitive' ? '✓ Copied' : '📋 Copy' }}
+                    <mat-icon class="text-sm align-middle">{{ copiedMode() === 'case-insensitive' ? 'check' : 'content_copy' }}</mat-icon>
+                    {{ copiedMode() === 'case-insensitive' ? 'Copied' : 'Copy' }}
                   </button>
                 </div>
               </div>
@@ -186,9 +189,10 @@
                   </button>
                   <button
                     (click)="copyToClipboard('numeric')"
-                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium"
+                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium inline-flex items-center gap-1"
                   >
-                    {{ copiedMode() === 'numeric' ? '✓ Copied' : '📋 Copy' }}
+                    <mat-icon class="text-sm align-middle">{{ copiedMode() === 'numeric' ? 'check' : 'content_copy' }}</mat-icon>
+                    {{ copiedMode() === 'numeric' ? 'Copied' : 'Copy' }}
                   </button>
                 </div>
               </div>
@@ -209,9 +213,10 @@
                   </button>
                   <button
                     (click)="copyToClipboard('length')"
-                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium"
+                    class="px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors font-medium inline-flex items-center gap-1"
                   >
-                    {{ copiedMode() === 'length' ? '✓ Copied' : '📋 Copy' }}
+                    <mat-icon class="text-sm align-middle">{{ copiedMode() === 'length' ? 'check' : 'content_copy' }}</mat-icon>
+                    {{ copiedMode() === 'length' ? 'Copied' : 'Copy' }}
                   </button>
                 </div>
               </div>

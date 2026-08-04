@@ -25,7 +25,7 @@
                 <button (click)="copyToken()" [disabled]="!jwtToken().trim()"
                   class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
                   title="Copy token">
-                  📋
+                  <mat-icon class="text-lg align-middle">content_copy</mat-icon>
                 </button>
               </div>
             </div>
@@ -78,7 +78,7 @@
                       <button (click)="copyPart('header')"
                         class="px-2 py-1 text-xs font-medium rounded transition-colors"
                         [ngClass]="copied() === 'header' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
-                        {{ copied() === 'header' ? '✓' : '📋' }}
+                        <mat-icon class="text-sm align-middle">{{ copied() === 'header' ? 'check' : 'content_copy' }}</mat-icon>
                       </button>
                     </div>
                     <div class="p-4 bg-white">
@@ -93,7 +93,7 @@
                       <button (click)="copyPart('payload')"
                         class="px-2 py-1 text-xs font-medium rounded transition-colors"
                         [ngClass]="copied() === 'payload' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'">
-                        {{ copied() === 'payload' ? '✓' : '📋' }}
+                        <mat-icon class="text-sm align-middle">{{ copied() === 'payload' ? 'check' : 'content_copy' }}</mat-icon>
                       </button>
                     </div>
                     <div class="p-4 bg-white">
@@ -136,7 +136,7 @@
                       <button (click)="copyPart('signature')"
                         class="px-2 py-1 text-xs font-medium rounded transition-colors"
                         [ngClass]="copied() === 'signature' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700 hover:bg-orange-200'">
-                        {{ copied() === 'signature' ? '✓' : '📋' }}
+                        <mat-icon class="text-sm align-middle">{{ copied() === 'signature' ? 'check' : 'content_copy' }}</mat-icon>
                       </button>
                     </div>
                     <div class="p-4 bg-white">

@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
@@ -22,7 +23,7 @@ import { HTML_FORMATTER_RESOURCE_CONTENT } from './html-formatter.resource-conte
 @Component({
   selector: 'app-html-formatter',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './html-formatter.component.html',
   styleUrl: './html-formatter.component.scss'
 })

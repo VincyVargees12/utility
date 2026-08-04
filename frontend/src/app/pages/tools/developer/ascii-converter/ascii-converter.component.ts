@@ -1,6 +1,7 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
@@ -118,7 +119,7 @@ const SAMPLE_TEXT = 'Hello, DataUtil! 123';
 @Component({
   selector: 'app-ascii-converter',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './ascii-converter.component.html',
   styleUrl: './ascii-converter.component.scss'
 })

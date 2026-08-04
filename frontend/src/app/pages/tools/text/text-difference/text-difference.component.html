@@ -48,7 +48,7 @@
               <button (click)="clearLeft()" class="action-btn" title="Clear left">🗑️</button>
               <button (click)="copyLeft()" class="action-btn" [title]="copiedLeft() ? 'Copied!' : 'Copy'"
                 [ngClass]="copiedLeft() ? 'text-green-600' : ''">
-                {{ copiedLeft() ? '✓' : '📋' }}
+                <mat-icon class="text-lg">{{ copiedLeft() ? 'check' : 'content_copy' }}</mat-icon>
               </button>
               <button (click)="downloadLeft()" [disabled]="!originalText()"
                 class="action-btn disabled:opacity-40 disabled:cursor-not-allowed" title="Download"><mat-icon class="text-lg">download</mat-icon></button>
@@ -88,7 +88,7 @@
               <button (click)="clearRight()" class="action-btn" title="Clear right">🗑️</button>
               <button (click)="copyRight()" class="action-btn" [title]="copiedRight() ? 'Copied!' : 'Copy'"
                 [ngClass]="copiedRight() ? 'text-green-600' : ''">
-                {{ copiedRight() ? '✓' : '📋' }}
+                <mat-icon class="text-lg">{{ copiedRight() ? 'check' : 'content_copy' }}</mat-icon>
               </button>
               <button (click)="downloadRight()" [disabled]="!modifiedText()"
                 class="action-btn disabled:opacity-40 disabled:cursor-not-allowed" title="Download"><mat-icon class="text-lg">download</mat-icon></button>
@@ -231,14 +231,14 @@
                   [ngClass]="!originalText()
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : (copiedLeft() ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200')">
-                  {{ copiedLeft() ? '✓' : '📋' }} Copy Left
+                  <mat-icon class="text-lg align-middle">{{ copiedLeft() ? 'check' : 'content_copy' }}</mat-icon> Copy Left
                 </button>
                 <button (click)="copyRight()" [disabled]="!modifiedText()"
                   class="px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                   [ngClass]="!modifiedText()
                     ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
                     : (copiedRight() ? 'bg-green-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200')">
-                  {{ copiedRight() ? '✓' : '📋' }} Copy Right
+                  <mat-icon class="text-lg align-middle">{{ copiedRight() ? 'check' : 'content_copy' }}</mat-icon> Copy Right
                 </button>
               </div>
               <div class="grid grid-cols-2 gap-2">

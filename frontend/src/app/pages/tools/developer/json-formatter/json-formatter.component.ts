@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { RelatedToolsComponent } from '../../../../shared/components/related-tools/related-tools.component';
 import { ToolResourceContentComponent } from '../../../../shared/components/tool-resource-content/tool-resource-content.component';
 import { SeoService } from '../../../../services/seo.service';
@@ -23,7 +24,7 @@ import { JSON_FORMATTER_RESOURCE_CONTENT } from './json-formatter.resource-conte
 @Component({
   selector: 'app-json-formatter',
   standalone: true,
-  imports: [CommonModule, FormsModule, RelatedToolsComponent, ToolResourceContentComponent],
+  imports: [CommonModule, FormsModule, MatIconModule, RelatedToolsComponent, ToolResourceContentComponent],
   templateUrl: './json-formatter.component.html',
   styleUrl: './json-formatter.component.scss'
 })

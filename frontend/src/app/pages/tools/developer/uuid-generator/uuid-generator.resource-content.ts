@@ -10,10 +10,11 @@ export const UUID_GENERATOR_RESOURCE_CONTENT: ToolResourceContent = {
     'Regardless of version, every UUID reserves a few fixed bits to encode its version number and "variant," which is why a v4 UUID always has a 4 in the same position (xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx) and a y character that is always 8, 9, a, or b.'
   ],
 
-  whatIsToolTitle: 'What is this UUID Generator?',
+  whatIsToolTitle: 'What is this UUID Generator & Decoder?',
   whatIsToolBody: [
-    'This UUID Generator creates version 1 (timestamp-based) and version 4 (random) UUIDs directly in your browser, with no server round-trip. You can generate a single UUID or up to 1,000 at once, and control exactly how each one is formatted before you copy or download it.',
-    'Formatting options include lowercase or uppercase output, including or omitting the hyphens between groups, and wrapping the result in curly braces — the format some systems (like older Windows APIs and certain COM/registry contexts) expect. Every generated UUID can be copied individually, the whole batch can be copied or downloaded as a .txt file, and you can regenerate a fresh batch with the same settings in one click.'
+    'This tool has two modes, switchable from the tabs at the top. "Generate" creates version 1 (timestamp-based) and version 4 (random) UUIDs directly in your browser, with no server round-trip. You can generate a single UUID or up to 1,000 at once, and control exactly how each one is formatted before you copy or download it.',
+    'Formatting options include lowercase or uppercase output, including or omitting the hyphens between groups, and wrapping the result in curly braces — the format some systems (like older Windows APIs and certain COM/registry contexts) expect. Every generated UUID can be copied individually, the whole batch can be copied or downloaded as a .txt file, and you can regenerate a fresh batch with the same settings in one click.',
+    '"Decode / Analyze" does the reverse: paste in any existing UUID and it parses the version, variant, and raw field breakdown straight from the bits. For version 1 UUIDs it reconstructs the actual embedded creation timestamp, clock sequence, and node ID. For version 3 and 5 UUIDs it identifies the hash algorithm used (MD5 or SHA-1) and explains why the original namespace/name can\'t be recovered. Nil and Max UUIDs are recognized as their own special sentinel values.'
   ],
 
   whyUseTitle: 'Why Use a UUID Generator?',
@@ -36,17 +37,23 @@ export const UUID_GENERATOR_RESOURCE_CONTENT: ToolResourceContent = {
     'Copy the entire batch to the clipboard at once',
     'Download the full batch as a .txt file, one UUID per line',
     'Regenerate a new batch instantly using your current settings',
+    'Decode / Analyze any UUID to reveal its version, variant, and raw field breakdown',
+    'Reconstructs the real embedded timestamp, clock sequence, and node ID from version 1 UUIDs',
+    'Identifies the hash algorithm (MD5/SHA-1) behind version 3 and 5 UUIDs',
+    'Recognizes the Nil UUID and Max UUID sentinel values',
+    'Accepts UUIDs with or without hyphens, braces, or a urn:uuid: prefix',
     'Runs entirely in your browser — no UUIDs are sent to or stored on a server'
   ],
 
-  howToTitle: 'How to Use the UUID Generator',
+  howToTitle: 'How to Use the UUID Generator & Decoder',
   howTo: [
     { title: 'Choose a UUID version', description: 'In the Generator Options panel, select Version 4 (Random) for general-purpose unique IDs, or Version 1 (Timestamp) if you want IDs that are roughly time-ordered.' },
     { title: 'Set the quantity', description: 'Enter how many UUIDs you need, from 1 up to 1,000, in the Quantity field.' },
     { title: 'Pick formatting options', description: 'Choose lowercase or uppercase, and toggle "Include hyphens" and "Include braces" depending on what format the target system expects.' },
     { title: 'Generate', description: 'Click "Generate UUIDs" to produce the batch. The results appear in the main panel, each on its own row.' },
     { title: 'Copy or export', description: 'Copy an individual UUID with its row button, use "Copy All" to grab the whole batch, or "Download" to save it as a .txt file.' },
-    { title: 'Regenerate as needed', description: 'Click "Regenerate" to produce a brand-new batch using the same settings, or "Clear" to empty the results and start over.' }
+    { title: 'Regenerate as needed', description: 'Click "Regenerate" to produce a brand-new batch using the same settings, or "Clear" to empty the results and start over.' },
+    { title: 'Switch to Decode / Analyze', description: 'Click the "Decode / Analyze" tab, paste in any UUID, and click "Decode" (or press Enter) to see its version, variant, and field breakdown.' }
   ],
 
   commonErrorsTitle: 'Common Mistakes and Pitfalls',
@@ -77,6 +84,12 @@ export const UUID_GENERATOR_RESOURCE_CONTENT: ToolResourceContent = {
       description: 'A timestamp-based UUID formatted with curly braces, matching the style some legacy Windows/COM registry entries expect.',
       input: 'Version: v1, Quantity: 1, Case: lowercase, Hyphens: on, Braces: on',
       output: '{6ba7b810-9dad-11d1-80b4-00c04fd430c8}'
+    },
+    {
+      title: 'Decoding a version 1 UUID',
+      description: 'Pasting a real v1 UUID into "Decode / Analyze" reconstructs its embedded creation timestamp, clock sequence, and node ID.',
+      input: '6ba7b810-9dad-11d1-80b4-00c04fd430c8',
+      output: 'Version 1, Variant: RFC 4122, Timestamp: 1998-02-04T22:13:53.151Z, Clock sequence: 180, Node: 00:c0:4f:d4:30:c8'
     }
   ],
 
@@ -88,6 +101,9 @@ export const UUID_GENERATOR_RESOURCE_CONTENT: ToolResourceContent = {
     { question: 'Is it safe to use a UUID as a security token or password?', answer: 'A random v4 UUID has real entropy, but it wasn\'t designed as a security primitive and shouldn\'t be treated as one on its own. For anything security-sensitive (session tokens, password reset links, API keys) use a purpose-built cryptographically secure random token generator instead.' },
     { question: 'Why does my system reject the UUID I generated?', answer: 'This usually comes down to formatting. Check whether the target system expects hyphens or not, lowercase or uppercase, and whether it wants the value wrapped in curly braces. Adjust the formatting options in this tool to match, then regenerate.' },
     { question: 'Are the UUIDs generated here sent to a server?', answer: 'No. All generation happens locally in your browser using JavaScript — nothing is transmitted or stored remotely.' },
-    { question: 'What\'s the maximum number of UUIDs I can generate at once?', answer: 'This tool supports generating between 1 and 1,000 UUIDs in a single batch. If you need more, generate multiple batches and combine the downloaded files.' }
+    { question: 'What\'s the maximum number of UUIDs I can generate at once?', answer: 'This tool supports generating between 1 and 1,000 UUIDs in a single batch. If you need more, generate multiple batches and combine the downloaded files.' },
+    { question: 'Can the decoder recover the original data behind a v3 or v5 UUID?', answer: 'No. Version 3 and 5 UUIDs are built from an MD5 or SHA-1 hash of a namespace UUID plus a name string. Hashing is one-way by design, so the decoder can tell you which algorithm was used and confirm the version/variant, but it cannot reverse the hash back to the original namespace or name.' },
+    { question: 'Why does the decoder say a v1 UUID\'s node ID might not be a real MAC address?', answer: 'RFC 4122 reserves the lowest bit of the node ID\'s first byte (the "multicast bit") as a signal. If an implementation can\'t or won\'t use the machine\'s real network card address, it generates a random node ID instead and sets that bit to 1, so no real MAC address is ever mistaken for a random one. This tool checks that bit and tells you which case applies.' },
+    { question: 'What are the Nil UUID and Max UUID?', answer: 'The Nil UUID (00000000-0000-0000-0000-000000000000) is all zero bits and conventionally represents "no value." The Max UUID (ffffffff-ffff-ffff-ffff-ffffffffffff) is all one bits and is used as a sentinel/upper-bound value, formalized in RFC 9562. The decoder recognizes both as special cases rather than trying to parse a version out of them.' }
   ]
 };

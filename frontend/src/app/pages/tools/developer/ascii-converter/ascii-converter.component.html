@@ -15,7 +15,7 @@
                 <button (click)="copyField(field.key)" [disabled]="!values()[field.key]"
                   class="text-base leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
                   [title]="copiedKey() === field.key ? 'Copied!' : 'Copy'">
-                  {{ copiedKey() === field.key ? '✓' : '📋' }}
+                  <mat-icon class="text-base align-middle">{{ copiedKey() === field.key ? 'check' : 'content_copy' }}</mat-icon>
                 </button>
               </div>
               <div class="p-4">
