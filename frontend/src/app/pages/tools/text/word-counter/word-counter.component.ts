@@ -65,7 +65,7 @@ export class WordCounterComponent implements OnInit {
       keywords: 'word counter, word count, count words online, character counter, keyword density, reading time calculator',
       ogTitle: 'Word Counter - Free Online Word Count Tool',
       ogDescription: 'Instantly count words, characters, sentences, paragraphs, and see keyword density.',
-      canonicalUrl: 'https://datautility.com/categories/text/word-counter'
+      canonicalUrl: 'https://www.data-util.com/categories/text/word-counter'
     });
   }
 

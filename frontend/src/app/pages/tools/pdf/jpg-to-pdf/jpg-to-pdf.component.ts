@@ -47,7 +47,7 @@ export class JpgToPdfComponent implements OnInit {
       keywords: 'jpg to pdf, image to pdf, png to pdf, convert jpg to pdf',
       ogTitle: 'JPG to PDF Converter - Free Online',
       ogDescription: 'Convert JPG, PNG, and other images to PDF quickly and easily.',
-      canonicalUrl: 'https://datautility.com/categories/pdf/jpg-to-pdf'
+      canonicalUrl: 'https://www.data-util.com/categories/pdf/jpg-to-pdf'
     });
   }
 

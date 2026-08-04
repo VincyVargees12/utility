@@ -66,7 +66,7 @@ export class SplitPdfComponent implements OnInit {
       keywords: 'split pdf, pdf splitter, extract pdf pages, divide pdf, separate pdf pages',
       ogTitle: 'Split PDF - Free Online PDF Splitter',
       ogDescription: 'Split PDF files into multiple documents. 100% free and secure.',
-      canonicalUrl: 'https://datautility.com/categories/pdf/split-pdf'
+      canonicalUrl: 'https://www.data-util.com/categories/pdf/split-pdf'
     });
   }
 

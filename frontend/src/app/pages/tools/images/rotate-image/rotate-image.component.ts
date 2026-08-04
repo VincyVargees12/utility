@@ -46,7 +46,7 @@ export class RotateImageComponent implements OnInit {
       keywords: 'rotate image, image rotation, rotate photo, flip image, turn image',
       ogTitle: 'Rotate Image - Free Online Image Rotation Tool',
       ogDescription: 'Rotate images by any angle. Quick 90° rotation or custom angles. 100% free.',
-      canonicalUrl: 'https://datautility.com/categories/images/rotate-image'
+      canonicalUrl: 'https://www.data-util.com/categories/images/rotate-image'
     });
   }
 

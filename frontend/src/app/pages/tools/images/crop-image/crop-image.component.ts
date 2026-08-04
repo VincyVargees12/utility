@@ -85,7 +85,7 @@ export class CropImageComponent implements OnInit, OnDestroy {
       keywords: 'crop image, image cropper, cut image, crop picture online',
       ogTitle: 'Crop Image - Free Online Image Cropper',
       ogDescription: 'Crop images by defining a perfect rectangle to cut out unwanted bounds.',
-      canonicalUrl: 'https://datautility.com/categories/images/crop-image'
+      canonicalUrl: 'https://www.data-util.com/categories/images/crop-image'
     });
   }
 

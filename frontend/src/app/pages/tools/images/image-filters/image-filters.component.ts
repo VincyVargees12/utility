@@ -120,7 +120,7 @@ export class ImageFiltersComponent implements OnInit {
       keywords: 'image filters, photo filters online, grayscale image, sepia effect, vintage filter, adjust brightness contrast',
       ogTitle: 'Image Filters - Apply Photo Effects Online',
       ogDescription: 'Enhance your photos with one-click filters and fine-grained adjustments.',
-      canonicalUrl: 'https://datautility.com/categories/images/filters'
+      canonicalUrl: 'https://www.data-util.com/categories/images/filters'
     });
   }
 

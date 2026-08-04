@@ -46,7 +46,7 @@ export class UnlockPdfComponent implements OnInit {
       keywords: 'unlock pdf, remove pdf password, pdf password remover, unprotect pdf',
       ogTitle: 'Unlock PDF - Remove PDF Passwords Online',
       ogDescription: 'Remove PDF password security quickly and safely.',
-      canonicalUrl: 'https://datautility.com/categories/pdf/unlock-pdf'
+      canonicalUrl: 'https://www.data-util.com/categories/pdf/unlock-pdf'
     });
   }
 

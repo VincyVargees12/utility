@@ -47,7 +47,7 @@ export class ProtectPdfComponent implements OnInit {
       keywords: 'protect pdf, encrypt pdf, add password to pdf, secure pdf',
       ogTitle: 'Protect PDF - Encrypt PDF with Password',
       ogDescription: 'Secure your PDF documents by encrypting them with a password easily and safely.',
-      canonicalUrl: 'https://datautility.com/categories/pdf/protect-pdf'
+      canonicalUrl: 'https://www.data-util.com/categories/pdf/protect-pdf'
     });
   }
 

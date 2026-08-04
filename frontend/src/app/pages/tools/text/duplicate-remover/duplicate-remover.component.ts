@@ -56,7 +56,7 @@ export class DuplicateRemoverComponent implements OnInit {
       keywords: 'remove duplicates, duplicate remover, remove duplicate lines, deduplicate text',
       ogTitle: 'Remove Duplicates - Free Duplicate Line Remover',
       ogDescription: 'Remove duplicate lines from your text. Works with case-sensitive and case-insensitive options.',
-      canonicalUrl: 'https://datautility.com/categories/text/duplicate-remover'
+      canonicalUrl: 'https://www.data-util.com/categories/text/duplicate-remover'
     });
   }
 

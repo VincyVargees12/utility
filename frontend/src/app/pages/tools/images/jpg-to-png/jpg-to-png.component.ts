@@ -47,7 +47,7 @@ export class JpgToPngComponent implements OnInit {
       keywords: 'jpg to png, convert jpg to png, jpeg to png, image converter',
       ogTitle: 'JPG to PNG Converter - Free Online',
       ogDescription: 'Convert JPG images to PNG format instantly with full transparency support.',
-      canonicalUrl: 'https://datautility.com/categories/images/jpg-to-png'
+      canonicalUrl: 'https://www.data-util.com/categories/images/jpg-to-png'
     });
   }
 

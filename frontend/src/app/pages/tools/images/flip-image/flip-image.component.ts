@@ -50,7 +50,7 @@ export class FlipImageComponent implements OnInit {
       keywords: 'flip image, mirror image, flip horizontally, flip vertically, flip photo',
       ogTitle: 'Flip Image - Free Online Image Flipper',
       ogDescription: 'Flip images horizontally or vertically. Create mirror effects instantly.',
-      canonicalUrl: 'https://datautility.com/categories/images/flip-image'
+      canonicalUrl: 'https://www.data-util.com/categories/images/flip-image'
     });
   }
 

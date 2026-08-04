@@ -71,7 +71,7 @@ export class RemoveExtraSpacesComponent implements OnInit {
       keywords: 'remove extra spaces, remove whitespace, collapse spaces, remove blank lines, trim text, whitespace cleaner',
       ogTitle: 'Remove Extra Spaces - Free Whitespace Cleaner',
       ogDescription: 'Clean up messy text by collapsing repeated spaces and removing blank lines.',
-      canonicalUrl: 'https://datautility.com/categories/text/remove-extra-spaces'
+      canonicalUrl: 'https://www.data-util.com/categories/text/remove-extra-spaces'
     });
   }
 

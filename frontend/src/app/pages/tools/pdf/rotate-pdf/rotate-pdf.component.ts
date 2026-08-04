@@ -51,7 +51,7 @@ export class RotatePdfComponent implements OnInit {
       keywords: 'rotate pdf, pdf rotator, change pdf orientation',
       ogTitle: 'Rotate PDF - Free Online PDF Rotator',
       ogDescription: 'Rotate your PDFs the way you need them. You can even rotate multiple PDFs at once!',
-      canonicalUrl: 'https://datautility.com/categories/pdf/rotate-pdf'
+      canonicalUrl: 'https://www.data-util.com/categories/pdf/rotate-pdf'
     });
   }
 

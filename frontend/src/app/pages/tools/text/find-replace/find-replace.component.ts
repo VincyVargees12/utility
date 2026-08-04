@@ -141,7 +141,7 @@ export class FindReplaceComponent implements OnInit {
       keywords: 'find and replace, search and replace, text replace tool, regex replace, find text online',
       ogTitle: 'Find and Replace - Free Text Search & Replace Tool',
       ogDescription: 'Search and replace text with match case, whole word, and regex support.',
-      canonicalUrl: 'https://datautility.com/categories/text/find-replace'
+      canonicalUrl: 'https://www.data-util.com/categories/text/find-replace'
     });
   }
 

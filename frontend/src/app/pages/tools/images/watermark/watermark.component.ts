@@ -110,7 +110,7 @@ export class WatermarkComponent implements OnInit {
       keywords: 'add watermark, image watermark, text watermark, watermark photos online, logo watermark',
       ogTitle: 'Add Watermark to Images Online',
       ogDescription: 'Protect your photos with a custom text or logo watermark, free and private.',
-      canonicalUrl: 'https://datautility.com/categories/images/watermark'
+      canonicalUrl: 'https://www.data-util.com/categories/images/watermark'
     });
   }
 

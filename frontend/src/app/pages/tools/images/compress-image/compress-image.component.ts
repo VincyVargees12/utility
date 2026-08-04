@@ -47,7 +47,7 @@ export class CompressImageComponent implements OnInit {
       keywords: 'compress image, reduce image size, optimize image, bulk image compressor',
       ogTitle: 'Compress Image - Fast Online Image Optimizer',
       ogDescription: 'Reduce image file size while maintaining quality. Perfect for web optimization.',
-      canonicalUrl: 'https://datautility.com/categories/images/compress-image'
+      canonicalUrl: 'https://www.data-util.com/categories/images/compress-image'
     });
   }
 

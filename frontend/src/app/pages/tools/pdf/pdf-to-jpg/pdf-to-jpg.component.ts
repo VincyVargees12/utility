@@ -39,7 +39,7 @@ export class PdfToJpgComponent implements OnInit {
       keywords: 'pdf to jpg, convert pdf to image, pdf to jpeg free',
       ogTitle: 'PDF to JPG Converter - Free Online',
       ogDescription: 'Convert every page of a PDF into high-quality JPG images instantly.',
-      canonicalUrl: 'https://datautility.com/categories/pdf/pdf-to-jpg'
+      canonicalUrl: 'https://www.data-util.com/categories/pdf/pdf-to-jpg'
     });
   }
 

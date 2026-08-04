@@ -46,7 +46,7 @@ export class ReverseTextComponent implements OnInit {
       keywords: 'reverse text, reverse words, reverse paragraphs, text reverser, backwards text',
       ogTitle: 'Reverse Text - Free Text Reverser Tool',
       ogDescription: 'Reverse text, words, or paragraphs instantly with multiple reverse modes.',
-      canonicalUrl: 'https://datautility.com/categories/text/reverse-text'
+      canonicalUrl: 'https://www.data-util.com/categories/text/reverse-text'
     });
   }
 

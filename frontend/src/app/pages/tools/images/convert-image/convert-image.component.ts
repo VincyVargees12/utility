@@ -53,7 +53,7 @@ export class ConvertImageComponent implements OnInit {
       keywords: 'convert image, image format converter, jpg to png, png to jpg, webp converter, gif converter, bmp to jpg, heic to jpg, heic converter',
       ogTitle: 'Convert Image - 15+ Image Format Converter',
       ogDescription: 'Convert images between JPG, PNG, WebP, GIF, BMP, TIFF, SVG, ICO, HEIC, and more formats instantly.',
-      canonicalUrl: 'https://datautility.com/categories/images/convert-image'
+      canonicalUrl: 'https://www.data-util.com/categories/images/convert-image'
     });
   }
 

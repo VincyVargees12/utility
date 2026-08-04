@@ -47,7 +47,7 @@ export class CharacterCounterComponent implements OnInit {
       keywords: 'character counter, character count, text analyzer, word counter, sentence counter',
       ogTitle: 'Character Counter - Free Text Character Counter',
       ogDescription: 'Instantly count characters, words, sentences, paragraphs, and calculate reading time.',
-      canonicalUrl: 'https://datautility.com/categories/text/character-counter'
+      canonicalUrl: 'https://www.data-util.com/categories/text/character-counter'
     });
   }
 

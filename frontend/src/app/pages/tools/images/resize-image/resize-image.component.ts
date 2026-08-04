@@ -93,7 +93,7 @@ export class ResizeImageComponent implements OnInit {
       keywords: 'resize image, change image size, bulk image resizer, scale image',
       ogTitle: 'Resize Image - Bulk Image Resizer Online',
       ogDescription: 'Resize multiple images at once by defining new pixels or percentages.',
-      canonicalUrl: 'https://datautility.com/categories/images/resize-image'
+      canonicalUrl: 'https://www.data-util.com/categories/images/resize-image'
     });
   }
 

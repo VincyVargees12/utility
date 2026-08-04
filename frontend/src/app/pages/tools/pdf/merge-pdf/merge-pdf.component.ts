@@ -46,7 +46,7 @@ export class MergePdfComponent implements OnInit {
       keywords: 'merge pdf, combine pdf, join pdf files, pdf merger',
       ogTitle: 'Merge PDF - Combine PDF Files Online Free',
       ogDescription: 'Combine PDFs in the order you want. 100% free and secure.',
-      canonicalUrl: 'https://datautility.com/categories/pdf/merge-pdf'
+      canonicalUrl: 'https://www.data-util.com/categories/pdf/merge-pdf'
     });
   }
 

@@ -47,7 +47,7 @@ export class ToWebpComponent implements OnInit {
       keywords: 'convert to webp, jpg to webp, png to webp, webp converter, image compression',
       ogTitle: 'Convert to WebP - Free Online Image Converter',
       ogDescription: 'Convert any image format to WebP instantly with quality control. Compress images up to 80% smaller.',
-      canonicalUrl: 'https://datautility.com/categories/images/to-webp'
+      canonicalUrl: 'https://www.data-util.com/categories/images/to-webp'
     });
   }
 

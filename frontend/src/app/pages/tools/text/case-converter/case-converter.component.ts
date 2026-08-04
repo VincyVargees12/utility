@@ -54,7 +54,7 @@ export class CaseConverterComponent implements OnInit {
       keywords: 'case converter, text converter, uppercase, lowercase, camelcase, snake case, text formatter',
       ogTitle: 'Case Converter - Free Text Case Converter',
       ogDescription: 'Convert text to any case format instantly. Supports uppercase, lowercase, title case, camelCase, snake_case, and more.',
-      canonicalUrl: 'https://datautility.com/categories/text/case-converter'
+      canonicalUrl: 'https://www.data-util.com/categories/text/case-converter'
     });
   }
 

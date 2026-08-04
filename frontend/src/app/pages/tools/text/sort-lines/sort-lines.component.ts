@@ -62,7 +62,7 @@ export class SortLinesComponent implements OnInit {
       keywords: 'sort lines, sort text, alphabetical sort, reverse sort, numeric sort, sort by length',
       ogTitle: 'Sort Lines - Free Text Sorting Tool',
       ogDescription: 'Sort your text lines alphabetically, numerically, by length, or in reverse. Fast and easy text sorting online.',
-      canonicalUrl: 'https://datautility.com/categories/text/sort-lines'
+      canonicalUrl: 'https://www.data-util.com/categories/text/sort-lines'
     });
   }
 

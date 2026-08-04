@@ -49,7 +49,7 @@ export class CompressPdfComponent implements OnInit {
       keywords: 'compress pdf, reduce pdf size, shrink pdf, pdf compressor',
       ogTitle: 'Compress PDF - Reduce PDF File Size Online Free',
       ogDescription: 'Reduce PDF file size while keeping quality. 100% free and secure.',
-      canonicalUrl: 'https://datautility.com/categories/pdf/compress-pdf'
+      canonicalUrl: 'https://www.data-util.com/categories/pdf/compress-pdf'
     });
   }
 
