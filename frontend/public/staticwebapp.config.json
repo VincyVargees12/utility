@@ -1,6 +1,6 @@
 {
   "navigationFallback": {
-    "rewrite": "/index.html",
+    "rewrite": "/index.csr.html",
     "exclude": [
       "/images/*",
       "/css/*",
@@ -47,7 +47,7 @@
   "trailingSlash": "auto",
   "responseOverrides": {
     "404": {
-      "rewrite": "/index.html",
+      "rewrite": "/index.csr.html",
       "statusCode": 200
     }
   }

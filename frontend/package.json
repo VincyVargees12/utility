@@ -9,8 +9,7 @@
     "test": "ng test",
     "lint": "eslint . --ext .ts,.html --max-warnings 0",
     "lint:fix": "eslint . --ext .ts,.html --fix",
-    "lint:report": "eslint . --ext .ts,.html --format json > eslint-report.json",
-    "serve:ssr:frontend": "node dist/frontend/server/server.mjs"
+    "lint:report": "eslint . --ext .ts,.html --format json > eslint-report.json"
   },
   "private": true,
   "packageManager": "npm@11.17.0",
@@ -22,7 +21,9 @@
     "@angular/forms": "^21.0.0",
     "@angular/material": "^21.0.0",
     "@angular/platform-browser": "^21.0.0",
+    "@angular/platform-server": "^21.0.0",
     "@angular/router": "^21.0.0",
+    "@angular/ssr": "^21.0.0",
     "@imgly/background-removal": "^1.7.0",
     "@monaco-editor/loader": "^1.7.0",
     "@types/crypto-js": "^4.2.2",
@@ -48,7 +49,6 @@
     "@angular/cli": "^21.0.0",
     "@angular/compiler-cli": "^21.0.0",
     "@types/cropperjs": "^1.1.5",
-    "@types/express": "^5.0.1",
     "@types/js-beautify": "^1.14.3",
     "@types/node": "^20.17.19",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
