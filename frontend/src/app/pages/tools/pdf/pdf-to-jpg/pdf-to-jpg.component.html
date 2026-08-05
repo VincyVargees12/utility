@@ -25,21 +25,21 @@
       <!-- Main Content Area -->
       <div class="flex-1 w-full min-w-0 bg-transparent">
         <div class="flex flex-col items-center justify-center pt-8">
-          <div class="relative w-full max-w-xs bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col h-96">
+          <div class="relative w-full max-w-xs bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col h-96 dark:bg-slate-800 dark:border-slate-700">
             <button
               class="absolute -top-3 -right-3 bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
               (click)="reset()"
               title="Remove file">
               &times;
             </button>
-            <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg">
+            <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg dark:bg-slate-900">
               @if (pdfThumbnail()) {
                 <img [src]="pdfThumbnail()!" class="absolute inset-0 w-full h-full object-contain shadow-sm bg-white" alt="Preview" />
               } @else {
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-gray-600"></div>
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-gray-600 dark:border-slate-600 dark:border-t-slate-400"></div>
               }
             </div>
-            <div class="bg-white border-t border-gray-100 p-3 text-center text-sm font-medium text-primary truncate rounded-b-lg">
+            <div class="bg-white border-t border-gray-100 p-3 text-center text-sm font-medium text-primary truncate rounded-b-lg dark:bg-slate-800 dark:border-slate-700">
               {{ pdfFileName() }}
             </div>
           </div>
@@ -53,10 +53,12 @@
         <!-- Options List -->
         <div class="flex flex-col mb-auto">
           <!-- Normal Quality Option -->
-          <div 
-            class="flex items-start p-6 cursor-pointer border-b border-gray-100 transition-colors"
+          <div
+            class="flex items-start p-6 cursor-pointer border-b border-gray-100 transition-colors dark:border-slate-700"
             [class.bg-[#f4f7fc]]="quality() === 'normal'"
+            [class.dark:bg-blue-950]="quality() === 'normal'"
             [class.hover:bg-gray-50]="quality() !== 'normal'"
+            [class.dark:hover:bg-slate-700]="quality() !== 'normal'"
             (click)="quality.set('normal')">
             <div class="flex-1">
               <h4 class="text-sm font-semibold mb-1" [class.text-blue-600]="quality() === 'normal'" [class.text-tertiary]="quality() !== 'normal'">Normal Quality</h4>
@@ -74,10 +76,12 @@
           </div>
 
           <!-- High Quality Option -->
-          <div 
-            class="flex items-start p-6 cursor-pointer border-b border-gray-100 transition-colors"
+          <div
+            class="flex items-start p-6 cursor-pointer border-b border-gray-100 transition-colors dark:border-slate-700"
             [class.bg-[#f4f7fc]]="quality() === 'high'"
+            [class.dark:bg-blue-950]="quality() === 'high'"
             [class.hover:bg-gray-50]="quality() !== 'high'"
+            [class.dark:hover:bg-slate-700]="quality() !== 'high'"
             (click)="quality.set('high')">
             <div class="flex-1">
               <h4 class="text-sm font-semibold mb-1" [class.text-blue-600]="quality() === 'high'" [class.text-tertiary]="quality() !== 'high'">High Quality</h4>
@@ -123,19 +127,19 @@
 <!-- Complete State -->
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
-    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200">
-      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200 dark:bg-slate-800 dark:border-slate-700">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 dark:bg-green-900">
+        <svg class="w-8 h-8 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
       </div>
-      
+
       <h2 class="text-2xl font-bold text-primary mb-2">PDF successfully converted to JPG!</h2>
       <p class="text-secondary mb-8">Your image files are ready for download.</p>
-      
+
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <button 
-          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium"
+        <button
+          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium dark:bg-slate-700 dark:hover:bg-slate-600"
           (click)="reset()">
           Convert Another
         </button>

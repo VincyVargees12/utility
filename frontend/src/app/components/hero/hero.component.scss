@@ -1,25 +1,24 @@
+@use 'styles/variables' as *;
+
 .hero {
   position: relative;
-  padding: 3rem 0 2rem;
+  padding: 4rem 0 3rem;
   overflow: hidden;
-  min-height: auto;
-  display: flex;
-  align-items: center;
 
-  @media (max-width: 768px) {
-    padding: 2rem 0 1.5rem;
-    min-height: auto;
+  @media (max-width: $breakpoint-md) {
+    padding: 2.5rem 0 2rem;
   }
 }
 
 .hero-gradient {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: linear-gradient(135deg, #2563EB15 0%, #7C3AED15 50%, #10B98115 100%);
   z-index: -1;
+
+  @include dark-mode {
+    background: linear-gradient(135deg, #2563EB10 0%, #7C3AED10 50%, #10B98110 100%);
+  }
 
   &::before {
     content: '';
@@ -44,10 +43,6 @@
   }
 }
 
-:host-context(.dark) .hero-gradient {
-  background: linear-gradient(135deg, #2563EB10 0%, #7C3AED10 50%, #10B98110 100%);
-}
-
 .hero-content {
   position: relative;
   z-index: 1;
@@ -56,39 +51,65 @@
   text-align: center;
 }
 
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: $radius-full;
+  background: rgba($primary-purple, 0.08);
+  color: $primary-purple;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  text-decoration: none;
+  transition: background-color $transition-base $ease-out;
+
+  &:hover {
+    background: rgba($primary-purple, 0.14);
+  }
+
+  @include dark-mode {
+    background: rgba($primary-purple-lighter, 0.15);
+    color: $primary-purple-lighter;
+
+    &:hover {
+      background: rgba($primary-purple-lighter, 0.22);
+    }
+  }
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $accent-green;
+  flex-shrink: 0;
+}
+
 .hero-title {
   font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
-  color: #111827;
-  animation-delay: 0.1s;
-}
+  font-weight: $font-weight-bold;
+  line-height: 1.15;
+  margin-bottom: 1.25rem;
+  color: $text-primary-light;
 
-:host-context(.dark) .hero-title {
-  color: #f1f5f9;
-}
-
-.text-gradient {
-  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  @include dark-mode {
+    color: $text-primary-dark;
+  }
 }
 
 .hero-subtitle {
   font-size: clamp(1rem, 1.8vw, 1.25rem);
-  color: #64748b;
-  max-width: 700px;
+  color: $text-secondary-light;
+  max-width: 640px;
   margin: 0 auto 2rem;
   line-height: 1.7;
-  animation-delay: 0.2s;
-}
 
-:host-context(.dark) .hero-subtitle {
-  color: #cbd5e1;
+  @include dark-mode {
+    color: $gray-300;
+  }
 }
-
 
 .hero-actions {
   display: flex;
@@ -96,21 +117,20 @@
   justify-content: center;
   gap: 1rem;
   flex-wrap: wrap;
-  margin-bottom: 4rem;
-  animation-delay: 0.4s;
+  margin-bottom: 3rem;
 }
 
 .btn-primary-large,
 .btn-secondary-large {
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 600;
+  gap: 0.6rem;
+  padding: 0.9rem 1.75rem;
+  border-radius: $radius-xl;
+  font-weight: $font-weight-semibold;
   font-size: 1.05rem;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all $transition-base $ease-out;
 
   svg {
     width: 20px;
@@ -119,37 +139,35 @@
 }
 
 .btn-primary-large {
-  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  background: linear-gradient(135deg, $primary-purple 0%, $secondary-blue 100%);
   color: white;
-  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 8px 20px rgba($primary-purple, 0.3);
 
   &:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba($primary-purple, 0.4);
   }
 }
 
 .btn-secondary-large {
   background: white;
-  color: #2563EB;
-  border: 2px solid #e2e8f0;
+  color: $primary-purple;
+  border: 2px solid $gray-200;
 
   &:hover {
-    background: #f8fafc;
-    border-color: #2563EB;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-color: $primary-purple;
+    transform: translateY(-2px);
+    box-shadow: $shadow-md;
   }
-}
 
-:host-context(.dark) .btn-secondary-large {
-  background: #1e293b;
-  color: #3b82f6;
-  border-color: #334155;
+  @include dark-mode {
+    background: $bg-dark-elevated;
+    color: $primary-purple-lighter;
+    border-color: $border-dark;
 
-  &:hover {
-    background: #0f172a;
-    border-color: #3b82f6;
+    &:hover {
+      border-color: $primary-purple-lighter;
+    }
   }
 }
 
@@ -159,16 +177,16 @@
   justify-content: center;
   gap: 2rem;
   flex-wrap: wrap;
-  padding: 2rem;
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 16px;
+  padding: 1.75rem 2rem;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: $radius-2xl;
   border: 1px solid rgba(255, 255, 255, 0.5);
   box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
-}
 
-:host-context(.dark) .hero-stats {
-  background: rgba(30, 41, 59, 0.5);
-  border-color: rgba(255, 255, 255, 0.1);
+  @include dark-mode {
+    background: rgba($bg-dark-elevated, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
 }
 
 .stat-item {
@@ -176,54 +194,47 @@
 }
 
 .stat-number {
-  font-size: 2rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  font-size: 1.75rem;
+  font-weight: $font-weight-extrabold;
+  background: linear-gradient(135deg, $primary-purple 0%, $secondary-blue 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .stat-label {
-  font-size: 0.9rem;
-  color: #64748b;
+  font-size: 0.85rem;
+  color: $text-secondary-light;
   margin-top: 0.25rem;
-}
 
-:host-context(.dark) .stat-label {
-  color: #94a3b8;
+  @include dark-mode {
+    color: $gray-400;
+  }
 }
 
 .stat-divider {
   width: 1px;
-  height: 40px;
-  background: #e2e8f0;
+  height: 36px;
+  background: $gray-200;
+
+  @include dark-mode {
+    background: $border-dark;
+  }
 }
 
-:host-context(.dark) .stat-divider {
-  background: #334155;
-}
-
-// Floating Elements
-
-
-
-// Animations
-.animate-slide-up {
-  opacity: 1;
-}
-
-.animate-fade-in {
-  opacity: 1;
-}
-
-@media (max-width: 768px) {
-
-
-
+@media (max-width: $breakpoint-md) {
   .btn-primary-large,
   .btn-secondary-large {
     width: 100%;
     justify-content: center;
+  }
+
+  .hero-stats {
+    gap: 1.25rem;
+    padding: 1.5rem;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
   }
 }

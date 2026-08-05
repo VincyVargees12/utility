@@ -10,9 +10,9 @@
         </div>
 
         <!-- Text Input Area -->
-        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700">
           <!-- Input Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
             <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
             <div class="flex items-center gap-2">
               @if (lastReplacedCount() !== null) {
@@ -34,7 +34,7 @@
             <div class="relative">
               <div
                 #highlightLayer
-                class="fr-highlight-layer w-full h-72 p-4 border border-transparent rounded-lg font-mono text-sm whitespace-pre-wrap break-words overflow-auto"
+                class="fr-highlight-layer w-full h-72 p-4 border border-transparent rounded-lg font-mono text-sm whitespace-pre-wrap break-words overflow-auto dark:text-slate-200"
                 [innerHTML]="highlightedHtml()"
               ></div>
               <textarea
@@ -43,16 +43,16 @@
                 (input)="onTextInput($any($event.target).value)"
                 (scroll)="onTextareaScroll()"
                 placeholder="Start typing or paste your content here... You can also upload a file below."
-                class="fr-textarea absolute inset-0 w-full h-72 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+                class="fr-textarea absolute inset-0 w-full h-72 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm dark:border-slate-700"
               ></textarea>
             </div>
           </div>
 
           <!-- File Upload Area -->
-          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
+          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50 dark:border-slate-700 dark:bg-slate-900">
             <div class="flex items-center gap-3">
               <label class="flex-1">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center dark:border-slate-700 dark:hover:bg-blue-950">
                   <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
                   <p class="text-xs text-secondary">Supported: .txt, .md</p>
                   <input
@@ -73,7 +73,7 @@
           </div>
 
           @if (text()) {
-            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end">
+            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end dark:border-slate-700 dark:bg-slate-900">
               <button
                 (click)="copyToClipboard()"
                 class="px-4 py-2 text-sm bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-medium flex items-center gap-2"
@@ -88,11 +88,11 @@
       </div>
 
       <!-- Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col dark:bg-slate-800 dark:border-slate-700">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Find &amp; Replace</h3>
 
         <!-- Tabs -->
-        <div class="flex border-b border-gray-200">
+        <div class="flex border-b border-gray-200 dark:border-slate-700">
           <button
             (click)="setTab('find')"
             [class.text-blue-600]="activeTab() === 'find'"
@@ -124,7 +124,7 @@
               [ngModel]="findText()"
               (ngModelChange)="setFindText($event)"
               placeholder="Text to search for"
-              class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+              class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200"
             >
           </div>
 
@@ -148,7 +148,7 @@
                 [ngModel]="replaceText()"
                 (ngModelChange)="setReplaceText($event)"
                 placeholder="Replacement text"
-                class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                class="w-full p-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200"
               >
             </div>
           }
@@ -187,11 +187,11 @@
           <!-- Match count / error / find feedback -->
           <div class="mt-4">
             @if (regexError()) {
-              <p class="text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+              <p class="text-xs font-medium text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 dark:bg-red-950 dark:border-red-800 dark:text-red-300">
                 {{ regexError() }}
               </p>
             } @else if (findText()) {
-              <div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+              <div class="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 dark:bg-slate-900 dark:border-slate-700">
                 <span class="text-xs font-medium text-secondary">
                   {{ currentMatchPosition() }} of {{ matchCount() }} match{{ matchCount() === 1 ? '' : 'es' }}
                 </span>
@@ -226,7 +226,7 @@
               <button
                 (click)="findPrevious()"
                 [disabled]="!findText() || !!regexError()"
-                class="flex-1 px-4 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex-1 px-4 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-700 dark:hover:bg-slate-600"
               >
                 ◀ Previous
               </button>
@@ -244,7 +244,7 @@
               <button
                 (click)="replaceOne()"
                 [disabled]="!findText() || !!regexError()"
-                class="flex-1 px-4 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex-1 px-4 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold disabled:opacity-50 disabled:cursor-not-allowed dark:bg-slate-700 dark:hover:bg-slate-600"
               >
                 Replace
               </button>
@@ -262,7 +262,7 @@
           @if (text()) {
             <button
               (click)="downloadText()"
-              class="w-full px-6 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold flex items-center justify-center gap-2 mt-3"
+              class="w-full px-6 py-3 bg-gray-100 text-primary rounded-lg hover:bg-gray-200 transition-colors font-bold flex items-center justify-center gap-2 mt-3 dark:bg-slate-700 dark:hover:bg-slate-600"
             >
               <span>📥 Download</span>
             </button>

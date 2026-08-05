@@ -1,4 +1,4 @@
-<main class="w-full">
+﻿<main class="w-full">
   <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
@@ -10,9 +10,9 @@
         </div>
 
         <!-- Text Input Area -->
-        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700">
           <!-- Input Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
             <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
             <div class="flex items-center gap-2">
               @if (activeMode()) {
@@ -42,15 +42,15 @@
               [value]="text()"
               (input)="onTextInput($any($event.target).value)"
               placeholder="Start typing or paste your content here... You can also upload a file below."
-              class="w-full h-72 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+              class="w-full h-72 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200"
             ></textarea>
           </div>
 
           <!-- File Upload Area -->
-          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
+          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50 dark:border-slate-700 dark:bg-slate-900">
             <div class="flex items-center gap-3">
               <label class="flex-1">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center dark:border-slate-700 dark:hover:bg-blue-950">
                   <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
                   <p class="text-xs text-secondary">Supported: .txt, .md</p>
                   <input
@@ -71,7 +71,7 @@
           </div>
 
           @if (text()) {
-            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end">
+            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end dark:border-slate-700 dark:bg-slate-900">
               <button
                 (click)="copyToClipboard()"
                 class="px-4 py-2 text-sm bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-medium flex items-center gap-2"
@@ -87,41 +87,41 @@
         <!-- Statistics -->
         @if (text()) {
           <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-8">
-            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-6 text-center">
-              <p class="text-xs font-semibold text-blue-600 mb-2">ORIGINAL CHARACTERS</p>
-              <p class="text-3xl font-bold text-blue-900">{{ stats().originalCharacters }}</p>
+            <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg border border-blue-200 p-6 text-center dark:from-blue-950 dark:to-blue-900 dark:border-blue-800">
+              <p class="text-xs font-semibold text-blue-600 mb-2 dark:text-blue-400">ORIGINAL CHARACTERS</p>
+              <p class="text-3xl font-bold text-blue-900 dark:text-blue-300">{{ stats().originalCharacters }}</p>
             </div>
 
-            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-6 text-center">
-              <p class="text-xs font-semibold text-green-600 mb-2">CLEANED CHARACTERS</p>
-              <p class="text-3xl font-bold text-green-900">{{ stats().cleanedCharacters }}</p>
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg border border-green-200 p-6 text-center dark:from-green-950 dark:to-green-900 dark:border-green-800">
+              <p class="text-xs font-semibold text-green-600 mb-2 dark:text-green-400">CLEANED CHARACTERS</p>
+              <p class="text-3xl font-bold text-green-900 dark:text-green-300">{{ stats().cleanedCharacters }}</p>
             </div>
 
-            <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg border border-red-200 p-6 text-center">
-              <p class="text-xs font-semibold text-red-600 mb-2">CHARACTERS REMOVED</p>
-              <p class="text-3xl font-bold text-red-900">{{ stats().charactersRemoved }}</p>
+            <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-lg border border-red-200 p-6 text-center dark:from-red-950 dark:to-red-900 dark:border-red-800">
+              <p class="text-xs font-semibold text-red-600 mb-2 dark:text-red-400">CHARACTERS REMOVED</p>
+              <p class="text-3xl font-bold text-red-900 dark:text-red-300">{{ stats().charactersRemoved }}</p>
             </div>
 
-            <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg border border-indigo-200 p-6 text-center">
-              <p class="text-xs font-semibold text-indigo-600 mb-2">ORIGINAL LINES</p>
-              <p class="text-3xl font-bold text-indigo-900">{{ stats().originalLines }}</p>
+            <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg border border-indigo-200 p-6 text-center dark:from-indigo-950 dark:to-indigo-900 dark:border-indigo-800">
+              <p class="text-xs font-semibold text-indigo-600 mb-2 dark:text-indigo-400">ORIGINAL LINES</p>
+              <p class="text-3xl font-bold text-indigo-900 dark:text-indigo-300">{{ stats().originalLines }}</p>
             </div>
 
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-6 text-center">
-              <p class="text-xs font-semibold text-purple-600 mb-2">CLEANED LINES</p>
-              <p class="text-3xl font-bold text-purple-900">{{ stats().cleanedLines }}</p>
+            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg border border-purple-200 p-6 text-center dark:from-purple-950 dark:to-purple-900 dark:border-purple-800">
+              <p class="text-xs font-semibold text-purple-600 mb-2 dark:text-purple-400">CLEANED LINES</p>
+              <p class="text-3xl font-bold text-purple-900 dark:text-purple-300">{{ stats().cleanedLines }}</p>
             </div>
 
-            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200 p-6 text-center">
-              <p class="text-xs font-semibold text-orange-600 mb-2">LINES REMOVED</p>
-              <p class="text-3xl font-bold text-orange-900">{{ stats().linesRemoved }}</p>
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg border border-orange-200 p-6 text-center dark:from-orange-950 dark:to-orange-900 dark:border-orange-800">
+              <p class="text-xs font-semibold text-orange-600 mb-2 dark:text-orange-400">LINES REMOVED</p>
+              <p class="text-3xl font-bold text-orange-900 dark:text-orange-300">{{ stats().linesRemoved }}</p>
             </div>
           </div>
         }
       </div>
 
       <!-- Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col dark:bg-slate-800 dark:border-slate-700">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Removal Options</h3>
 
         <div class="px-6 pb-6">
@@ -130,8 +130,10 @@
             <div
               class="w-full flex items-start p-3 border rounded-lg transition-colors"
               [class.bg-blue-50]="activeMode() === 'all'"
+              [class.dark:bg-blue-950]="activeMode() === 'all'"
               [class.border-blue-500]="activeMode() === 'all'"
-              [class.border-gray-200]="activeMode() !== 'all'">
+              [class.border-gray-200]="activeMode() !== 'all'"
+              [class.dark:border-slate-700]="activeMode() !== 'all'">
               <button class="flex-1 text-left" (click)="setMode('all')">
                 <div class="flex items-center gap-2">
                   <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'all'" [class.text-secondary]="activeMode() !== 'all'">Remove All</span>
@@ -156,8 +158,10 @@
             <div
               class="w-full flex items-start p-3 border rounded-lg transition-colors"
               [class.bg-blue-50]="activeMode() === 'single'"
+              [class.dark:bg-blue-950]="activeMode() === 'single'"
               [class.border-blue-500]="activeMode() === 'single'"
-              [class.border-gray-200]="activeMode() !== 'single'">
+              [class.border-gray-200]="activeMode() !== 'single'"
+              [class.dark:border-slate-700]="activeMode() !== 'single'">
               <button class="flex-1 text-left" (click)="setMode('single')">
                 <div class="flex items-center gap-2">
                   <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'single'" [class.text-secondary]="activeMode() !== 'single'">Single Spaces</span>
@@ -181,8 +185,10 @@
             <div
               class="w-full flex items-start p-3 border rounded-lg transition-colors"
               [class.bg-blue-50]="activeMode() === 'blank'"
+              [class.dark:bg-blue-950]="activeMode() === 'blank'"
               [class.border-blue-500]="activeMode() === 'blank'"
-              [class.border-gray-200]="activeMode() !== 'blank'">
+              [class.border-gray-200]="activeMode() !== 'blank'"
+              [class.dark:border-slate-700]="activeMode() !== 'blank'">
               <button class="flex-1 text-left" (click)="setMode('blank')">
                 <div class="flex items-center gap-2">
                   <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'blank'" [class.text-secondary]="activeMode() !== 'blank'">Remove Blank Lines</span>
@@ -222,15 +228,15 @@
         (click)="closePreview()"
       >
         <div
-          class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col animate-in fade-in zoom-in-95"
+          class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col animate-in fade-in zoom-in-95 dark:bg-slate-800"
           (click)="$event.stopPropagation()"
         >
           <!-- Modal Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
             <h2 class="text-xl font-bold text-primary">{{ getPreviewTitle() }}</h2>
             <button
               (click)="closePreview()"
-              class="text-gray-700 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center"
+              class="text-gray-700 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center dark:text-slate-300 dark:hover:text-slate-100"
             >
               ✕
             </button>
@@ -238,16 +244,16 @@
 
           <!-- Modal Content -->
           <div class="flex-1 overflow-y-auto p-6">
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <p class="font-mono text-sm text-gray-700 whitespace-pre-wrap break-words">{{ getPreviewText() || '(empty)' }}</p>
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 dark:bg-slate-900 dark:border-slate-700">
+              <p class="font-mono text-sm text-gray-700 whitespace-pre-wrap break-words dark:text-slate-300">{{ getPreviewText() || '(empty)' }}</p>
             </div>
           </div>
 
           <!-- Modal Footer -->
-          <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex gap-2 justify-end">
+          <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex gap-2 justify-end dark:border-slate-700 dark:bg-slate-900">
             <button
               (click)="closePreview()"
-              class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
             >
               Close
             </button>

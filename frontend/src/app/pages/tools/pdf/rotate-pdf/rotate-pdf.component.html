@@ -28,9 +28,9 @@
       <div class="flex-1 w-full min-w-0 bg-transparent">
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           @for (file of files(); track file.id) {
-            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-              <button 
-                class="absolute -top-2 -right-2 bg-white border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-blue-600 hover:border-blue-600 dark:hover:text-blue-400 dark:hover:border-blue-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col dark:bg-slate-800 dark:border-slate-700">
+              <button
+                class="absolute -top-2 -right-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-blue-600 hover:border-blue-600 dark:hover:text-blue-400 dark:hover:border-blue-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
                 (click)="removeFile(file.id)"
                 title="Remove file">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -52,16 +52,16 @@
                 </button>
               </div>
 
-              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
+              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px] dark:bg-slate-900">
                 <div class="relative h-full w-full transition-transform duration-300 transform" [style.transform]="'rotate(' + file.rotation + 'deg)'">
                   @if (file.thumbnail) {
                     <img [src]="file.thumbnail" class="absolute inset-0 w-full h-full object-contain shadow-sm bg-white" alt="Preview" />
                   } @else {
-                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-gray-600"></div>
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-gray-600 dark:border-slate-600 dark:border-t-slate-400"></div>
                   }
                 </div>
               </div>
-              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg">
+              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg dark:bg-slate-800 dark:border-slate-700">
                 {{ file.name }}
               </div>
             </div>
@@ -89,8 +89,8 @@
       <app-tool-sidebar [width]="380">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Rotate PDF</h3>
         
-        <div class="p-6 bg-blue-50/50 border-b border-gray-100">
-          <div class="flex space-x-2 text-blue-700 bg-blue-100/50 p-3 rounded text-sm">
+        <div class="p-6 bg-blue-50/50 border-b border-gray-100 dark:bg-blue-950/50 dark:border-slate-700">
+          <div class="flex space-x-2 text-blue-700 bg-blue-100/50 p-3 rounded text-sm dark:bg-blue-900/50 dark:text-blue-300">
             <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span>Mouse over PDF file and a rotate icon will appear, click on the arrows to rotate PDFs.</span>
           </div>
@@ -101,16 +101,16 @@
         <div class="px-6 pb-6 mt-4">
           <h4 class="text-sm font-bold text-primary mb-4">Rotation</h4>
           <div class="flex flex-col gap-3">
-            <button 
-              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100"
+            <button
+              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700"
               (click)="rotateRight()">
               <div class="bg-blue-500 text-white p-3 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path></svg>
               </div>
               <span class="px-4 text-sm font-bold text-secondary tracking-wide">RIGHT</span>
             </button>
-            <button 
-              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100"
+            <button
+              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-700"
               (click)="rotateLeft()">
               <div class="bg-blue-500 text-white p-3 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path></svg>
@@ -148,19 +148,19 @@
 <!-- Complete State -->
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
-    <div class="bg-white rounded-lg shadow-sm p-8 text-center">
-      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white rounded-lg shadow-sm p-8 text-center dark:bg-slate-800">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 dark:bg-green-900">
+        <svg class="w-8 h-8 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
       </div>
-      
+
       <h2 class="text-2xl font-bold text-primary mb-2">PDF successfully rotated!</h2>
       <p class="text-secondary mb-8">Your rotated PDF provides a new viewpoint.</p>
-      
+
       <div class="flex justify-center gap-4">
-        <button 
-          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium"
+        <button
+          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium dark:bg-slate-700 dark:hover:bg-slate-600"
           (click)="reset()">
           Rotate Another
         </button>

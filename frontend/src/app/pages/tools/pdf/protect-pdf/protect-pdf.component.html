@@ -26,14 +26,14 @@
       <!-- Main Content Area -->
       <div class="flex-1 w-full min-w-0 bg-transparent">
         <div class="flex flex-col items-center justify-center">
-          <div class="relative w-full max-w-md bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col mb-8">
-            <button 
+          <div class="relative w-full max-w-md bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col mb-8 dark:bg-slate-800 dark:border-slate-700">
+            <button
               class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20"
               (click)="reset()"
               title="Remove file">
               &times;
             </button>
-            <div class="flex-1 p-6 flex flex-col items-center justify-center bg-gray-50 rounded-t-lg text-center h-48">
+            <div class="flex-1 p-6 flex flex-col items-center justify-center bg-gray-50 rounded-t-lg text-center h-48 dark:bg-slate-900">
               <svg class="w-16 h-16 text-[#e5322d] mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
               </svg>
@@ -52,22 +52,24 @@
           <p class="text-sm text-secondary mb-4 text-center">Enter a password to encrypt and secure your PDF document.</p>
           
           @if (errorMessage()) {
-            <div class="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium text-center">
+            <div class="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm font-medium text-center dark:bg-red-950 dark:border-red-800 dark:text-red-300">
               {{ errorMessage() }}
             </div>
           }
-          
+
           <form (submit)="processProtection(); $event.preventDefault()" class="space-y-4">
             <div>
               <label class="block text-sm font-medium text-primary mb-2">Type password</label>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 name="password"
-                [ngModel]="password()" 
+                [ngModel]="password()"
                 (ngModelChange)="password.set($event)"
-                class="w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow text-sm"
+                class="w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow text-sm dark:bg-slate-900"
                 [class.border-red-300]="passwordError()"
+                [class.dark:border-red-800]="passwordError()"
                 [class.border-gray-200]="!passwordError()"
+                [class.dark:border-slate-700]="!passwordError()"
                 placeholder="Min. 4 characters"
                 autocomplete="new-password"
                 autofocus>
@@ -75,14 +77,16 @@
             
             <div>
               <label class="block text-sm font-medium text-primary mb-2">Repeat password</label>
-              <input 
-                type="password" 
+              <input
+                type="password"
                 name="repeatPassword"
-                [ngModel]="repeatPassword()" 
+                [ngModel]="repeatPassword()"
                 (ngModelChange)="repeatPassword.set($event)"
-                class="w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow text-sm"
+                class="w-full px-4 py-3 bg-gray-50 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow text-sm dark:bg-slate-900"
                 [class.border-red-300]="passwordError()"
+                [class.dark:border-red-800]="passwordError()"
                 [class.border-gray-200]="!passwordError()"
+                [class.dark:border-slate-700]="!passwordError()"
                 placeholder="Confirm password"
                 autocomplete="new-password">
                 
@@ -127,7 +131,7 @@
 <!-- Complete State -->
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-6">
-    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200">
+    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200 dark:bg-slate-800 dark:border-slate-700">
       <div class="w-16 h-16 bg-[#e5322d] rounded-full flex items-center justify-center mx-auto mb-6 shadow-md">
         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
@@ -138,8 +142,8 @@
       <p class="text-secondary mb-8">Your document is now encrypted and secured with your password.</p>
       
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <button 
-          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium"
+        <button
+          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium dark:bg-slate-700 dark:hover:bg-slate-600"
           (click)="reset()">
           Protect Another
         </button>

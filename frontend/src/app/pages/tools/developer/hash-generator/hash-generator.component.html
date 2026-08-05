@@ -10,8 +10,8 @@
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
 
           <!-- Input Section -->
-          <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
-            <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+            <div class="border-b border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-900 flex items-center justify-between">
               <h2 class="text-lg font-bold text-primary">Input Text</h2>
               <div class="flex items-center gap-2">
                 <button (click)="loadSample()"
@@ -31,16 +31,16 @@
                 [(ngModel)]="inputText"
                 (ngModelChange)="updateInputLength()"
                 placeholder="Enter text to generate hash..."
-                class="w-full h-[28rem] p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm resize-none"
+                class="w-full h-[28rem] p-4 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm resize-none"
                 spellcheck="false">
               </textarea>
-              <div class="mt-3 flex items-center justify-between text-sm text-gray-600">
+              <div class="mt-3 flex items-center justify-between text-sm text-gray-600 dark:text-slate-400">
                 <span>{{ inputLength() }} characters</span>
               </div>
             </div>
-            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50">
+            <div class="border-t border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-900">
               <label class="block">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-3 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                <div class="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-3 cursor-pointer hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors text-center">
                   <p class="text-xs font-medium text-primary">📁 Upload file</p>
                   <input type="file"
                     (change)="onFileSelected($event)" class="hidden">
@@ -50,8 +50,8 @@
           </div>
 
           <!-- Hash Results Section -->
-          <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm flex flex-col">
-            <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm flex flex-col">
+            <div class="border-b border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-900 flex items-center justify-between">
               <h2 class="text-lg font-bold text-primary">Hash Results</h2>
               <div class="flex items-center gap-2">
                 @if (hashResults().length > 0) {
@@ -62,7 +62,7 @@
                 }
               </div>
             </div>
-            
+
             <div class="flex-1 overflow-y-auto" style="max-height: calc(28rem + 8rem);">
               @if (errorMessage()) {
                 <div class="p-6">
@@ -73,26 +73,26 @@
               } @else if (isGenerating()) {
                 <div class="p-6 text-center">
                   <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
-                  <p class="mt-3 text-sm text-gray-600">Generating hashes...</p>
+                  <p class="mt-3 text-sm text-gray-600 dark:text-slate-400">Generating hashes...</p>
                 </div>
               } @else if (hashResults().length > 0) {
                 <div class="p-6 space-y-4">
                   @for (result of hashResults(); track result.algorithm) {
-                    <div class="border border-gray-300 rounded-lg p-4 bg-gray-50">
+                    <div class="border border-gray-300 dark:border-slate-700 rounded-lg p-4 bg-gray-50 dark:bg-slate-900">
                       <div class="flex items-center justify-between mb-2">
                         <div class="flex items-center gap-2">
                           <span class="text-sm font-bold text-primary">{{ result.algorithm }}</span>
-                          <span class="text-xs text-gray-700">({{ result.length }} chars)</span>
+                          <span class="text-xs text-gray-700 dark:text-slate-300">({{ result.length }} chars)</span>
                         </div>
                         <button (click)="copyHash(result.hash, result.algorithm)"
                           class="px-3 py-1 text-xs font-medium rounded-md transition-colors inline-flex items-center gap-1"
-                          [ngClass]="copied() === result.algorithm ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
+                          [ngClass]="copied() === result.algorithm ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
                           <mat-icon class="text-sm align-middle">{{ copied() === result.algorithm ? 'check' : 'content_copy' }}</mat-icon>
                           {{ copied() === result.algorithm ? 'Copied' : 'Copy' }}
                         </button>
                       </div>
-                      <div class="mt-2 p-3 bg-white rounded border border-gray-200">
-                        <p class="font-mono text-xs break-all text-gray-700">{{ result.hash }}</p>
+                      <div class="mt-2 p-3 bg-white dark:bg-slate-800 rounded border border-gray-200 dark:border-slate-700">
+                        <p class="font-mono text-xs break-all text-gray-700 dark:text-slate-300">{{ result.hash }}</p>
                       </div>
                     </div>
                   }
@@ -100,7 +100,7 @@
               } @else {
                 <div class="p-12 text-center">
                   <div class="text-6xl mb-4">🔐</div>
-                  <p class="text-gray-600">Enter text and click a button to generate hashes</p>
+                  <p class="text-gray-600 dark:text-slate-400">Enter text and click a button to generate hashes</p>
                 </div>
               }
             </div>
@@ -111,8 +111,8 @@
       </div>
 
       <!-- Right Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
-        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Actions</h3>
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white dark:bg-slate-800 border-l border-gray-200 dark:border-slate-700 shadow-xl flex-col">
+        <h3 class="text-xl font-bold text-primary border-b dark:border-slate-700 p-6 text-center">Actions</h3>
 
         <div class="px-4 pb-6 space-y-4 mt-4">
 
@@ -120,7 +120,7 @@
           <div class="space-y-2">
             <label for="outputFormat" class="block text-sm font-semibold text-primary">Output Format</label>
             <select id="outputFormat" [(ngModel)]="outputFormat"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="hex">Hexadecimal</option>
               <option value="base64">Base64</option>
             </select>
@@ -130,7 +130,7 @@
           <div class="space-y-2">
             <label for="selectedAlgorithm" class="block text-sm font-semibold text-primary">Select Algorithm</label>
             <select id="selectedAlgorithm" [(ngModel)]="selectedAlgorithm"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="MD5">MD5 (128-bit)</option>
               <option value="SHA-1">SHA-1 (160-bit)</option>
               <option value="SHA-256">SHA-256 (256-bit)</option>
@@ -140,21 +140,21 @@
           </div>
 
           <!-- Action buttons -->
-          <div class="pt-2 border-t border-gray-200 space-y-2">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700 space-y-2">
             <button (click)="generateSingleHash()" [disabled]="!inputText().trim() || isGenerating()"
-              class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+              class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed">
               🔐 Generate {{ selectedAlgorithm() }}
             </button>
             <button (click)="generateAllHashes()" [disabled]="!inputText().trim() || isGenerating()"
-              class="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+              class="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors font-semibold text-sm disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed">
               ⚡ Generate All Hashes
             </button>
           </div>
 
           <!-- Features -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">Supported Algorithms</h4>
-            <ul class="text-xs text-gray-700 space-y-1">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">Supported Algorithms</h4>
+            <ul class="text-xs text-gray-700 dark:text-slate-300 space-y-1">
               <li>✓ MD5 (128-bit, not secure)</li>
               <li>✓ SHA-1 (160-bit, weak)</li>
               <li>✓ SHA-256 (256-bit, secure)</li>
@@ -164,27 +164,27 @@
           </div>
 
           <!-- Info -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">What are Hashes?</h4>
-            <p class="text-xs text-gray-700 leading-relaxed">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">What are Hashes?</h4>
+            <p class="text-xs text-gray-700 dark:text-slate-300 leading-relaxed">
               Cryptographic hash functions generate fixed-size outputs (hashes) from variable-length input data.
               They're one-way functions used for data integrity verification, password storage, and digital signatures.
             </p>
           </div>
 
           <!-- Security Note -->
-          <div class="pt-2 border-t border-gray-200">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
             <h4 class="text-sm font-semibold text-orange-600 mb-2">⚠️ Security Note</h4>
-            <p class="text-xs text-gray-700 leading-relaxed">
+            <p class="text-xs text-gray-700 dark:text-slate-300 leading-relaxed">
               MD5 and SHA-1 are cryptographically broken and should not be used for security purposes.
               Use SHA-256 or higher for secure applications.
             </p>
           </div>
 
           <!-- Use Cases -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">Common Use Cases</h4>
-            <ul class="text-xs text-gray-700 space-y-1">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">Common Use Cases</h4>
+            <ul class="text-xs text-gray-700 dark:text-slate-300 space-y-1">
               <li>• File integrity verification</li>
               <li>• Password hashing</li>
               <li>• Digital signatures</li>

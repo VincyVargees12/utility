@@ -33,29 +33,29 @@
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6 pt-4 pb-10 custom-scrollbar">
           
           @for (img of images(); track img.id) {
-            <div class="relative bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col h-48 sm:h-56">
-              <button 
+            <div class="relative bg-white border border-gray-200 rounded-lg shadow-sm group flex flex-col h-48 sm:h-56 dark:bg-slate-800 dark:border-slate-700">
+              <button
                 class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold text-lg leading-none shadow-sm transition-transform active:scale-95 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
                 (click)="removeImage(img.id, $event)"
                 title="Remove image">
                 &times;
               </button>
-              <div class="flex-1 p-2 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg">
+              <div class="flex-1 p-2 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg dark:bg-slate-900">
                 <img [src]="img.previewUrl" class="absolute inset-0 w-full h-full object-contain shadow-sm bg-white" [alt]="img.name" />
               </div>
-              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs font-medium text-primary truncate rounded-b-lg">
+              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs font-medium text-primary truncate rounded-b-lg dark:bg-slate-800 dark:border-slate-700">
                 {{ img.name }}
               </div>
             </div>
           }
-          
+
           <!-- Add more button -->
-          <div 
-            class="relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center h-48 sm:h-56 hover:bg-gray-100 cursor-pointer transition-colors"
+          <div
+            class="relative bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center h-48 sm:h-56 hover:bg-gray-100 cursor-pointer transition-colors dark:bg-slate-900 dark:border-slate-600 dark:hover:bg-slate-700"
             (click)="addMoreInput.click()"
             (drop)="onFileDrop($event)"
             (dragover)="onDragOver($event)">
-            <div class="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mb-2">
+            <div class="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mb-2 dark:bg-red-900 dark:text-red-400">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
             </div>
             <span class="text-sm font-medium text-secondary">Add more</span>
@@ -81,25 +81,35 @@
           <div>
             <h4 class="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Page Size</h4>
             <div class="grid grid-cols-2 gap-3">
-              <button 
+              <button
                 class="py-3 px-2 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
                 [class.bg-[#fef2f2]]="pageSize() === 'fit'"
+                [class.dark:bg-red-950]="pageSize() === 'fit'"
                 [class.border-red-500]="pageSize() === 'fit'"
                 [class.text-red-700]="pageSize() === 'fit'"
+                [class.dark:text-red-300]="pageSize() === 'fit'"
                 [class.border-gray-200]="pageSize() !== 'fit'"
+                [class.dark:border-slate-700]="pageSize() !== 'fit'"
                 [class.text-gray-600]="pageSize() !== 'fit'"
+                [class.dark:text-slate-400]="pageSize() !== 'fit'"
                 [class.hover:bg-gray-50]="pageSize() !== 'fit'"
+                [class.dark:hover:bg-slate-700]="pageSize() !== 'fit'"
                 (click)="pageSize.set('fit')">
                 Fit (same size)
               </button>
-              <button 
+              <button
                 class="py-3 px-2 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
                 [class.bg-[#fef2f2]]="pageSize() === 'a4'"
+                [class.dark:bg-red-950]="pageSize() === 'a4'"
                 [class.border-red-500]="pageSize() === 'a4'"
                 [class.text-red-700]="pageSize() === 'a4'"
+                [class.dark:text-red-300]="pageSize() === 'a4'"
                 [class.border-gray-200]="pageSize() !== 'a4'"
+                [class.dark:border-slate-700]="pageSize() !== 'a4'"
                 [class.text-gray-600]="pageSize() !== 'a4'"
+                [class.dark:text-slate-400]="pageSize() !== 'a4'"
                 [class.hover:bg-gray-50]="pageSize() !== 'a4'"
+                [class.dark:hover:bg-slate-700]="pageSize() !== 'a4'"
                 (click)="pageSize.set('a4')">
                 A4 (210x297mm)
               </button>
@@ -110,36 +120,51 @@
           <div>
             <h4 class="text-sm font-semibold text-primary mb-3 uppercase tracking-wider">Margin</h4>
             <div class="grid grid-cols-3 gap-2">
-              <button 
+              <button
                 class="py-2 px-1 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
                 [class.bg-[#fef2f2]]="margin() === 'none'"
+                [class.dark:bg-red-950]="margin() === 'none'"
                 [class.border-red-500]="margin() === 'none'"
                 [class.text-red-700]="margin() === 'none'"
+                [class.dark:text-red-300]="margin() === 'none'"
                 [class.border-gray-200]="margin() !== 'none'"
+                [class.dark:border-slate-700]="margin() !== 'none'"
                 [class.text-gray-600]="margin() !== 'none'"
+                [class.dark:text-slate-400]="margin() !== 'none'"
                 [class.hover:bg-gray-50]="margin() !== 'none'"
+                [class.dark:hover:bg-slate-700]="margin() !== 'none'"
                 (click)="margin.set('none')">
                 None
               </button>
-              <button 
+              <button
                 class="py-2 px-1 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
                 [class.bg-[#fef2f2]]="margin() === 'small'"
+                [class.dark:bg-red-950]="margin() === 'small'"
                 [class.border-red-500]="margin() === 'small'"
                 [class.text-red-700]="margin() === 'small'"
+                [class.dark:text-red-300]="margin() === 'small'"
                 [class.border-gray-200]="margin() !== 'small'"
+                [class.dark:border-slate-700]="margin() !== 'small'"
                 [class.text-gray-600]="margin() !== 'small'"
+                [class.dark:text-slate-400]="margin() !== 'small'"
                 [class.hover:bg-gray-50]="margin() !== 'small'"
+                [class.dark:hover:bg-slate-700]="margin() !== 'small'"
                 (click)="margin.set('small')">
                 Small
               </button>
-              <button 
+              <button
                 class="py-2 px-1 border rounded-lg text-sm font-medium transition-colors focus:outline-none"
                 [class.bg-[#fef2f2]]="margin() === 'big'"
+                [class.dark:bg-red-950]="margin() === 'big'"
                 [class.border-red-500]="margin() === 'big'"
                 [class.text-red-700]="margin() === 'big'"
+                [class.dark:text-red-300]="margin() === 'big'"
                 [class.border-gray-200]="margin() !== 'big'"
+                [class.dark:border-slate-700]="margin() !== 'big'"
                 [class.text-gray-600]="margin() !== 'big'"
+                [class.dark:text-slate-400]="margin() !== 'big'"
                 [class.hover:bg-gray-50]="margin() !== 'big'"
+                [class.dark:hover:bg-slate-700]="margin() !== 'big'"
                 (click)="margin.set('big')">
                 Big
               </button>
@@ -150,7 +175,7 @@
 
         <div class="p-6 mt-auto">
           @if (errorMessage()) {
-            <div class="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded border border-red-100">
+            <div class="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded border border-red-100 dark:bg-red-950 dark:border-red-800 dark:text-red-300">
               {{ errorMessage() }}
             </div>
           }
@@ -182,19 +207,19 @@
 <!-- Complete State -->
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
-    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200">
-      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="bg-white rounded-lg shadow-sm p-8 text-center border border-gray-200 dark:bg-slate-800 dark:border-slate-700">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 dark:bg-green-900">
+        <svg class="w-8 h-8 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
       </div>
-      
+
       <h2 class="text-2xl font-bold text-primary mb-2">Images converted to PDF!</h2>
       <p class="text-secondary mb-8">Your document is ready for download.</p>
-      
+
       <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <button 
-          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium"
+        <button
+          class="btn bg-gray-100 hover:bg-gray-200 text-primary px-8 py-3 rounded-lg font-medium dark:bg-slate-700 dark:hover:bg-slate-600"
           (click)="reset()">
           Convert More
         </button>

@@ -10,7 +10,7 @@
 
 @if (errorMessage()) {
   <div class="max-w-7xl mx-auto px-4 pt-8">
-    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4">
+    <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-4 dark:bg-red-950 dark:border-red-800 dark:text-red-300">
       {{ errorMessage() }}
     </div>
   </div>
@@ -47,12 +47,12 @@
           <!-- Images Grid -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
             @for (img of images(); track img.id) {
-              <div class="relative bg-white rounded-lg border-2 border-gray-200 overflow-hidden hover:border-blue-400 transition-colors group">
-                <div class="aspect-square bg-gray-50 flex items-center justify-center relative">
+              <div class="relative bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden hover:border-blue-400 transition-colors group">
+                <div class="aspect-square bg-gray-50 dark:bg-slate-900 flex items-center justify-center relative">
                   <img [src]="img.previewUrl" [alt]="img.name" class="max-w-full max-h-full object-contain">
                 </div>
                 <div class="p-3">
-                  <p class="text-sm font-medium text-gray-900 truncate">{{ img.name }}</p>
+                  <p class="text-sm font-medium text-gray-900 dark:text-slate-100 truncate">{{ img.name }}</p>
                   <p class="text-xs text-secondary">{{ img.width }} × {{ img.height }}px</p>
                 </div>
                 <button 
@@ -68,7 +68,7 @@
           @if (images().length > 0) {
             <div class="mb-8 text-center">
               <button 
-                class="px-6 py-2 border-2 border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
+                class="px-6 py-2 border-2 border-blue-500 text-blue-500 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors"
                 (click)="fileInput.click()">
                 + Add More Images
               </button>
@@ -86,7 +86,7 @@
         <!-- Fixed Sidebar -->
         <app-tool-sidebar [width]="380">
           <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Conversion Settings</h3>
-          
+
           <div class="p-6 flex-1 overflow-y-auto">
             <!-- Quality Selection -->
             <div class="mb-6">
@@ -98,6 +98,8 @@
                   [class.text-white]="quality() === 'low'"
                   [class.bg-gray-100]="quality() !== 'low'"
                   [class.text-gray-700]="quality() !== 'low'"
+                  [class.dark:bg-slate-800]="quality() !== 'low'"
+                  [class.dark:text-slate-300]="quality() !== 'low'"
                   (click)="quality.set('low')">
                   🔽 Low Quality (60% - Smallest file)
                 </button>
@@ -107,6 +109,8 @@
                   [class.text-white]="quality() === 'medium'"
                   [class.bg-gray-100]="quality() !== 'medium'"
                   [class.text-gray-700]="quality() !== 'medium'"
+                  [class.dark:bg-slate-800]="quality() !== 'medium'"
+                  [class.dark:text-slate-300]="quality() !== 'medium'"
                   (click)="quality.set('medium')">
                   ⚖️ Medium Quality (80% - Balanced)
                 </button>
@@ -116,6 +120,8 @@
                   [class.text-white]="quality() === 'high'"
                   [class.bg-gray-100]="quality() !== 'high'"
                   [class.text-gray-700]="quality() !== 'high'"
+                  [class.dark:bg-slate-800]="quality() !== 'high'"
+                  [class.dark:text-slate-300]="quality() !== 'high'"
                   (click)="quality.set('high')">
                   ⭐ High Quality (95% - Best quality)
                 </button>
@@ -123,14 +129,14 @@
             </div>
 
             <!-- Info Box -->
-            <div class="bg-blue-50 border border-blue-200 rounded p-4">
+            <div class="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-900 rounded p-4">
               <p class="text-xs text-secondary">
                 <strong>About WebP:</strong> Modern image format that provides superior compression. WebP images are typically 25-35% smaller than JPG while maintaining quality.
               </p>
             </div>
 
             <!-- Bottom Section -->
-            <div class="mt-6 pt-6 border-t border-gray-200">
+            <div class="mt-6 pt-6 border-t border-gray-200 dark:border-slate-700">
               <p class="text-xs text-secondary mb-4">
                 {{ images().length }} image(s) selected. Click Convert to start.
               </p>

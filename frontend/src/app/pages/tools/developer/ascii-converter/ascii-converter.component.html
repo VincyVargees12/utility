@@ -9,11 +9,11 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           @for (field of fields; track field.key) {
-            <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
-              <div class="border-b border-gray-200 px-4 py-3 bg-gray-50 flex items-center justify-between">
+            <div class="bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+              <div class="border-b border-gray-200 dark:border-slate-700 px-4 py-3 bg-gray-50 dark:bg-slate-900 flex items-center justify-between">
                 <h2 class="text-sm font-bold text-primary">{{ field.label }}</h2>
                 <button (click)="copyField(field.key)" [disabled]="!values()[field.key]"
-                  class="text-base leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
+                  class="text-base leading-none text-gray-600 dark:text-slate-400 hover:text-blue-600 transition-colors disabled:text-gray-600 dark:disabled:text-slate-400 disabled:cursor-not-allowed"
                   [title]="copiedKey() === field.key ? 'Copied!' : 'Copy'">
                   <mat-icon class="text-base align-middle">{{ copiedKey() === field.key ? 'check' : 'content_copy' }}</mat-icon>
                 </button>
@@ -23,7 +23,7 @@
                   [value]="values()[field.key]"
                   (input)="updateValue(field.key, $any($event.target).value)"
                   [placeholder]="field.placeholder"
-                  class="w-full h-40 p-3 border border-gray-300 rounded-lg font-mono text-xs resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  class="w-full h-40 p-3 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-200 font-mono text-xs resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"
                   spellcheck="false"
                 ></textarea>
                 @if (errorKey() === field.key) {
@@ -35,7 +35,7 @@
                     Convert
                   </button>
                   <button (click)="highlight(box)"
-                    class="px-4 py-2 bg-gray-100 text-gray-800 rounded-md text-xs font-semibold hover:bg-gray-200 transition-colors">
+                    class="px-4 py-2 bg-gray-100 dark:bg-slate-700 text-gray-800 dark:text-slate-200 rounded-md text-xs font-semibold hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors">
                     Highlight Text
                   </button>
                 </div>
@@ -46,8 +46,8 @@
       </div>
 
       <!-- Right Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
-        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Actions</h3>
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white dark:bg-slate-800 border-l border-gray-200 dark:border-slate-700 shadow-xl flex-col">
+        <h3 class="text-xl font-bold text-primary border-b dark:border-slate-700 p-6 text-center">Actions</h3>
 
         <div class="px-4 pb-6 space-y-4 mt-4">
           <div class="space-y-2">
@@ -62,17 +62,17 @@
           </div>
 
           <!-- How it works -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">How it works</h4>
-            <p class="text-xs text-gray-700 leading-relaxed">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">How it works</h4>
+            <p class="text-xs text-gray-700 dark:text-slate-300 leading-relaxed">
               Every box shown here represents the same content in a different format. Type into the "Text (ASCII / ANSI)" box and click its <strong>Convert</strong> button to fill in every other format. You can also edit any other box directly — clicking its own <strong>Convert</strong> button treats that box as the source and updates the rest, including Text, from it.
             </p>
           </div>
 
           <!-- Features -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">Features</h4>
-            <ul class="text-xs text-gray-700 space-y-1">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">Features</h4>
+            <ul class="text-xs text-gray-700 dark:text-slate-300 space-y-1">
               <li>✓ Binary, Hex, Decimal (space-separated byte values)</li>
               <li>✓ Base64 with full Unicode/UTF-8 support</li>
               <li>✓ ROT13 letter substitution cipher</li>

@@ -1,4 +1,4 @@
-<main class="w-full">
+﻿<main class="w-full">
   <div class="max-w-none mx-auto px-4 py-8 ml-[10%]">
     <div class="flex flex-col lg:flex-row gap-6 items-start relative">
       <!-- Main Content Area -->
@@ -10,9 +10,9 @@
         </div>
 
         <!-- Text Input Area -->
-        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700">
           <!-- Input Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
             <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
             <button
               (click)="loadSample()"
@@ -28,15 +28,15 @@
               [value]="text()"
               (input)="text.set($event.target.value); onTextChange()"
               placeholder="Start typing or paste your content here... You can also upload a file below."
-              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200"
             ></textarea>
           </div>
 
           <!-- File Upload Area -->
-          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
+          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50 dark:border-slate-700 dark:bg-slate-900">
             <div class="flex items-center gap-4">
               <label class="flex-1">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center dark:border-slate-700 dark:hover:bg-blue-950">
                   <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
                   <p class="text-xs text-secondary">Supported: .txt, .md</p>
                   <input
@@ -59,7 +59,7 @@
 
         <!-- Remove Empty Lines Option -->
         @if (text()) {
-          <div class="mt-6 flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-4 shadow-sm">
+          <div class="mt-6 flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-4 shadow-sm dark:bg-slate-800 dark:border-slate-700">
             <input
               type="checkbox"
               [checked]="removeEmpty()"
@@ -76,35 +76,35 @@
         <!-- Statistics -->
         @if (text()) {
           <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <p class="text-xs text-blue-600 font-medium mb-1">Original Lines</p>
-              <p class="text-2xl font-bold text-blue-700">{{ stats().originalLines }}</p>
+            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200 dark:bg-blue-950 dark:border-blue-800">
+              <p class="text-xs text-blue-600 font-medium mb-1 dark:text-blue-400">Original Lines</p>
+              <p class="text-2xl font-bold text-blue-700 dark:text-blue-400">{{ stats().originalLines }}</p>
             </div>
-            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
-              <p class="text-xs text-green-600 font-medium mb-1">Sorted Lines</p>
-              <p class="text-2xl font-bold text-green-700">{{ stats().sortedLines }}</p>
+            <div class="bg-green-50 p-4 rounded-lg border border-green-200 dark:bg-green-950 dark:border-green-800">
+              <p class="text-xs text-green-600 font-medium mb-1 dark:text-green-400">Sorted Lines</p>
+              <p class="text-2xl font-bold text-green-700 dark:text-green-400">{{ stats().sortedLines }}</p>
             </div>
             @if (stats().emptyLinesRemoved > 0) {
-              <div class="bg-orange-50 p-4 rounded-lg border border-orange-200">
-                <p class="text-xs text-orange-600 font-medium mb-1">Empty Removed</p>
-                <p class="text-2xl font-bold text-orange-700">{{ stats().emptyLinesRemoved }}</p>
+              <div class="bg-orange-50 p-4 rounded-lg border border-orange-200 dark:bg-orange-950 dark:border-orange-800">
+                <p class="text-xs text-orange-600 font-medium mb-1 dark:text-orange-400">Empty Removed</p>
+                <p class="text-2xl font-bold text-orange-700 dark:text-orange-400">{{ stats().emptyLinesRemoved }}</p>
               </div>
             }
-            <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
-              <p class="text-xs text-purple-600 font-medium mb-1">Total Characters</p>
-              <p class="text-2xl font-bold text-purple-700">{{ stats().totalCharacters }}</p>
+            <div class="bg-purple-50 p-4 rounded-lg border border-purple-200 dark:bg-purple-950 dark:border-purple-800">
+              <p class="text-xs text-purple-600 font-medium mb-1 dark:text-purple-400">Total Characters</p>
+              <p class="text-2xl font-bold text-purple-700 dark:text-purple-400">{{ stats().totalCharacters }}</p>
             </div>
           </div>
         }
       </div>
 
       <!-- Right Sidebar - Sort Results -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col dark:bg-slate-800 dark:border-slate-700">
           <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Quick Copy</h3>
           
           <div class="px-4 pb-6 space-y-3 mt-4">
             <!-- A → Z -->
-            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 dark:bg-slate-900 dark:border-slate-700">
               <div class="flex items-center justify-between mb-2">
                 <h4 class="text-sm font-semibold text-primary">A → Z</h4>
                 <div class="flex gap-1">
@@ -124,11 +124,11 @@
                   </button>
                 </div>
               </div>
-              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200">{{ results().asc || 'Sorted...' }}</p>
+              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">{{ results().asc || 'Sorted...' }}</p>
             </div>
 
             <!-- Z → A -->
-            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 dark:bg-slate-900 dark:border-slate-700">
               <div class="flex items-center justify-between mb-2">
                 <h4 class="text-sm font-semibold text-primary">Z → A</h4>
                 <div class="flex gap-1">
@@ -148,11 +148,11 @@
                   </button>
                 </div>
               </div>
-              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200">{{ results().desc || 'Sorted...' }}</p>
+              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">{{ results().desc || 'Sorted...' }}</p>
             </div>
 
             <!-- Case Insensitive -->
-            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 dark:bg-slate-900 dark:border-slate-700">
               <div class="flex items-center justify-between mb-2">
                 <h4 class="text-sm font-semibold text-primary">No Case</h4>
                 <div class="flex gap-1">
@@ -172,11 +172,11 @@
                   </button>
                 </div>
               </div>
-              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200">{{ results().caseInsensitive || 'Sorted...' }}</p>
+              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">{{ results().caseInsensitive || 'Sorted...' }}</p>
             </div>
 
             <!-- Numeric -->
-            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 dark:bg-slate-900 dark:border-slate-700">
               <div class="flex items-center justify-between mb-2">
                 <h4 class="text-sm font-semibold text-primary">Numeric</h4>
                 <div class="flex gap-1">
@@ -196,11 +196,11 @@
                   </button>
                 </div>
               </div>
-              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200">{{ results().numeric || 'Sorted...' }}</p>
+              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">{{ results().numeric || 'Sorted...' }}</p>
             </div>
 
             <!-- By Length -->
-            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4">
+            <div class="bg-gray-50 rounded-lg border border-gray-200 p-4 dark:bg-slate-900 dark:border-slate-700">
               <div class="flex items-center justify-between mb-2">
                 <h4 class="text-sm font-semibold text-primary">By Length</h4>
                 <div class="flex gap-1">
@@ -220,7 +220,7 @@
                   </button>
                 </div>
               </div>
-              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200">{{ results().length || 'Sorted...' }}</p>
+              <p class="bg-white p-2 rounded text-xs font-mono text-gray-700 break-words max-h-[80px] overflow-y-auto whitespace-pre-wrap border border-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700">{{ results().length || 'Sorted...' }}</p>
             </div>
           </div>
         </div>
@@ -232,16 +232,16 @@
         class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] p-4"
         (click)="closePreview()"
       >
-        <div 
-          class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col animate-in fade-in zoom-in-95"
+        <div
+          class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col animate-in fade-in zoom-in-95 dark:bg-slate-800"
           (click)="$event.stopPropagation()"
         >
           <!-- Modal Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
             <h2 class="text-xl font-bold text-primary">{{ getPreviewTitle() }}</h2>
             <button
               (click)="closePreview()"
-              class="text-gray-700 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center"
+              class="text-gray-700 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center dark:text-slate-300 dark:hover:text-slate-100"
             >
               ✕
             </button>
@@ -249,16 +249,16 @@
 
           <!-- Modal Content -->
           <div class="flex-1 overflow-y-auto p-6">
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <p class="font-mono text-sm text-gray-700 whitespace-pre-wrap break-words">{{ getPreviewText() }}</p>
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 dark:bg-slate-900 dark:border-slate-700">
+              <p class="font-mono text-sm text-gray-700 whitespace-pre-wrap break-words dark:text-slate-300">{{ getPreviewText() }}</p>
             </div>
           </div>
 
           <!-- Modal Footer -->
-          <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex gap-2 justify-end">
+          <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex gap-2 justify-end dark:border-slate-700 dark:bg-slate-900">
             <button
               (click)="closePreview()"
-              class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
             >
               Close
             </button>

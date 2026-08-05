@@ -10,8 +10,8 @@
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
 
           <!-- Input -->
-          <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
-            <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+            <div class="border-b border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-900 flex items-center justify-between">
               <h2 class="text-lg font-bold text-primary">Input HTML</h2>
               <div class="flex items-center gap-2">
                 <button (click)="loadSample()"
@@ -23,21 +23,22 @@
                   Clear
                 </button>
                 <button (click)="copyInput()" [disabled]="!inputText().trim()"
-                  class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
+                  class="text-lg leading-none text-gray-600 dark:text-slate-400 hover:text-blue-600 transition-colors disabled:text-gray-600 dark:disabled:text-slate-400 disabled:cursor-not-allowed"
                   title="Copy input HTML">
                   <mat-icon class="text-lg align-middle">content_copy</mat-icon>
                 </button>
               </div>
             </div>
             <div class="p-6">
+              <!-- Monaco editor mounts its own theme (currently fixed to 'vs' light theme in the component); container border below only affects the frame around it -->
               <div #inputEditorHost
-                class="monaco-host h-[32rem] border border-gray-300 rounded-lg overflow-hidden"
+                class="monaco-host h-[32rem] border border-gray-300 dark:border-slate-700 rounded-lg overflow-hidden"
                 aria-label="Input HTML editor">
               </div>
             </div>
-            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50">
+            <div class="border-t border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-900">
               <label class="block">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-3 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                <div class="border-2 border-dashed border-gray-300 dark:border-slate-600 rounded-lg p-3 cursor-pointer hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950 transition-colors text-center">
                   <p class="text-xs font-medium text-primary">📁 Upload .html / .htm</p>
                   <input type="file" accept=".html,.htm"
                     (change)="onFileSelected($event)" class="hidden">
@@ -47,18 +48,18 @@
           </div>
 
           <!-- Output -->
-          <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
-            <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+            <div class="border-b border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-900 flex items-center justify-between">
               <h2 class="text-lg font-bold text-primary">Output HTML</h2>
               <div class="flex items-center gap-2">
                 @if (isValid() !== null) {
                   <span class="text-xs font-semibold px-3 py-1 rounded-full"
-                    [ngClass]="isValid() ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'">
+                    [ngClass]="isValid() ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'">
                     {{ isValid() ? 'Valid' : 'Invalid' }}
                   </span>
                 }
                 <button (click)="copyOutput()" [disabled]="!outputText().trim()"
-                  class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
+                  class="text-lg leading-none text-gray-600 dark:text-slate-400 hover:text-blue-600 transition-colors disabled:text-gray-600 dark:disabled:text-slate-400 disabled:cursor-not-allowed"
                   title="Copy output HTML">
                   <mat-icon class="text-lg align-middle">content_copy</mat-icon>
                 </button>
@@ -66,7 +67,7 @@
             </div>
             <div class="p-6">
               <div #outputEditorHost
-                class="monaco-host h-[32rem] border border-gray-300 rounded-lg overflow-hidden"
+                class="monaco-host h-[32rem] border border-gray-300 dark:border-slate-700 rounded-lg overflow-hidden"
                 aria-label="Output HTML editor">
               </div>
               @if (errorMessage()) {
@@ -82,8 +83,8 @@
       </div>
 
       <!-- Right Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
-        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Actions</h3>
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white dark:bg-slate-800 border-l border-gray-200 dark:border-slate-700 shadow-xl flex-col">
+        <h3 class="text-xl font-bold text-primary border-b dark:border-slate-700 p-6 text-center">Actions</h3>
 
         <div class="px-4 pb-6 space-y-4 mt-4">
 
@@ -92,7 +93,7 @@
             <label for="indentSize" class="block text-sm font-semibold text-primary">Indentation</label>
             <select id="indentSize" [value]="indentSize()"
               (change)="indentSize.set(+$any($event.target).value)"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+              class="w-full px-3 py-2 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
               <option value="2">2 spaces</option>
               <option value="4">4 spaces</option>
               <option value="8">8 spaces</option>
@@ -100,38 +101,38 @@
           </div>
 
           <!-- Action buttons -->
-          <div class="pt-2 border-t border-gray-200 space-y-2">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700 space-y-2">
             <button (click)="formatHtml()" [disabled]="!inputText().trim()"
-              class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+              class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold text-sm disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed">
               Format / Beautify HTML
             </button>
             <button (click)="minifyHtml()" [disabled]="!inputText().trim()"
-              class="w-full px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+              class="w-full px-6 py-3 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors font-semibold text-sm disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed">
               Minify HTML
             </button>
             <button (click)="validateHtml()" [disabled]="!inputText().trim()"
-              class="w-full px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+              class="w-full px-6 py-3 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors font-semibold text-sm disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed">
               Validate HTML
             </button>
           </div>
 
           <!-- Copy / Download -->
-          <div class="pt-2 border-t border-gray-200 space-y-2">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700 space-y-2">
             <button (click)="copyOutput()" [disabled]="!outputText().trim()"
-              class="w-full px-6 py-3 text-white rounded-lg transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed"
+              class="w-full px-6 py-3 text-white rounded-lg transition-colors font-semibold text-sm disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed"
               [ngClass]="copied() ? 'bg-green-600 hover:bg-green-700' : 'bg-violet-600 hover:bg-violet-700'">
               {{ copied() ? '✓ Copied' : 'Copy Output' }}
             </button>
             <button (click)="downloadOutput()" [disabled]="!outputText().trim()"
-              class="w-full px-6 py-3 bg-purple-100 text-black rounded-lg hover:bg-purple-200 transition-colors font-semibold text-sm disabled:bg-gray-300 disabled:cursor-not-allowed">
+              class="w-full px-6 py-3 bg-purple-100 text-black rounded-lg hover:bg-purple-200 transition-colors font-semibold text-sm disabled:bg-gray-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed">
               Download HTML
             </button>
           </div>
 
           <!-- Features -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">Features</h4>
-            <ul class="text-xs text-gray-700 space-y-1">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">Features</h4>
+            <ul class="text-xs text-gray-700 dark:text-slate-300 space-y-1">
               <li>✓ Proper indentation</li>
               <li>✓ Syntax highlighting</li>
               <li>✓ Minify HTML</li>

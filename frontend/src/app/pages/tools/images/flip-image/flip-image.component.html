@@ -28,9 +28,9 @@
       <div class="flex-1 w-full bg-transparent pt-6">
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           @for (img of images(); track img.id) {
-            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-              <button 
-                class="absolute -top-2 -right-2 bg-white border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-red-600 hover:border-red-600 dark:hover:text-red-400 dark:hover:border-red-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col dark:bg-slate-800 dark:border-slate-700">
+              <button
+                class="absolute -top-2 -right-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-red-600 hover:border-red-600 dark:hover:text-red-400 dark:hover:border-red-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
                 (click)="removeImage(img.id, $event)"
                 title="Remove image">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
@@ -52,13 +52,13 @@
                 </button>
               </div>
 
-              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
-                <div class="relative h-full w-full transition-transform duration-300" 
+              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px] dark:bg-slate-900">
+                <div class="relative h-full w-full transition-transform duration-300"
                   [style.transform]="(img.flipped.horizontal ? 'scaleX(-1)' : '') + (img.flipped.vertical ? ' scaleY(-1)' : '')">
                   <img [src]="img.previewUrl" class="absolute inset-0 w-full h-full object-contain bg-white" [alt]="img.name" />
                 </div>
               </div>
-              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg">
+              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg dark:bg-slate-800 dark:border-slate-700">
                 {{ img.name }}
               </div>
             </div>
@@ -85,9 +85,9 @@
       <!-- Sidebar -->
       <app-tool-sidebar [width]="380">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Flip Image</h3>
-        
-        <div class="p-6 bg-blue-50/50 border-b border-gray-100">
-          <div class="flex space-x-2 text-blue-700 bg-blue-100/50 p-3 rounded text-sm">
+
+        <div class="p-6 bg-blue-50/50 dark:bg-blue-950/20 border-b border-gray-100 dark:border-slate-700">
+          <div class="flex space-x-2 text-blue-700 dark:text-blue-300 bg-blue-100/50 dark:bg-blue-950/40 p-3 rounded text-sm">
             <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span>Mouse over image and flip icons will appear, click the arrows to flip images.</span>
           </div>
@@ -96,16 +96,16 @@
         <div class="px-6 pb-6 mt-4">
           <h4 class="text-sm font-bold text-primary mb-4">Flip Options</h4>
           <div class="flex flex-col gap-3">
-            <button 
-              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100"
+            <button
+              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-slate-700"
               (click)="flipAllHorizontal()">
               <div class="bg-blue-500 text-white p-3 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4V16m10 0v-4m0 4l4-4m-4 4l-4-4M17 4h-1a3 3 0 00-3 3v6a3 3 0 003 3h1"></path></svg>
               </div>
               <span class="px-4 text-sm font-bold text-secondary tracking-wide">FLIP VERTICAL</span>
             </button>
-            <button 
-              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100"
+            <button
+              class="flex items-center w-full bg-gray-50 hover:bg-gray-100 rounded overflow-hidden transition-colors border border-gray-100 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-slate-700"
               (click)="flipAllHorizontal()">
               <div class="bg-blue-500 text-white p-3 flex items-center justify-center">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10a3 3 0 003 3h10a3 3 0 003-3V7M4 7l8-4 8 4m-8 4v-2a1 1 0 011-1h2a1 1 0 011 1v2"></path></svg>
@@ -148,8 +148,8 @@
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
     <div class="text-center">
-      <div class="inline-block rounded-full bg-green-100 p-4 mb-4">
-        <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="inline-block rounded-full bg-green-100 dark:bg-green-900 p-4 mb-4">
+        <svg class="w-16 h-16 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
       </div>

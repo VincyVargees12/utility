@@ -10,9 +10,9 @@
         </div>
 
         <!-- Text Input Area -->
-        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
+        <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700">
           <!-- Input Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
             <h2 class="text-lg font-bold text-primary">Paste or Upload Text</h2>
             <div class="flex items-center gap-2">
               @if (activeMode()) {
@@ -42,15 +42,15 @@
               [value]="text()"
               (input)="onTextInput($any($event.target).value)"
               placeholder="Start typing or paste your content here... You can also upload a file below."
-              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm"
+              class="w-full h-96 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none font-mono text-sm dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200"
             ></textarea>
           </div>
 
           <!-- File Upload Area -->
-          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50">
+          <div class="border-t border-gray-200 px-6 py-6 bg-gray-50 dark:border-slate-700 dark:bg-slate-900">
             <div class="flex items-center gap-3">
               <label class="flex-1">
-                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center">
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors text-center dark:border-slate-700 dark:hover:bg-blue-950">
                   <p class="text-sm font-medium text-primary mb-1">📁 Upload File</p>
                   <p class="text-xs text-secondary">Supported: .txt, .md</p>
                   <input
@@ -71,7 +71,7 @@
           </div>
 
           @if (text()) {
-            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end">
+            <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex justify-end dark:border-slate-700 dark:bg-slate-900">
               <button
                 (click)="copyToClipboard()"
                 class="px-4 py-2 text-sm bg-purple-700 text-white rounded-lg hover:bg-purple-800 transition-colors font-medium flex items-center gap-2"
@@ -86,7 +86,7 @@
       </div>
 
       <!-- Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col dark:bg-slate-800 dark:border-slate-700">
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Reverse Mode</h3>
 
         <div class="px-6 pb-6">
@@ -95,8 +95,10 @@
             <div
               class="w-full flex items-start p-3 border rounded-lg transition-colors"
               [class.bg-blue-50]="activeMode() === 'text'"
+              [class.dark:bg-blue-950]="activeMode() === 'text'"
               [class.border-blue-500]="activeMode() === 'text'"
-              [class.border-gray-200]="activeMode() !== 'text'">
+              [class.border-gray-200]="activeMode() !== 'text'"
+              [class.dark:border-slate-700]="activeMode() !== 'text'">
               <button class="flex-1 text-left" (click)="setMode('text')">
                 <div class="flex items-center gap-2">
                   <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'text'" [class.text-secondary]="activeMode() !== 'text'">Reverse Text</span>
@@ -121,8 +123,10 @@
             <div
               class="w-full flex items-start p-3 border rounded-lg transition-colors"
               [class.bg-blue-50]="activeMode() === 'words'"
+              [class.dark:bg-blue-950]="activeMode() === 'words'"
               [class.border-blue-500]="activeMode() === 'words'"
-              [class.border-gray-200]="activeMode() !== 'words'">
+              [class.border-gray-200]="activeMode() !== 'words'"
+              [class.dark:border-slate-700]="activeMode() !== 'words'">
               <button class="flex-1 text-left" (click)="setMode('words')">
                 <div class="flex items-center gap-2">
                   <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'words'" [class.text-secondary]="activeMode() !== 'words'">Reverse Words</span>
@@ -146,8 +150,10 @@
             <div
               class="w-full flex items-start p-3 border rounded-lg transition-colors"
               [class.bg-blue-50]="activeMode() === 'paragraphs'"
+              [class.dark:bg-blue-950]="activeMode() === 'paragraphs'"
               [class.border-blue-500]="activeMode() === 'paragraphs'"
-              [class.border-gray-200]="activeMode() !== 'paragraphs'">
+              [class.border-gray-200]="activeMode() !== 'paragraphs'"
+              [class.dark:border-slate-700]="activeMode() !== 'paragraphs'">
               <button class="flex-1 text-left" (click)="setMode('paragraphs')">
                 <div class="flex items-center gap-2">
                   <span class="text-sm font-semibold" [class.text-blue-600]="activeMode() === 'paragraphs'" [class.text-secondary]="activeMode() !== 'paragraphs'">Reverse Paragraphs</span>
@@ -187,15 +193,15 @@
         (click)="closePreview()"
       >
         <div
-          class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col animate-in fade-in zoom-in-95"
+          class="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[80vh] flex flex-col animate-in fade-in zoom-in-95 dark:bg-slate-800"
           (click)="$event.stopPropagation()"
         >
           <!-- Modal Header -->
-          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between dark:border-slate-700 dark:bg-slate-900">
             <h2 class="text-xl font-bold text-primary">{{ getPreviewTitle() }}</h2>
             <button
               (click)="closePreview()"
-              class="text-gray-700 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center"
+              class="text-gray-700 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center dark:text-slate-300 dark:hover:text-slate-100"
             >
               ✕
             </button>
@@ -203,16 +209,16 @@
 
           <!-- Modal Content -->
           <div class="flex-1 overflow-y-auto p-6">
-            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-              <p class="font-mono text-sm text-gray-700 whitespace-pre-wrap break-words">{{ getPreviewText() || '(empty)' }}</p>
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 dark:bg-slate-900 dark:border-slate-700">
+              <p class="font-mono text-sm text-gray-700 whitespace-pre-wrap break-words dark:text-slate-300">{{ getPreviewText() || '(empty)' }}</p>
             </div>
           </div>
 
           <!-- Modal Footer -->
-          <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex gap-2 justify-end">
+          <div class="border-t border-gray-200 px-6 py-4 bg-gray-50 flex gap-2 justify-end dark:border-slate-700 dark:bg-slate-900">
             <button
               (click)="closePreview()"
-              class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+              class="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors font-medium dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
             >
               Close
             </button>

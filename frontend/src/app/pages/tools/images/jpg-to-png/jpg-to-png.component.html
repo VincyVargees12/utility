@@ -28,18 +28,18 @@
       <div class="flex-1 w-full bg-transparent pt-6">
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           @for (img of images(); track img.id) {
-            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-              <button 
-                class="absolute -top-2 -right-2 bg-white border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-red-600 hover:border-red-600 dark:hover:text-red-400 dark:hover:border-red-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col dark:bg-slate-800 dark:border-slate-700">
+              <button
+                class="absolute -top-2 -right-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-red-600 hover:border-red-600 dark:hover:text-red-400 dark:hover:border-red-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
                 (click)="removeImage(img.id, $event)"
                 title="Remove image">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
 
-              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
+              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px] dark:bg-slate-900">
                 <img [src]="img.previewUrl" class="absolute inset-0 w-full h-full object-contain bg-white" [alt]="img.name" />
               </div>
-              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg">
+              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg dark:bg-slate-800 dark:border-slate-700">
                 {{ img.name }}
               </div>
             </div>
@@ -77,6 +77,8 @@
               [class.border-blue-500]="quality() === 'low'"
               [class.hover:bg-gray-50]="quality() !== 'low'"
               [class.border-gray-200]="quality() !== 'low'"
+              [class.dark:hover:bg-slate-800]="quality() !== 'low'"
+              [class.dark:border-slate-700]="quality() !== 'low'"
               (click)="quality.set('low')">
               <div class="flex-1">
                 <div class="flex items-center gap-2">
@@ -99,6 +101,8 @@
               [class.border-blue-500]="quality() === 'medium'"
               [class.hover:bg-gray-50]="quality() !== 'medium'"
               [class.border-gray-200]="quality() !== 'medium'"
+              [class.dark:hover:bg-slate-800]="quality() !== 'medium'"
+              [class.dark:border-slate-700]="quality() !== 'medium'"
               (click)="quality.set('medium')">
               <div class="flex-1">
                 <div class="flex items-center gap-2">
@@ -121,6 +125,8 @@
               [class.border-blue-500]="quality() === 'high'"
               [class.hover:bg-gray-50]="quality() !== 'high'"
               [class.border-gray-200]="quality() !== 'high'"
+              [class.dark:hover:bg-slate-800]="quality() !== 'high'"
+              [class.dark:border-slate-700]="quality() !== 'high'"
               (click)="quality.set('high')">
               <div class="flex-1">
                 <div class="flex items-center gap-2">
@@ -171,8 +177,8 @@
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
     <div class="text-center">
-      <div class="inline-block rounded-full bg-green-100 p-4 mb-4">
-        <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="inline-block rounded-full bg-green-100 dark:bg-green-900 p-4 mb-4">
+        <svg class="w-16 h-16 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
       </div>

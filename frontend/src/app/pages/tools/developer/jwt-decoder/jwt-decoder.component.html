@@ -10,8 +10,8 @@
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
 
           <!-- Input Section -->
-          <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm">
-            <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm">
+            <div class="border-b border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-900 flex items-center justify-between">
               <h2 class="text-lg font-bold text-primary">JWT Token</h2>
               <div class="flex items-center gap-2">
                 <button (click)="loadSample()"
@@ -23,7 +23,7 @@
                   Clear
                 </button>
                 <button (click)="copyToken()" [disabled]="!jwtToken().trim()"
-                  class="text-lg leading-none text-gray-600 hover:text-blue-600 transition-colors disabled:text-gray-600 disabled:cursor-not-allowed"
+                  class="text-lg leading-none text-gray-600 dark:text-slate-400 hover:text-blue-600 transition-colors disabled:text-gray-600 dark:disabled:text-slate-400 disabled:cursor-not-allowed"
                   title="Copy token">
                   <mat-icon class="text-lg align-middle">content_copy</mat-icon>
                 </button>
@@ -36,24 +36,24 @@
                 [(ngModel)]="jwtToken"
                 (ngModelChange)="decodeJwt()"
                 placeholder="Paste your JWT token here..."
-                class="w-full h-[32rem] p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm resize-none break-all"
+                class="w-full h-[32rem] p-4 border border-gray-300 dark:border-slate-700 rounded-lg bg-white dark:bg-slate-900 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm resize-none break-all"
                 spellcheck="false">
               </textarea>
             </div>
           </div>
 
           <!-- Decoded Output Section -->
-          <div class="bg-white rounded-lg border-2 border-gray-200 overflow-hidden shadow-sm flex flex-col">
-            <div class="border-b border-gray-200 px-6 py-4 bg-gray-50 flex items-center justify-between">
+          <div class="bg-white dark:bg-slate-800 rounded-lg border-2 border-gray-200 dark:border-slate-700 overflow-hidden shadow-sm flex flex-col">
+            <div class="border-b border-gray-200 dark:border-slate-700 px-6 py-4 bg-gray-50 dark:bg-slate-900 flex items-center justify-between">
               <h2 class="text-lg font-bold text-primary">Decoded JWT</h2>
               <div class="flex items-center gap-2">
                 @if (isValid()) {
-                  <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700">
+                  <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400">
                     Valid Structure
                   </span>
                 }
                 @if (errorMessage()) {
-                  <span class="text-xs font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700">
+                  <span class="text-xs font-semibold px-3 py-1 rounded-full bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300">
                     Invalid
                   </span>
                 }
@@ -63,8 +63,8 @@
             <div class="flex-1 overflow-y-auto" style="max-height: calc(32rem + 3rem);">
               @if (errorMessage()) {
                 <div class="p-6">
-                  <div class="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <p class="text-sm font-medium text-red-700">
+                  <div class="bg-red-50 border border-red-200 rounded-lg p-4 dark:bg-red-950 dark:border-red-800">
+                    <p class="text-sm font-medium text-red-700 dark:text-red-300">
                       ❌ {{ errorMessage() }}
                     </p>
                   </div>
@@ -72,45 +72,45 @@
               } @else if (decodedJwt()) {
                 <div class="p-6 space-y-4">
                   <!-- Header -->
-                  <div class="border border-blue-200 rounded-lg overflow-hidden">
-                    <div class="bg-blue-50 px-4 py-2 flex items-center justify-between">
-                      <h3 class="text-sm font-bold text-blue-900">Header</h3>
+                  <div class="border border-blue-200 dark:border-blue-800 rounded-lg overflow-hidden">
+                    <div class="bg-blue-50 dark:bg-blue-950 px-4 py-2 flex items-center justify-between">
+                      <h3 class="text-sm font-bold text-blue-900 dark:text-blue-300">Header</h3>
                       <button (click)="copyPart('header')"
                         class="px-2 py-1 text-xs font-medium rounded transition-colors"
-                        [ngClass]="copied() === 'header' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
+                        [ngClass]="copied() === 'header' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'">
                         <mat-icon class="text-sm align-middle">{{ copied() === 'header' ? 'check' : 'content_copy' }}</mat-icon>
                       </button>
                     </div>
-                    <div class="p-4 bg-white">
-                      <pre class="text-xs font-mono text-gray-700 whitespace-pre-wrap break-all">{{ decodedJwt()!.headerRaw }}</pre>
+                    <div class="p-4 bg-white dark:bg-slate-800">
+                      <pre class="text-xs font-mono text-gray-700 dark:text-slate-300 whitespace-pre-wrap break-all">{{ decodedJwt()!.headerRaw }}</pre>
                     </div>
                   </div>
 
                   <!-- Payload -->
-                  <div class="border border-purple-200 rounded-lg overflow-hidden">
-                    <div class="bg-purple-50 px-4 py-2 flex items-center justify-between">
-                      <h3 class="text-sm font-bold text-purple-900">Payload</h3>
+                  <div class="border border-purple-200 dark:border-purple-800 rounded-lg overflow-hidden">
+                    <div class="bg-purple-50 dark:bg-purple-950 px-4 py-2 flex items-center justify-between">
+                      <h3 class="text-sm font-bold text-purple-900 dark:text-purple-300">Payload</h3>
                       <button (click)="copyPart('payload')"
                         class="px-2 py-1 text-xs font-medium rounded transition-colors"
-                        [ngClass]="copied() === 'payload' ? 'bg-green-100 text-green-700' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'">
+                        [ngClass]="copied() === 'payload' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400' : 'bg-purple-100 text-purple-700 hover:bg-purple-200'">
                         <mat-icon class="text-sm align-middle">{{ copied() === 'payload' ? 'check' : 'content_copy' }}</mat-icon>
                       </button>
                     </div>
-                    <div class="p-4 bg-white">
-                      <pre class="text-xs font-mono text-gray-700 whitespace-pre-wrap break-all">{{ decodedJwt()!.payloadRaw }}</pre>
-                      
+                    <div class="p-4 bg-white dark:bg-slate-800">
+                      <pre class="text-xs font-mono text-gray-700 dark:text-slate-300 whitespace-pre-wrap break-all">{{ decodedJwt()!.payloadRaw }}</pre>
+
                       <!-- Common Claims Info -->
                       @if (decodedJwt()!.payload.exp || decodedJwt()!.payload.iat || decodedJwt()!.payload.nbf) {
-                        <div class="mt-4 pt-4 border-t border-gray-200 space-y-2">
-                          <h4 class="text-xs font-semibold text-gray-900 mb-2">Timestamps:</h4>
+                        <div class="mt-4 pt-4 border-t border-gray-200 dark:border-slate-700 space-y-2">
+                          <h4 class="text-xs font-semibold text-gray-900 dark:text-slate-200 mb-2">Timestamps:</h4>
                           @if (decodedJwt()!.payload.iat) {
-                            <div class="text-xs text-gray-700">
+                            <div class="text-xs text-gray-700 dark:text-slate-300">
                               <span class="font-semibold">Issued At (iat):</span>
                               <span class="ml-2">{{ formatTimestamp(decodedJwt()!.payload.iat) }}</span>
                             </div>
                           }
                           @if (decodedJwt()!.payload.exp) {
-                            <div class="text-xs" [ngClass]="isExpired(decodedJwt()!.payload.exp) ? 'text-red-600' : 'text-gray-600'">
+                            <div class="text-xs" [ngClass]="isExpired(decodedJwt()!.payload.exp) ? 'text-red-600' : 'text-gray-600 dark:text-slate-400'">
                               <span class="font-semibold">Expires (exp):</span>
                               <span class="ml-2">{{ formatTimestamp(decodedJwt()!.payload.exp) }}</span>
                               @if (isExpired(decodedJwt()!.payload.exp)) {
@@ -119,7 +119,7 @@
                             </div>
                           }
                           @if (decodedJwt()!.payload.nbf) {
-                            <div class="text-xs text-gray-700">
+                            <div class="text-xs text-gray-700 dark:text-slate-300">
                               <span class="font-semibold">Not Before (nbf):</span>
                               <span class="ml-2">{{ formatTimestamp(decodedJwt()!.payload.nbf) }}</span>
                             </div>
@@ -130,25 +130,25 @@
                   </div>
 
                   <!-- Signature -->
-                  <div class="border border-orange-200 rounded-lg overflow-hidden">
-                    <div class="bg-orange-50 px-4 py-2 flex items-center justify-between">
-                      <h3 class="text-sm font-bold text-orange-900">Signature</h3>
+                  <div class="border border-orange-200 dark:border-orange-800 rounded-lg overflow-hidden">
+                    <div class="bg-orange-50 dark:bg-orange-950 px-4 py-2 flex items-center justify-between">
+                      <h3 class="text-sm font-bold text-orange-900 dark:text-orange-300">Signature</h3>
                       <button (click)="copyPart('signature')"
                         class="px-2 py-1 text-xs font-medium rounded transition-colors"
-                        [ngClass]="copied() === 'signature' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700 hover:bg-orange-200'">
+                        [ngClass]="copied() === 'signature' ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-400' : 'bg-orange-100 text-orange-700 hover:bg-orange-200'">
                         <mat-icon class="text-sm align-middle">{{ copied() === 'signature' ? 'check' : 'content_copy' }}</mat-icon>
                       </button>
                     </div>
-                    <div class="p-4 bg-white">
-                      <pre class="text-xs font-mono text-gray-700 break-all">{{ decodedJwt()!.signature }}</pre>
-                      <p class="text-xs text-gray-700 mt-2">⚠️ Signature verification requires the secret key</p>
+                    <div class="p-4 bg-white dark:bg-slate-800">
+                      <pre class="text-xs font-mono text-gray-700 dark:text-slate-300 break-all">{{ decodedJwt()!.signature }}</pre>
+                      <p class="text-xs text-gray-700 dark:text-slate-300 mt-2">⚠️ Signature verification requires the secret key</p>
                     </div>
                   </div>
                 </div>
               } @else {
                 <div class="p-12 text-center">
                   <div class="text-6xl mb-4">🎫</div>
-                  <p class="text-gray-600">Paste a JWT token to decode</p>
+                  <p class="text-gray-600 dark:text-slate-400">Paste a JWT token to decode</p>
                 </div>
               }
             </div>
@@ -158,14 +158,14 @@
       </div>
 
       <!-- Right Sidebar -->
-      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white border-l border-gray-200 shadow-xl flex-col">
-        <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Actions</h3>
+      <div class="hidden lg:flex sticky top-[70px] w-[380px] flex-shrink-0 bg-white dark:bg-slate-800 border-l border-gray-200 dark:border-slate-700 shadow-xl flex-col">
+        <h3 class="text-xl font-bold text-primary border-b dark:border-slate-700 p-6 text-center">Actions</h3>
 
         <div class="px-4 pb-6 space-y-4 mt-4">
 
           <!-- Action buttons -->
           @if (decodedJwt()) {
-            <div class="pt-2 border-t border-gray-200 space-y-2">
+            <div class="pt-2 border-t border-gray-200 dark:border-slate-700 space-y-2">
               <button (click)="downloadDecoded()"
                 class="w-full px-6 py-3 bg-purple-100 text-black rounded-lg hover:bg-purple-200 transition-colors font-semibold text-sm">
                 <mat-icon class="text-lg">download</mat-icon> Download Decoded JSON
@@ -174,28 +174,28 @@
           }
 
           <!-- JWT Structure Info -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">JWT Structure</h4>
-            <div class="space-y-2 text-xs text-gray-700">
-              <div class="p-2 bg-blue-50 rounded border border-blue-200">
-                <p class="font-semibold text-blue-900 mb-1">Header</p>
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">JWT Structure</h4>
+            <div class="space-y-2 text-xs text-gray-700 dark:text-slate-300">
+              <div class="p-2 bg-blue-50 dark:bg-blue-950 rounded border border-blue-200 dark:border-blue-800">
+                <p class="font-semibold text-blue-900 dark:text-blue-300 mb-1">Header</p>
                 <p>Contains token type and signing algorithm</p>
               </div>
-              <div class="p-2 bg-purple-50 rounded border border-purple-200">
-                <p class="font-semibold text-purple-900 mb-1">Payload</p>
+              <div class="p-2 bg-purple-50 dark:bg-purple-950 rounded border border-purple-200 dark:border-purple-800">
+                <p class="font-semibold text-purple-900 dark:text-purple-300 mb-1">Payload</p>
                 <p>Contains claims (user data, expiration, etc.)</p>
               </div>
-              <div class="p-2 bg-orange-50 rounded border border-orange-200">
-                <p class="font-semibold text-orange-900 mb-1">Signature</p>
+              <div class="p-2 bg-orange-50 dark:bg-orange-950 rounded border border-orange-200 dark:border-orange-800">
+                <p class="font-semibold text-orange-900 dark:text-orange-300 mb-1">Signature</p>
                 <p>Verifies token hasn't been tampered with</p>
               </div>
             </div>
           </div>
 
           <!-- Common Claims -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">Common Claims</h4>
-            <ul class="text-xs text-gray-700 space-y-1">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">Common Claims</h4>
+            <ul class="text-xs text-gray-700 dark:text-slate-300 space-y-1">
               <li><strong>iss:</strong> Issuer</li>
               <li><strong>sub:</strong> Subject (user ID)</li>
               <li><strong>aud:</strong> Audience</li>
@@ -206,17 +206,17 @@
           </div>
 
           <!-- Security Note -->
-          <div class="pt-2 border-t border-gray-200">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
             <h4 class="text-sm font-semibold text-orange-600 mb-2">⚠️ Security Note</h4>
-            <p class="text-xs text-gray-700 leading-relaxed">
+            <p class="text-xs text-gray-700 dark:text-slate-300 leading-relaxed">
               This tool only decodes JWTs. It does not validate signatures. Never share your JWT tokens or secret keys publicly.
             </p>
           </div>
 
           <!-- What is JWT? -->
-          <div class="pt-2 border-t border-gray-200">
-            <h4 class="text-sm font-semibold text-gray-900 mb-2">What is JWT?</h4>
-            <p class="text-xs text-gray-700 leading-relaxed">
+          <div class="pt-2 border-t border-gray-200 dark:border-slate-700">
+            <h4 class="text-sm font-semibold text-gray-900 dark:text-slate-200 mb-2">What is JWT?</h4>
+            <p class="text-xs text-gray-700 dark:text-slate-300 leading-relaxed">
               JSON Web Token (JWT) is an open standard (RFC 7519) for securely transmitting information between parties as a JSON object.
               JWTs are commonly used for authentication and information exchange.
             </p>

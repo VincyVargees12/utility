@@ -28,18 +28,18 @@
       <div class="flex-1 w-full bg-transparent pt-6">
         <div class="flex flex-wrap gap-4 justify-center md:justify-start">
           @for (img of images(); track img.id) {
-            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-              <button 
-                class="absolute -top-2 -right-2 bg-white border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-red-600 hover:border-red-600 dark:hover:text-red-400 dark:hover:border-red-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
+            <div class="relative w-48 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow group flex flex-col dark:bg-slate-800 dark:border-slate-700">
+              <button
+                class="absolute -top-2 -right-2 bg-white dark:bg-slate-800 border border-gray-300 dark:border-gray-600 rounded-full p-1 text-tertiary hover:text-red-600 hover:border-red-600 dark:hover:text-red-400 dark:hover:border-red-400 z-20 opacity-0 group-hover:opacity-100 transition-opacity"
                 (click)="removeImage(img.id, $event)"
                 title="Remove image">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
               </button>
 
-              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px]">
+              <div class="flex-1 p-4 flex items-center justify-center bg-gray-50 relative overflow-hidden rounded-t-lg min-h-[220px] dark:bg-slate-900">
                 <img [src]="img.previewUrl" class="absolute inset-0 w-full h-full object-contain bg-white" [alt]="img.name" />
               </div>
-              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg">
+              <div class="bg-white border-t border-gray-100 p-2 text-center text-xs text-secondary truncate rounded-b-lg dark:bg-slate-800 dark:border-slate-700">
                 <span class="font-medium">{{ img.name }}</span>
                 <div class="text-[11px] text-tertiary">{{ img.width }} × {{ img.height }}px</div>
               </div>
@@ -69,8 +69,8 @@
         <h3 class="text-xl font-bold text-primary border-b p-6 text-center">Convert Image</h3>
         
         <!-- Target Format Selection -->
-        <div class="px-6 py-4 border-b border-gray-100 max-h-[350px] overflow-y-auto">
-          <h4 class="text-sm font-bold text-primary mb-3 sticky top-0 bg-white">Target Format</h4>
+        <div class="px-6 py-4 border-b border-gray-100 dark:border-slate-700 max-h-[350px] overflow-y-auto">
+          <h4 class="text-sm font-bold text-primary mb-3 sticky top-0 bg-white dark:bg-slate-800">Target Format</h4>
           
           <!-- Image Formats -->
           <div class="mb-4">
@@ -85,6 +85,9 @@
                   [class.border-gray-200]="targetFormat() !== fmt"
                   [class.text-gray-600]="targetFormat() !== fmt"
                   [class.hover:bg-gray-50]="targetFormat() !== fmt"
+                  [class.dark:border-slate-700]="targetFormat() !== fmt"
+                  [class.dark:text-slate-400]="targetFormat() !== fmt"
+                  [class.dark:hover:bg-slate-800]="targetFormat() !== fmt"
                   (click)="setFormat(fmt)">
                   {{ fmt | uppercase }}
                 </button>
@@ -105,6 +108,9 @@
                   [class.border-gray-200]="targetFormat() !== fmt"
                   [class.text-gray-600]="targetFormat() !== fmt"
                   [class.hover:bg-gray-50]="targetFormat() !== fmt"
+                  [class.dark:border-slate-700]="targetFormat() !== fmt"
+                  [class.dark:text-slate-400]="targetFormat() !== fmt"
+                  [class.dark:hover:bg-slate-800]="targetFormat() !== fmt"
                   (click)="setFormat(fmt)">
                   {{ fmt | uppercase }}
                 </button>
@@ -114,8 +120,8 @@
         </div>
 
         <!-- Info -->
-        <div class="px-6 py-4 bg-blue-50/50">
-          <div class="flex space-x-2 text-blue-700 bg-blue-100/50 p-3 rounded text-sm">
+        <div class="px-6 py-4 bg-blue-50/50 dark:bg-blue-950/20">
+          <div class="flex space-x-2 text-blue-700 dark:text-blue-300 bg-blue-100/50 dark:bg-blue-950/40 p-3 rounded text-sm">
             <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             <span>Converting to <strong>{{ targetFormat() | uppercase }}</strong> at high quality</span>
           </div>
@@ -154,8 +160,8 @@
 @if (state() === 'complete') {
   <div class="max-w-4xl mx-auto px-4 py-12">
     <div class="text-center">
-      <div class="inline-block rounded-full bg-green-100 p-4 mb-4">
-        <svg class="w-16 h-16 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="inline-block rounded-full bg-green-100 dark:bg-green-900 p-4 mb-4">
+        <svg class="w-16 h-16 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
         </svg>
       </div>
