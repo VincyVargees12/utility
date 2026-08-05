@@ -54,11 +54,11 @@ export class FindReplaceComponent implements OnInit {
 
   resourceContent = FIND_REPLACE_RESOURCE_CONTENT;
 
-  private readonly SAMPLE_TEXT = 'Optimize Assets and CSS: Inline Critical CSS: Remove global blocking stylesheets and inline only the necessary CSS needed to render the above-the-fold content in your <head>.\n\nUse NgOptimizedImage: Replace standard <img> tags with the built-in NgOptimizedImage directive. This automatically adds preconnect hints, applies lazy loading to below-the-fold images, and enforces image sizing to prevent layout shifts.';
+  private readonly SAMPLE_TEXT = 'Dear team, thank you for your hard work this quarter. Your dedication has helped our company reach new milestones, and your ideas continue to shape our roadmap.\n\nAs we move into the next quarter, we want to hear more of your feedback. Your voice matters, and your input will guide our next round of product decisions.';
 
   loadSample(): void {
     this.onTextInput(this.SAMPLE_TEXT);
-    this.setFindText('inline');
+    this.setFindText('your');
   }
 
   private escapeRegExp(value: string): string {
