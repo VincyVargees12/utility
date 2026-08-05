@@ -41,16 +41,23 @@ export class SeoService {
     if (pageMeta.ogImage) {
       this.meta.updateTag({ property: 'og:image', content: pageMeta.ogImage });
     }
-    
-    if (pageMeta.ogUrl) {
-      this.meta.updateTag({ property: 'og:url', content: pageMeta.ogUrl });
+
+    // Falls back to canonicalUrl since every page passes that but few pass ogUrl explicitly —
+    // without this, og:url/twitter:url silently stay on whatever index.html hardcodes (the homepage).
+    const pageUrl = pageMeta.ogUrl || pageMeta.canonicalUrl;
+    if (pageUrl) {
+      this.meta.updateTag({ property: 'og:url', content: pageUrl });
     }
 
     // Twitter Card tags
     this.meta.updateTag({ name: 'twitter:card', content: pageMeta.twitterCard || 'summary_large_image' });
     this.meta.updateTag({ name: 'twitter:title', content: pageMeta.ogTitle || pageMeta.title });
     this.meta.updateTag({ name: 'twitter:description', content: pageMeta.ogDescription || pageMeta.description });
-    
+
+    if (pageUrl) {
+      this.meta.updateTag({ name: 'twitter:url', content: pageUrl });
+    }
+
     if (pageMeta.ogImage) {
       this.meta.updateTag({ name: 'twitter:image', content: pageMeta.ogImage });
     }
