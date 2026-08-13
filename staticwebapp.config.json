@@ -44,7 +44,7 @@
     ".xml": "application/xml",
     ".txt": "text/plain"
   },
-  "trailingSlash": "auto",
+  "trailingSlash": "never",
   "responseOverrides": {
     "404": {
       "rewrite": "/index.html",
