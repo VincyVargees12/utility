@@ -45,6 +45,9 @@
     ".txt": "text/plain"
   },
   "trailingSlash": "never",
+  "globalHeaders": {
+    "X-DataUtil-Config": "never-test-2026"
+  },
   "responseOverrides": {
     "404": {
       "rewrite": "/index.html",
