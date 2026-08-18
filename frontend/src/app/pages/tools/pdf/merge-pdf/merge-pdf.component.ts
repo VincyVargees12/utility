@@ -144,16 +144,6 @@ export class MergePdfComponent implements OnInit {
       const arrayBuffer = await file.arrayBuffer();
       const PDFDocClass = await this.loadPdfLib();
       const pdfDoc = await PDFDocClass.load(arrayBuffer, { ignoreEncryption: true });
-
-      if (pdfDoc.isEncrypted) {
-        this.errorMessage.set(`"${file.name}" is password protected and was removed. Unlock it first, then upload it here.`);
-        this.files.update(files => files.filter(f => f.id !== id));
-        if (this.files().length === 0) {
-          this.state.set('upload');
-        }
-        return;
-      }
-
       const pageCount = pdfDoc.getPageCount();
 
       this.files.update(files =>
@@ -211,13 +201,6 @@ export class MergePdfComponent implements OnInit {
     } catch (error) {
       console.error('Error generating thumbnail:', error);
     }
-  }
-
-  previewFile(item: PdfFileItem, event: Event): void {
-    event.stopPropagation();
-    const url = URL.createObjectURL(item.file);
-    window.open(url, '_blank');
-    setTimeout(() => URL.revokeObjectURL(url), 30000);
   }
 
   removeFile(id: string, event?: Event): void {

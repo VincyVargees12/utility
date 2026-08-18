@@ -45,25 +45,5 @@ export const PDF_TOOL_ROUTES: Routes = [
     path: 'jpg-to-pdf',
     loadComponent: () => import('./jpg-to-pdf/jpg-to-pdf.component').then(m => m.JpgToPdfComponent),
     title: 'JPG to PDF - DataUtil'
-  },
-  {
-    path: 'watermark-pdf',
-    loadComponent: () => import('./watermark-pdf/watermark-pdf.component').then(m => m.WatermarkPdfComponent),
-    title: 'Watermark PDF - DataUtil'
-  },
-  {
-    path: 'rearrange-pdf',
-    loadComponent: () => import('./rearrange-pdf/rearrange-pdf.component').then(m => m.RearrangePdfComponent),
-    title: 'Rearrange PDF Pages - DataUtil'
-  },
-  {
-    path: 'remove-blank-pages',
-    loadComponent: () => import('./remove-blank-pages/remove-blank-pages.component').then(m => m.RemoveBlankPagesComponent),
-    title: 'PDF Blank Page Remover - DataUtil'
-  },
-  {
-    path: 'duplicate-page-finder',
-    loadComponent: () => import('./duplicate-page-finder/duplicate-page-finder.component').then(m => m.DuplicatePageFinderComponent),
-    title: 'PDF Duplicate Page Finder - DataUtil'
   }
 ];
