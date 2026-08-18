@@ -31,7 +31,11 @@ export const TOOLS_REGISTRY: Record<string, ToolCategory> = {
       { id: 'jpg-to-pdf', name: 'JPG to PDF', description: 'Convert JPG images to PDF in seconds. Easily adjust orientation and margins.', icon: 'image', route: '/categories/pdf/jpg-to-pdf', category: 'convert' },
       { id: 'pdf-to-jpg', name: 'PDF to JPG', description: 'Convert each PDF page into a JPG or extract all images contained in a PDF.', icon: 'photo_library', route: '/categories/pdf/pdf-to-jpg', category: 'convert' },
       { id: 'unlock-pdf', name: 'Unlock PDF', description: 'Remove PDF password security, giving you the freedom to use your PDFs as you want.', icon: 'lock_open', route: '/categories/pdf/unlock-pdf', category: 'security' },
-      { id: 'protect-pdf', name: 'Protect PDF', description: 'Protect PDF files with a password. Encrypt PDF documents to prevent unauthorized access.', icon: 'lock', route: '/categories/pdf/protect-pdf', category: 'security' }
+      { id: 'protect-pdf', name: 'Protect PDF', description: 'Protect PDF files with a password. Encrypt PDF documents to prevent unauthorized access.', icon: 'lock', route: '/categories/pdf/protect-pdf', category: 'security' },
+      { id: 'watermark-pdf', name: 'Watermark PDF', description: 'Stamp a text or image watermark onto your PDF pages, in bulk.', icon: 'branding_watermark', route: '/categories/pdf/watermark-pdf', category: 'edit' },
+      { id: 'rearrange-pdf', name: 'Rearrange PDF Pages', description: 'Drag and drop to reorder, rotate, or delete pages in your PDF.', icon: 'reorder', route: '/categories/pdf/rearrange-pdf', category: 'organize' },
+      { id: 'remove-blank-pages', name: 'Blank Page Remover', description: 'Automatically detect and remove blank pages from a PDF.', icon: 'auto_fix_high', route: '/categories/pdf/remove-blank-pages', category: 'organize' },
+      { id: 'duplicate-page-finder', name: 'Duplicate Page Finder', description: 'Automatically find and remove pages that repeat within a PDF.', icon: 'content_copy', route: '/categories/pdf/duplicate-page-finder', category: 'organize' }
     ]
   },
   images: {
